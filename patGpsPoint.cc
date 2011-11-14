@@ -171,8 +171,15 @@ map<char*, patReal> patGpsPoint::distanceTo(patGeoCoordinates* upGeoCoord, patGe
 }
 
 map<char*, patReal> patGpsPoint::distanceTo(patNetwork* theNetwork, patArc* theArc) {
-    patGeoCoordinates* upGeoCoord = &(theNetwork->getNodeFromUserId(theArc->upNodeId)->geoCoord);
-    patGeoCoordinates* downGeoCoord = &(theNetwork->getNodeFromUserId(theArc->downNodeId)->geoCoord);
+
+	patNode* up_node = theArc->getUpNode();
+	patNode* down_node = theArc->getDownNode();
+	if(up_node==NULL || down_node==NULL){
+		up_node = theNetwork->getNodeFromUserId(theArc->upNodeId);
+		down_node = theNetwork->getNodeFromUserId(theArc->downNodeId);
+	}
+    patGeoCoordinates* upGeoCoord = &(up_node->geoCoord);
+    patGeoCoordinates* downGeoCoord = &(down_node->geoCoord);
     return distanceTo(upGeoCoord, downGeoCoord);
 }
 
@@ -558,10 +565,16 @@ struct link_ddr_range patGpsPoint::detLinkDDR_Range(map<char*, patReal> distance
 
 
 }
+patBoolean patGpsPoint::detLinkDDR(patArc* theArc, patNetwork* theNetwork){
 
-patBoolean patGpsPoint::detLinkDDR(patArc* theArc, patNetwork* theNetwork) {
-    patGeoCoordinates* upNodeGeoCoord = &(theNetwork->getNodeFromUserId(theArc->upNodeId)->geoCoord);
-    patGeoCoordinates* downNodeGeoCoord = &(theNetwork->getNodeFromUserId(theArc->downNodeId)->geoCoord);
+    patNode* upNode = theNetwork->getNodeFromUserId(theArc->upNodeId);
+    patNode* downNode = theNetwork->getNodeFromUserId(theArc->downNodeId);
+    return detLinkDDR(theArc, upNode, downNode);
+}
+
+patBoolean patGpsPoint::detLinkDDR(patArc* theArc, patNode* upNode, patNode* downNode) {
+	patGeoCoordinates* upNodeGeoCoord = &(upNode->geoCoord);
+	patGeoCoordinates* downNodeGeoCoord = &(downNode->geoCoord);
     map<char*, patReal> distanceLink;
     patReal headingAccuracyBound = patNBParameters::the()->maxHeadingGPSArc;
     patReal arcHeading = theArc->attributes.heading;
@@ -598,8 +611,14 @@ patBoolean patGpsPoint::detLinkDDR(patArc* theArc, patNetwork* theNetwork) {
 }
 
 patReal patGpsPoint::calLinkDDR(patArc* theArc, patNetwork* theNetwork) {
-    patGeoCoordinates* upNodeGeoCoord = &(theNetwork->getNodeFromUserId(theArc->upNodeId)->geoCoord);
-    patGeoCoordinates* downNodeGeoCoord = &(theNetwork->getNodeFromUserId(theArc->downNodeId)->geoCoord);
+	patNode* up_node = theArc->getUpNode();
+	patNode* down_node = theArc->getDownNode();
+	if(up_node==NULL || down_node==NULL){
+		up_node = theNetwork->getNodeFromUserId(theArc->upNodeId);
+		down_node = theNetwork->getNodeFromUserId(theArc->downNodeId);
+	}
+    patGeoCoordinates* upNodeGeoCoord = &(up_node->geoCoord);
+    patGeoCoordinates* downNodeGeoCoord = &(down_node->geoCoord);
     map<char*, patReal> distanceLink;
 
     distanceLink = distanceTo(upNodeGeoCoord, downNodeGeoCoord);
@@ -1160,7 +1179,17 @@ void patGpsPoint::genDDRFromPaths(
         for (list<patArc*>::iterator arcIter=arcList->begin();
                 arcIter!=arcList->end();
                 ++arcIter){
-            if( detLinkDDR(const_cast<patArc*> (*arcIter), theNetwork)==patFALSE){
+        	patArc* the_arc = const_cast<patArc*> (*arcIter);
+        	patNode* up_node = the_arc->getUpNode();
+        	patNode* down_node = the_arc->getDownNode();
+        	patBoolean isInDDR;
+        	if (up_node==NULL || down_node==NULL){
+        		isInDDR =detLinkDDR(const_cast<patArc*> (*arcIter), theNetwork);
+        	}
+        	else{
+        		isInDDR = detLinkDDR(const_cast<patArc*> (*arcIter),up_node,down_node);
+        	}
+            if( isInDDR==patFALSE){
                 excludedArcs.insert(*arcIter);
             }
         }
@@ -1682,7 +1711,11 @@ void patGpsPoint::setGpsParams(struct gps_params * p,
         patGpsPoint* prevGpsPoint,
         vector<patGpsPoint>* gpsSequence) {
     pair<patReal, patReal> speedProfile = calSpeedInZone(prevGpsPoint, gpsSequence);
-    p->time_diff = timeStamp - prevGpsPoint->getTimeStamp();
+    p->time_diff = patReal(timeStamp) - patReal(prevGpsPoint->getTimeStamp());
+	
+	p->time_prev = patReal(prevGpsPoint->getTimeStamp());
+	p->time_curr = patReal(timeStamp);
+	
     p->mu_v_curr = getSpeedMS();
     p->std_v_curr = getSpeedAccuracyMS();
 

@@ -30,6 +30,10 @@ class patArcTransition{
 	patArcTransition(list<patArc*> listOfArcs,
 				patGpsPoint* curr_GpsPoint,
 				patGpsPoint* prev_GpsPoint);
+
+	patArcTransition(list<pair<patArc*, TransportMode> > ,
+				patGpsPoint* curr_GpsPoint,
+				patGpsPoint* prev_GpsPoint);
 	
 	friend bool operator<(const patArcTransition& tran1, const patArcTransition& tran2) ;
 	friend bool operator==(const patArcTransition& tran1, const patArcTransition& tran2) ;
@@ -42,7 +46,7 @@ friend ostream& operator<<(ostream& str, const patArcTransition& x);
 list<patReal>  calProbability(patNetwork* theNetwork, struct gps_params GP);
 
 	void setNetworkParams(patNetwork* theNetwork, 
-			struct network_params * p);
+			struct network_params& p);
 	vector<patReal> dealIntersections(
 	patNetwork* theNetwork);
 	patReal getValue(patString type,patNetwork* theNetwork, struct gps_params GP);
@@ -55,14 +59,15 @@ list<patReal>  calProbability(patNetwork* theNetwork, struct gps_params GP);
 	patGpsPoint* getCurrGpsPoint();
 	patArc* getFirstArc();
 	patArc* getLastArc();
-	
+	patReal calMultiModalProbability(patNetwork* theNetwork, struct gps_params GP);
+
 	protected:
-	patPathJ path;
 	patReal value;
 	patReal valueSimple;
 	patReal valueRaw;
 	patGpsPoint* prevGpsPoint;
 	patGpsPoint* currGpsPoint;
+	patPathJ path;
 
 };
 #endif

@@ -10,7 +10,7 @@
 
 #include "patNetwork.h"
 
-
+#include "patGpsPoint.h"
 
 #include "patNode.h"
 
@@ -21,7 +21,6 @@
 class patOdJ;
 class patSample;
 class patPathJ;
-class patGpsPoint;
 class patArcTransition;
 class patPathDevelop;
 class patTripParser {
@@ -30,6 +29,8 @@ friend class patSample;
 
 public:
 	patTripParser();
+
+	void readGPSFromFile( patString& fileName,patError*& err);
 	patTripParser( patTraveler* theTraveler,
 		patULong& theTipId,
 		patULong& theStartTime) ;
@@ -74,7 +75,7 @@ void genMapMatchingResult(vector< list < pair<patArc*, patULong> > >* adjList);
 
 vector<patGpsPoint> increaseSamplingInterval(patReal newInterval);
 	void genAssocDomain(map<patArc*,set<patULong> >* associateDomain);
-
+vector<patGpsPoint>* getGpsSequence();
  protected:
   vector<patGpsPoint> gpsSequence ;
   patOdJ* od;

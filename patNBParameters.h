@@ -19,7 +19,8 @@ class patNBParameters{
 		patBoolean getParam(patString name, patULong* value);
 		patBoolean getParam(patString name, patString* value);
 		void showAll();
-		
+		patBoolean setTrafficModelParam();
+
 		void init(patError*& err);
 	static patNBParameters* ins;
 	

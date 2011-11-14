@@ -64,12 +64,13 @@ void patCalculateProbaForPaths::fromFile(patString file_name, patError*& err) {
     return;
 }
 
-    set<patPathJ> patCalculateProbaForPaths::getPaths(){
-        return path_set;
-    }
-    void patCalculateProbaForPaths::fromPaths(set<patPathJ> a_path_set){
-        path_set=a_path_set;
-    }
+set<patPathJ> patCalculateProbaForPaths::getPaths(){
+	return path_set;
+}
+void patCalculateProbaForPaths::fromPaths(set<patPathJ> a_path_set){
+	path_set=a_path_set;
+}
+
  vector<patReal> patCalculateProbaForPaths::calculateProbas() {
     vector<patReal> proba_results;
     set<patArcTransition>* arc_transition_set = new set<patArcTransition>;

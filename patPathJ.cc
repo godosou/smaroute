@@ -6,16 +6,36 @@
 #include "patErrNullPointer.h"
 #include "patGpsPoint.h"
 #include "patNBParameters.h"
+#include <shapefil.h>
+#include "patWay.h"
+
 #include <list>
 
 #include <fstream>
 #include <sstream>
+patPathJ::patPathJ(list<pair<patArc*, TransportMode> > the_arc_list ) :
+name (patString("No name")),
+Id(-1){
+
+	attributes.length=-1;
+	for(list<pair<patArc*, TransportMode> >::iterator arc_iter = the_arc_list.begin();
+			arc_iter!=the_arc_list.end();
+			++arc_iter){
+		addArcToBack(arc_iter->first, arc_iter->second);
+	}
+	detChangePoints();
+
+ }
 patPathJ::patPathJ() :
 name (patString("No name")),
 Id(-1)
 {
 attributes.length=-1;
 
+}
+
+patBoolean patPathJ::empty(){
+return listOfArcs.empty();
 }
 
 patPathJ::patPathJ(list<patArc* > theListOfArcs) :
@@ -123,6 +143,14 @@ bool operator<(const patPathJ& aPath, const patPathJ& bPath) {
 void patPathJ::addArcToFront(patArc* theArc){
 	listOfArcs.push_front(theArc);
 }
+
+
+void patPathJ::addArcToBack(patArc* theArc, TransportMode t_m){
+
+	listOfArcs.insert(listOfArcs.end(),theArc);
+	modes.insert(modes.end(),t_m);
+}
+
 void patPathJ::addArcToBack(patArc* theArc){
 
 	listOfArcs.insert(listOfArcs.end(),theArc);
@@ -217,7 +245,7 @@ patReal patPathJ::computePathLength(){
 	for(list<patArc*>::iterator arcIter = listOfArcs.begin();
 						arcIter!=listOfArcs.end();
 						++arcIter){
-						
+		//DEBUG_MESSAGE((*arcIter)->getLength());
 		attributes.length+=(*arcIter)->getLength();
 	}
 	
@@ -275,36 +303,53 @@ patArc* patPathJ::getArc(patULong iArc){
   
  	
 	   
-list<patArc*> patPathJ::getSeg(patArc* aArc, patArc* bArc){
-		list<patArc*> rtnList;
+list<pair<patArc*, TransportMode> > patPathJ::getSeg(patArc* aArc, patArc* bArc){
+	list<pair<patArc*, TransportMode> > rtnList;
 
-	if(aArc==bArc){
-		rtnList.push_back(aArc);
-		return rtnList;
-	}
 	list<patArc*>::iterator arcIter = listOfArcs.begin();
-	
+	list<TransportMode>::iterator modeIter = modes.begin();
+
 	while((*arcIter)!=aArc && arcIter!=listOfArcs.end()){
 		++arcIter;
+		++modeIter;
 	}
-	
+
 	if(arcIter == listOfArcs.end()){
-		return list<patArc*>();
+			return rtnList;
+	}
+
+
+	rtnList.push_back(pair<patArc*, TransportMode>(aArc,*modeIter));
+	if(aArc==bArc){
+			return rtnList;
 	}
 	
-	rtnList.push_back(*arcIter);
 	 ++arcIter;
 		
 	while((*arcIter)!=bArc && arcIter!=listOfArcs.end()){
-		rtnList.push_back(*arcIter);
+		rtnList.push_back(pair<patArc*, TransportMode>(*arcIter,*modeIter));
 		++arcIter;
+		++modeIter;
 	}
 	
 	if(arcIter == listOfArcs.end()){
-		return list<patArc*>();
+		return list<pair<patArc*, TransportMode> >();
 	}
-	rtnList.push_back(*arcIter);
+	rtnList.push_back(pair<patArc*, TransportMode>(*arcIter,*modeIter));
 	return rtnList;
+}
+
+bool patPathJ::isValidPath(){
+	list<patArc*>::iterator arc_iter = listOfArcs.begin();
+	patNode* connection_node_up = (*arc_iter)->getDownNode();
+	++arc_iter;
+	for(;arc_iter!=listOfArcs.end();++arc_iter){
+		if((*arc_iter)->getUpNode()!=connection_node_up){
+			return false;
+		}
+		connection_node_up=(*arc_iter)->getDownNode();
+	}
+	return true;
 }
 /*
 patBoolean patPathJ::isValidPath(vector<patGpsPoint>* gpsSequence){
@@ -742,4 +787,152 @@ set<patArc*> patPathJ::getDistinctArcs(){
 		
 	}
 	return arcSet;
+}
+
+bool patPathJ::isUniModal() {
+	return change_points.empty();
+}
+
+set<TransportMode> patPathJ::getUniqueModes() {
+	set<TransportMode> unique_modes;
+	for (list<TransportMode>::iterator mode_iter = modes.begin();
+			mode_iter != modes.end(); ++mode_iter) {
+
+		unique_modes.insert(*mode_iter);
+	}
+	return unique_modes;
+}
+short patPathJ::getNbrOfUniqueModes() {
+	return getUniqueModes().size();
+}
+
+void patPathJ::detChangePoints() {
+	short loc = 0;
+	change_points.clear();
+	list<TransportMode>::iterator mode_iter = modes.begin();
+	TransportMode prev_mode = *mode_iter;
+	++mode_iter;
+	for (; mode_iter != modes.end(); ++mode_iter) {
+		++loc;
+		if (prev_mode != *mode_iter) {
+//			DEBUG_MESSAGE(loc<<": "<<prev_mode<<"-"<<*mode_iter);
+			change_points.push_back(loc);
+		}
+		prev_mode=*mode_iter;
+	}
+}
+
+vector<TransportMode> patPathJ::getUnimodalModes() {
+	vector<TransportMode> segment_modes;
+
+	TransportMode current_mode;
+	list<TransportMode>::iterator mode_iter = modes.begin();
+	current_mode = *mode_iter;
+	++mode_iter;
+	segment_modes.push_back(current_mode);			
+	for (; mode_iter != modes.end(); ++mode_iter) {
+		if (*mode_iter != current_mode) {
+			segment_modes.push_back(current_mode);
+		}
+		current_mode = *mode_iter;
+	}
+
+return segment_modes;
+}
+vector<patReal> patPathJ::getIntermediateUnimodalLengths() {
+	vector<patReal> intermediate_length;
+	patReal current_length;
+	TransportMode current_mode;
+	list<TransportMode>::iterator mode_iter = modes.begin();
+	list<patArc*>::iterator arc_iter = listOfArcs.begin();
+
+	current_mode = *mode_iter;
+	current_length = 0;
+	++mode_iter;
+	++arc_iter;
+	for (; mode_iter != modes.end(); ++mode_iter) {
+		if (*mode_iter != current_mode) {
+			intermediate_length.push_back(current_length);
+			current_length = (*arc_iter)->getLength();
+		} else {
+			current_length += (*arc_iter)->getLength();
+		}
+		current_mode = *mode_iter;
+		++arc_iter;
+	}
+	intermediate_length.push_back(current_length - back()->getLength());
+	return intermediate_length;
+}
+short patPathJ::getNbrOfChangePoints() {
+	return change_points.size();
+}
+
+bool patPathJ::readShpFile(string file_path,
+		patNetworkElements* network, patError*& err) {
+	DBFHandle file_handler = DBFOpen(file_path.c_str(), "rb");
+	int line_counts = DBFGetRecordCount(file_handler);
+	if (line_counts == 0) {
+		WARNING("empty path.");
+		return false;
+	}
+	list<int> listOfArcsOSMIds;
+	list<string> listofArcsModes;
+
+	short int edge_id_index = DBFGetFieldIndex(file_handler, "edge_id");
+	short int path_id_index = DBFGetFieldIndex(file_handler, "path_id");
+	short int source_id_index = DBFGetFieldIndex(file_handler, "source");
+	short int target_id_index = DBFGetFieldIndex(file_handler, "target");
+	short int mode_index = DBFGetFieldIndex(file_handler, "mode");
+	vector<int> tmp_edges;
+	vector<int> tmp_nodes;
+	list<pair<int,int> > tmp_st;
+	DEBUG_MESSAGE(
+			"edge" << edge_id_index << "path" << path_id_index << "mode"
+					<< mode_index);
+	for (int i = 0; i < line_counts; ++i) {
+		TransportMode t_m;
+		int osm_id = DBFReadIntegerAttribute(file_handler, i, edge_id_index);
+		string mode = DBFReadStringAttribute(file_handler, i, mode_index);
+		DEBUG_MESSAGE(osm_id << "," << mode);
+		if (mode == "BUS") {
+			t_m = BUS;
+		} else if (mode == "CAR") {
+			t_m = CAR;
+		} else if (mode == "WALK") {
+			t_m = WALK;
+		} else if (mode == "TRAIN") {
+			t_m = TRAIN;
+		} else if (mode == "BIKE") {
+			t_m = BIKE;
+		} else {
+			WARNING("not recognized transport mode" << mode);
+			return false;
+		}
+		patWay* a_way = network->getProcessedWay(osm_id);
+		if (a_way == NULL) {
+			WARNING("wrong way id" << osm_id);
+			return false;
+		}
+		const list<patArc*>* the_arc_list = a_way->getListOfArcs(false);
+		DEBUG_MESSAGE("way length: " << the_arc_list->size())
+		for (list<patArc*>::const_iterator arc_iter = the_arc_list->begin();
+				arc_iter != the_arc_list->end(); ++arc_iter) {
+			listOfArcs.push_back(*arc_iter);
+
+			modes.push_back(t_m);
+		}
+
+	}
+	return true;
+}
+void patPathJ::setUnimodalTransportMode(TransportMode m){
+	modes.clear();
+	modes.push_back(m);
+}
+
+void patPathJ::assignModeForNoInformation(){
+	modes.clear();
+	if(modes.empty()){
+		setUnimodalTransportMode(TransportMode(CAR));
+	}
 }

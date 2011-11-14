@@ -11,6 +11,8 @@
 #include "patOdJ.h"
 
 
+#include "patTransportMode.h"
+#include "patNetworkElements.h"
 struct path_attributes{
 	patULong leftTurn;
 	patULong rightTurn;
@@ -48,6 +50,12 @@ friend bool operator<(const patPathJ& path1, const patPathJ& path2) ;
   *@param theArc arc to be added
   */
    void addArcToFront(patArc* theArc);
+   /**
+   *Add an arc to the front of listOfArcs
+   *@param theArc arc to be added.
+   *@param t_m the transport mode.
+   */
+   void addArcToBack(patArc* theArc, TransportMode t_m);
 
   /**
   *Add an arc to the back of listOfArcs
@@ -135,6 +143,7 @@ void calTurns(patNetwork* theNetwork);
   patArc* front();
   patArc* back2();
   patBoolean isValidPath(vector<patGpsPoint>* gpsSequence);
+  bool isValidPath();
 patReal computePointDDRRaw(map<patArc*,patReal>* currLinkDDR);
 patBoolean append(list<patArc*>* newSeg);
 patBoolean append(patPathJ* newSeg);
@@ -143,7 +152,8 @@ patULong endNodeUserId();
 	
  patULong getSubPath(patPathJ* newPath, patNode* startNode, patNode* endNode);
 patBoolean containLoop();
-  list<patArc*>  getSeg(patArc* aArc, patArc* bArc);
+
+list<pair<patArc*, TransportMode> >   getSeg(patArc* aArc, patArc* bArc);
 	
 	patReal getPerPrimaryLinkRd();
 	patReal getPerTrunkLinkRd();
@@ -156,9 +166,71 @@ patBoolean containLoop();
 	patReal getPerPrimaryRd();
 	patReal getPerTrunkRd();
 	patReal getPerMotorwayRd();
+	patBoolean empty();
+
+	/**
+	 * Multi-modal path definition
+	 */
+	patPathJ(
+			list<pair<patArc*, TransportMode> > theListOfArcs);
+	/**
+	 * Get multimodal path segs;
+	 * @param aArc Begin arc.
+	 * @param bArc End arc.
+	 * @return list of arcs with modes;
+	 */
+	list<pair<patArc*, TransportMode> >  getMultimodalSeg(patArc* aArc, patArc* bArc);
+
+	/**
+	 * Determine whether the path is unimodal or not.
+	 * @return true if it is unimodal; false otherwise;
+	 */
+	bool isUniModal();
+
+	/**
+	 * Get the set of modes.
+	 * @return The set of modes.
+	 */
+	set<TransportMode> getUniqueModes();
+
+	/**
+	 * Get the number of modes.
+	 * @return The number of modes.
+	 */
+	short getNbrOfUniqueModes();
+	/**
+	 *
+	 * Determine the change points for multimodal path;
+	 */
+	void detChangePoints();
+
+	/**
+	 * Get the number of change points;
+	 * @return The number of change points.
+	 */
+	short getNbrOfChangePoints();
+	void assignModeForNoInformation();
+	void setUnimodalTransportMode(TransportMode m);
+	  /**
+	   * Get unimodal intermediate path segments' length
+	   */
+	  vector<patReal> getIntermediateUnimodalLengths();
+
+	  /**
+	   * Get modes of each unimodal segment;
+	   */
+	  vector<TransportMode> getUnimodalModes();
+	/**
+	 * Read a path from shape files .shp and .dbf.
+	 */
+	bool readShpFile(string file_path, patNetworkElements* network,patError*& err);
+	bool getArcsFromOSMIds(patNetworkElements* network, patError*& err);
+
 
   protected:
   list<patArc*> listOfArcs ;
+	list<TransportMode> modes;
+	vector<short> change_points;
   patOdJ* od ;
   patString name;
   patULong Id;

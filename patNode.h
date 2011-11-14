@@ -59,6 +59,8 @@ friend class patNetworkElements; //added by Jingmin
      @param lat Latitude of the node
      @param lon Longitude of the node
    */
+		  patArc* getOutgoingArc(patULong down_node_id);
+
   patNode(patULong theId, patString theName, patReal lat, patReal lon,struct node_attributes theAttr) ;
   patNode(patULong theId,patReal lat, patReal lon) ;
 

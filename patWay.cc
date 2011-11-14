@@ -8,7 +8,7 @@
 #include "patWay.h"
 #include "patPostGreSQLConnector.h"
 #include "patDisplay.h"
-
+#include "patNetworkElements.h"
 map<patString, set<patString> > patWay::car_include_rules;
 map<patString, set<patString> > patWay::car_exclude_rules;
 map<patString, set<patString> > patWay::bike_include_rules;
@@ -34,7 +34,7 @@ patBoolean patWay::isHighway() const {
 	}
 }
 
-signed short int  patWay::isOneway() const {
+signed short int patWay::isOneway() const {
 	map<patString, patString>::const_iterator find_oneway = attributes.find(
 			"oneway");
 	if (find_oneway == attributes.end()) {
@@ -52,7 +52,7 @@ signed short int  patWay::isOneway() const {
 	}
 
 }
-signed short int  patWay::isCarOneWay() const {
+signed short int patWay::isCarOneWay() const {
 
 	if (!isWay(patWay::car_include_rules, patWay::car_exclude_rules)) {
 		return -2; //not car
@@ -60,14 +60,14 @@ signed short int  patWay::isCarOneWay() const {
 		return isOneway(); //"-1" reverse, "0" two ways, "1" one way;
 	}
 }
-signed short int  patWay::isBikeOneWay() const {
+signed short int patWay::isBikeOneWay() const {
 	if (!isWay(patWay::bike_include_rules, patWay::bike_exclude_rules)) {
 		return -2; //not car
 	} else {
 		return 0;
 	}
 }
-signed short int  patWay::isWalkOneWay() const {
+signed short int patWay::isWalkOneWay() const {
 	if (!isWay(patWay::bike_include_rules, patWay::bike_exclude_rules)) {
 		return -2; //not car
 	} else {
@@ -86,7 +86,8 @@ patString patWay::getHighwayType() const {
 }
 patString patWay::getTagValue(patString tag_key) const {
 
-	map<patString, patString>::const_iterator find_tag = attributes.find(tag_key);
+	map<patString, patString>::const_iterator find_tag = attributes.find(
+			tag_key);
 	if (find_tag == attributes.end()) {
 		return "";
 	} else {
@@ -198,7 +199,7 @@ void patWay::initiateNetworkTypeRules() {
 	DEBUG_MESSAGE("walk include rules:"<<walk_include_rules.size());
 	DEBUG_MESSAGE("walk exclude rules:"<<walk_exclude_rules.size());
 }
-const list<patArc*>* patWay::getListOfArcs(patBoolean reverse) const {
+const list<patArc*>* patWay::getListOfArcs(bool reverse) const {
 	if (reverse) {
 		return &reverse_arcs;
 	} else {
@@ -228,3 +229,64 @@ patWay::~patWay() {
 	// TODO Auto-generated destructor stub
 }
 
+patBoolean patWay::readFromNodesIds(patNetworkElements* network,
+		list<patULong> the_list_of_nodes_ids, patError*& err) {
+
+	if (the_list_of_nodes_ids.size() <= 1) {
+		DEBUG_MESSAGE("no enough node"<<the_list_of_nodes_ids.size());
+		return patFALSE;
+	}
+	list<patULong>::iterator node_iter = the_list_of_nodes_ids.begin();
+	patULong up_node_id = *node_iter;
+	patULong down_node_id;
+	patNode* up_node = network->getNode(up_node_id);
+	patNode* down_node;
+	node_iter++;
+
+	patULong wrong_arc_counts = 0;
+	for (; node_iter != the_list_of_nodes_ids.end(); ++node_iter) {
+		down_node_id = *node_iter;
+		down_node = network->getNode(down_node_id);
+
+		if(getId()==191887){
+				DEBUG_MESSAGE(down_node_id);
+		}
+
+		if (up_node == NULL || down_node == NULL) {
+			//WARNING("Nodes "<<up_node_id<<" or "<<down_node_id<<"not found;");
+			wrong_arc_counts++;
+		} else {
+			patArc* new_arc = up_node->getOutgoingArc(down_node_id);
+			if (new_arc == NULL) {
+				new_arc = network->addArc(up_node, down_node, this, err);
+			}
+
+			if (new_arc != NULL) {
+				appendArc(new_arc);
+			}
+
+			patArc* new_arc_reverse = down_node->getOutgoingArc(up_node_id);
+
+			if (new_arc_reverse == NULL) {
+				new_arc_reverse = network->addArc(down_node, up_node, this,
+						err);
+			}
+
+			if(getId()==191887){
+				DEBUG_MESSAGE(*up_node<<","<<*down_node);
+							DEBUG_MESSAGE(*new_arc_reverse);
+			}
+			if (new_arc_reverse != NULL) {
+				appendReverseArc(new_arc_reverse);
+			}
+		}
+		up_node = down_node;
+		up_node_id = down_node_id;
+	}
+	if (wrong_arc_counts>0){
+		return false;
+	}
+	else{
+		return true;
+	}
+}

@@ -3,7 +3,9 @@
 #include "patErrMiscError.h"
 #include "patArcTransition.h"
 #include <xmlwrapp/xmlwrapp.h>
-
+#include "dataStruct.h"
+#include "patTransportMode.h"
+#include "patTrafficModelComplex.h"
 patNBParameters::patNBParameters(patString fname)
 {
 	 
@@ -28,13 +30,9 @@ patBoolean patNBParameters::readFile(patString fileName,patError*& err){
 DEBUG_MESSAGE("parsing config file:"<<fileName);
 	xml::init xmlinit ;  
   
-DEBUG_MESSAGE("OK0");
   xml::tree_parser parser(fileName.c_str(),true); 
-DEBUG_MESSAGE("OK1");
   xml::document &doc = parser.get_document(); 
-DEBUG_MESSAGE("OK2");
   doc.save_to_file ("t.xml", 0);
-DEBUG_MESSAGE("OK3");
   if (!parser) {
     stringstream str ;
     str << "Error while parsing " << fileName ;
@@ -43,12 +41,9 @@ DEBUG_MESSAGE("OK3");
     return patFALSE ;
   }
 
-	DEBUG_MESSAGE("OK4");
   xml::node theRoot = doc.get_root_node() ;
 	
-  DEBUG_MESSAGE("Node: " << theRoot.get_name()) ;
   xml::node::node_type theType = theRoot.get_type() ;
-  DEBUG_MESSAGE("Node type: " << theType) ;
 	
 	xml::nodes_view modules(theRoot.elements("module"));
 	for(xml::nodes_view::iterator mIter = modules.begin();
@@ -62,7 +57,6 @@ DEBUG_MESSAGE("OK3");
 		}
 		else{
 			patString moduleName(attrIter1->get_value());		
-			DEBUG_MESSAGE("module:"<<moduleName);
 			xml::nodes_view params(mIter->elements("param"));
 			patULong k=0;
 			for(xml::nodes_view::iterator pIter = params.begin();
@@ -84,19 +78,17 @@ DEBUG_MESSAGE("OK3");
 					patString pValue(attrIterV->get_value());						
 					patString pType(attrIterT->get_value());
 					
-					DEBUG_MESSAGE(pName<<", "<<pValue<<", "<<pType);
-					setParam(pName,pValue,pType);
+				setParam(pName,pValue,pType);
 				}
 	
 				
 			}
-	
-			DEBUG_MESSAGE("there are "<<k<<" params");
-			
+
 	
 		}
 		
 	}
+	setTrafficModelParam();
   return patTRUE ;
 }
 patBoolean patNBParameters::setParam(patString name,patString value,patString type){
@@ -106,8 +98,50 @@ patBoolean patNBParameters::setParam(patString name,patString value,patString ty
 	}
 	return patFALSE;
 }
+patBoolean patNBParameters::setTrafficModelParam(){
+	TrafficModelParam car_param;
+	getParam(patString("CARw"),&car_param.w);
+	getParam(patString("CARlambda"),&car_param.lambda);
+	getParam(patString("CARmu"),&car_param.mu);
+	getParam(patString("CARsigma"),&car_param.sigma);
+	patTrafficModelComplex::tm_params[CAR]=car_param;
 
+	TrafficModelParam BUS_param;
+	getParam(patString("BUSw"),&BUS_param.w);
+	getParam(patString("BUSlambda"),&BUS_param.lambda);
+	getParam(patString("BUSmu"),&BUS_param.mu);
+	getParam(patString("BUSsigma"),&BUS_param.sigma);
+	patTrafficModelComplex::tm_params[BUS]=BUS_param;
 
+	TrafficModelParam WALK_param;
+	getParam(patString("WALKw"),&WALK_param.w);
+	getParam(patString("WALKlambda"),&WALK_param.lambda);
+	getParam(patString("WALKmu"),&WALK_param.mu);
+	getParam(patString("WALKsigma"),&WALK_param.sigma);
+	patTrafficModelComplex::tm_params[WALK]=WALK_param;
+
+	TrafficModelParam BIKE_param;
+	getParam(patString("BIKEw"),&BIKE_param.w);
+	getParam(patString("BIKElambda"),&BIKE_param.lambda);
+	getParam(patString("BIKEmu"),&BIKE_param.mu);
+	getParam(patString("BIKEsigma"),&BIKE_param.sigma);
+	patTrafficModelComplex::tm_params[BIKE]=BIKE_param;
+
+	TrafficModelParam TRAIN_param;
+	getParam(patString("TRAINw"),&TRAIN_param.w);
+	getParam(patString("TRAINlambda"),&TRAIN_param.lambda);
+	getParam(patString("TRAINmu"),&TRAIN_param.mu);
+	getParam(patString("TRAINsigma"),&TRAIN_param.sigma);
+	patTrafficModelComplex::tm_params[TRAIN]=TRAIN_param;
+
+	TrafficModelParam METRO_param;
+	getParam(patString("METROw"),&METRO_param.w);
+	getParam(patString("METROlambda"),&METRO_param.lambda);
+	getParam(patString("METROmu"),&METRO_param.mu);
+	getParam(patString("METROsigma"),&METRO_param.sigma);
+	patTrafficModelComplex::tm_params[METRO]=METRO_param;
+
+}
 patBoolean patNBParameters::getParam(patString name, patReal* value){
 	map<patString, pair<patString,patString> >::iterator pIter = params.find(name);
 	if (pIter==params.end()||pIter->second.second != "float"){

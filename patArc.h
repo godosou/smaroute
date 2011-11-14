@@ -56,7 +56,6 @@ friend class patMapMatchingV2;//added by Jingmin
 friend class patMapMatchingRoute;//added by Jingmin
 friend class patStreetSegment;//added by Jingmin
 friend class patReadPathFromKML;//added by Jingmin
-friend class patMapMatchingRoute;//added by Jingmin
 friend class patNetworkElements;//add by Jingmin
 friend bool operator<(const patPathJ& aPath, const patPathJ& bPath);//add by Jingmin
 friend ostream& operator<<(ostream& str,  patMapMatchingRoute& x);
@@ -104,6 +103,8 @@ patULong computeTurn(patArc* downArc,patNetwork* theNetwork);
    patNode* getUpNode() const;
    patNode* getDownNode() const;
   patReal calHeading(patNetwork* theNetwork, patError*& err) ;
+  patReal patArc::calHeading();
+
  protected:
   patReal frozenGeneralizedCost ;
   patULong userId ;

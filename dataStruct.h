@@ -8,11 +8,14 @@
  */
 #ifndef dataStruct_h
 #define dataStruct_h
-
+#include <vector>
+#include "patTransportMode.h"
 #include "patType.h";
 struct gps_params{
-	patULong time_diff;
+	patReal time_diff;
 	
+	patReal time_prev;
+	patReal time_curr;
 	patReal max_v_inter;
 	patReal p_0;
 	
@@ -52,6 +55,18 @@ struct network_params{
 	
 	patReal prev_ddr;
 	patULong a_total;
+	vector<patReal> intermediate_lengths;
+	vector<TransportMode> transport_modes;
+
 	vector<patReal> t_w;
 };
+
+
+struct TrafficModelParam{
+	patReal w;
+	patReal lambda;
+	patReal sigma;
+	patReal mu;
+};
+
 #endif

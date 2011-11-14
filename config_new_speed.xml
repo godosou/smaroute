@@ -88,44 +88,44 @@
 	</module>
 	<module name="MultimodalMapMatching">
 		<!-- ===========Car travel model===== -->
-		<param name="CarW" value="1.0" type="float"/>
-		<param name="CarLAMBDA" value="1.0" type="float"/>
-		<param name="CarMU" value="1.0" type="float"/>
-		<param name="CarSIGMA" value="1.0" type="float"/>
+		<param name="CARw" value="0.42347086" type="float"/>
+		<param name="CARlambda" value="0.05676425" type="float"/>
+		<param name="CARmu" value="3.67190790" type="float"/>
+		<param name="CARsigma" value="0.39578792" type="float"/>
 		
 		<!-- ===========Bus travel model===== -->
-		<param name="BusW" value="1.0" type="float"/>
-		<param name="BusLAMBDA" value="1.0" type="float"/>
-		<param name="BusMU" value="1.0" type="float"/>
-		<param name="BusSIGMA" value="1.0" type="float"/>
+		<param name="BUSw" value="0.45" type="float"/>
+		<param name="BUSlambda" value="0.15" type="float"/>
+		<param name="BUSmu" value="2.95" type="float"/>
+		<param name="BUSsigma" value="0.53" type="float"/>
 		
 		
 		<!-- ===========Train travel model===== -->
-		<param name="TrainW" value="1.0" type="float"/>
-		<param name="TrainLAMBDA" value="1.0" type="float"/>
-		<param name="TrainMU" value="1.0" type="float"/>
-		<param name="TrainSIGMA" value="1.0" type="float"/>
+		<param name="TRAINw" value="0.27" type="float"/>
+		<param name="TRAINlambda" value="0.17" type="float"/>
+		<param name="TRAINmu" value="4.520" type="float"/>
+		<param name="TRAINsigma" value="0.54" type="float"/>
 		
 		
 		<!-- ===========Metro travel model===== -->
-		<param name="MetroW" value="1.0" type="float"/>
-		<param name="MetroLAMBDA" value="1.0" type="float"/>
-		<param name="MetroMU" value="1.0" type="float"/>
-		<param name="MetroSIGMA" value="1.0" type="float"/>
+		<param name="METROw" value="0.53" type="float"/>
+		<param name="METROlambda" value="0.12" type="float"/>
+		<param name="METROmu" value="3.40" type="float"/>
+		<param name="METROsigma" value="0.42" type="float"/>
 		
 		
 		<!-- ===========Walk travel model===== -->
-		<param name="WalkW" value="1.0" type="float"/>
-		<param name="WalkLAMBDA" value="1.0" type="float"/>
-		<param name="WalkMU" value="1.0" type="float"/>
-		<param name="WalkSIGMA" value="1.0" type="float"/>
+		<param name="WALKw" value="0.36" type="float"/>
+		<param name="WALKlambda" value="0.17" type="float"/>
+		<param name="WALKmu" value="5.08" type="float"/>
+		<param name="WALKsigma" value="2.21" type="float"/>
 		
 		
 		<!-- ===========Bike travel model===== -->
-		<param name="BikeW" value="1.0" type="float"/>
-		<param name="BikeLAMBDA" value="1.0" type="float"/>
-		<param name="BikeMU" value="1.0" type="float"/>
-		<param name="BikeSIGMA" value="1.0" type="float"/>
+		<param name="BIKEw" value="0.40" type="float"/>
+		<param name="BIKElambda" value="0.10" type="float"/>
+		<param name="BIKEmu" value=" 2.90" type="float"/>
+		<param name="BIKEsigma" value="0.31" type="float"/>
 	
 	</module>
 <!-- ====================Path Sampling============================== -->
@@ -183,7 +183,7 @@
 		<param name="goStraightPenalty" value="20" type="float"/>
 		<param name="rightTurnPenalty" value="15" type="float"/>
 		<param name="stopPenalty" value="5" type="float"/>
-		<param name="nbrOfIntegrationCalls" value="2000" type="int"/>
+		<param name="nbrOfIntegrationCalls" value="10000" type="int"/>
 		<param name="integrationMethod" value="miser" type="string"/>
 		
 	</module>
@@ -197,7 +197,7 @@
 	<module name="global">
 
 		<param name="randomSeed" value="471221" type="int"/>
-		<param name="dataDirectory" value="data/5451/" type="string"/>
+		<param name="dataDirectory" value="data/all data" type="string"/>
 		<param name="resultPath" value="/Users/jchen/Documents/Project/biogeme/newbioroute/result/" type="string"/>
 	</module>
 	

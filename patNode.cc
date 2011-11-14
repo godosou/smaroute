@@ -94,3 +94,12 @@ patIterator<patULong>* patNode::getSuccessors() {
 patULong patNode::getUserId() const {
   return userId ;
 }
+patArc* patNode::getOutgoingArc(patULong down_node_id){
+	map<patULong, patArc*>::iterator find = outgoingArcs.find(down_node_id);
+	if (find==outgoingArcs.end()){
+		return NULL;
+	}
+	else{
+		return find->second;
+	}
+}

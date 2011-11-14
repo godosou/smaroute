@@ -12,10 +12,11 @@
 #include "patType.h"
 #include <map>
 #include <pqxx/pqxx>
-
+#include <list>
+#include "patError.h"
 using namespace pqxx;
 using namespace std;
-
+class patNetworkElements;
 struct pt_info{
 	patString type; /*< train, bus,...*/
 	patString route; /*< route number*/
@@ -38,7 +39,7 @@ public:
 	signed short int  isBikeOneWay() const;
 	signed short int  isWalkOneWay() const;
 	patString getTagValue(patString tag_key) const;
-
+	patBoolean readFromNodesIds(patNetworkElements* network, list<patULong> the_list_of_nodes_ids, patError*& err);
 	patString getHighwayType() const;
 	patBoolean isHighway() const;
 	patBoolean isHighway(patString highway_type);
@@ -53,7 +54,7 @@ public:
 	 * return pointer to the last node;
 	 */
 	patNode* getDownNode();
-	const list<patArc*>* getListOfArcs(patBoolean reverse) const;
+	const list<patArc*>* getListOfArcs(bool reverse=false) const;
 	static void initiateNetworkTypeRules();
 	virtual ~patWay();
 	static map<patString,set<patString> > car_include_rules;

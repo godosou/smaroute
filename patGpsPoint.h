@@ -58,6 +58,7 @@ friend bool operator<(const patGpsPoint& g1, const patGpsPoint& g2);
         map<patString, patReal>* theAlgoParams) ;
 	 patReal distanceTo( const  patNode* theNode)  ;
 	 patULong getTimeStamp() const;
+
 	map<char*, patReal> distanceTo(  patGeoCoordinates* startCoord, patGeoCoordinates* nextCoord) ;
 	void genLinkDDR( patGpsPoint* prevGpsPoint, patNetwork* theNetwork)  ; 
 	void genLinkDDR( patNetwork* theNetwork)  ; 
@@ -74,6 +75,7 @@ friend bool operator<(const patGpsPoint& g1, const patGpsPoint& g2);
 	patReal measureDDR( patReal theDistance) ;
 	patReal arcHeading(const patGeoCoordinates* startCoord,const patGeoCoordinates* nextCoord) ;
 	patReal getSpeed() ;
+	patBoolean detLinkDDR(patArc* theArc, patNode* upNode, patNode* downNode);
 	patBoolean detLinkDDR(patArc* theArc, patULong upNodeId,patULong downNodeId,patNetwork* theNetwork);
 	patBoolean detLinkDDR(patArc* theArc,patNetwork* theNetwork);
 	void genSegmentDDR(patGpsPoint* prevGpsPoint,patNetwork* theNetwork, vector< list <  pair<patArc*,patULong> > >* adjList);

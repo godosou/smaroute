@@ -5,9 +5,11 @@ include  $(MAKEHOME)/general.mk
 
 
 
+#TARGET = CheckDatabase
 TARGET = routeChoice_Jingmin
 
 SOURCE =	patCalculateProbaForPaths.cc\
+			patReadPathFromShp.cc\
 			patNetworkElements.cc\
 			patGeoBoundingBox.cc\
 			patNetworkUnimodal.cc\
@@ -79,7 +81,7 @@ bioroute.o: bioroute.cc
 	$(CC) -c  $(CCNOOPT) $< -o $@
 
 $(TARGET): $(OBJ) $(LIBFILE) 
-	$(CC) $(LDFLAGS) -o $(TARGET) $(LIB_PATH)  $(OBJ) $(LIB) `xmlwrapp-config --libs` $(LIB_PATH) $(LIB)   -lpqxx -lpq -lgsl -lgslcblas -lm
+	$(CC) $(LDFLAGS) -o $(TARGET) $(LIB_PATH)  $(OBJ) $(LIB) `xmlwrapp-config --libs` $(LIB_PATH) $(LIB)  -lshp -lpqxx -lpq -lgsl -lgslcblas -lm
 	echo $(TARGET) has been built
 
 clean:

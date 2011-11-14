@@ -174,10 +174,11 @@ patReal patPathProbaAlgoV4::run_ts(patString algoType){
 	if(probaPath==0.0){
 		return 0.0;
 	}
+	//DEBUG_MESSAGE(gpsSequence->size());
 	for(patULong j = 1;
 		j < gpsSequence->size();
 		++j){
-		//DEBUG_MESSAGE("point "<<j);
+	//	DEBUG_MESSAGE("point "<<j);
 		calPointProba(algoType,j);
 		if(proba[j] == 0.0){
 			DEBUG_MESSAGE("algo:"<<algoType<<"zero probability at ["<<(j+1)<<"]"<<gpsSequence->at(j)->getTimeStamp()<<" total gps:"<<gpsSequence->size());
@@ -192,7 +193,7 @@ patReal patPathProbaAlgoV4::run_ts(patString algoType){
 
 		probaPath  *= proba[j];
 	}
-	//DEBUG_MESSAGE("path proba"<<probaPath);
+	DEBUG_MESSAGE("path proba"<<probaPath);
 	
 	return probaPath;
 }
@@ -225,9 +226,9 @@ patReal patPathProbaAlgoV4::calPointProba(patString algoType,patULong j){
 	}
 	
 	if (j>0){
-		//DEBUG_MESSAGE(proba[j]<<","<<getPointSimpleDDR(j-1));
-		proba[j]=proba[j]/getPointSimpleDDR(j-1);
-		//DEBUG_MESSAGE(j+1<<","<<proba[j]);
+		DEBUG_MESSAGE(proba[j]<<","<<getPointSimpleDDR(j-1));
+		proba[j]=proba[j]/getPointSimpleDDR(j-1);//normalization
+		DEBUG_MESSAGE(j+1<<","<<proba[j]);
 	}
 	//if(backLength>0.0){
 	//	proba[j] /= patPower(backLength/1000, patNBParameters::the()->pointProbaPower);
@@ -257,6 +258,7 @@ patReal patPathProbaAlgoV4::getPointSimpleDDR(patULong g){
 			pointDDRSum+=arcIter->first->getLength() * arcIter->second;
 		}
 	}	
+	//DEBUG_MESSAGE(pointDDRSum);
 	if (pointDDRSum==0.0){
 		DEBUG_MESSAGE("zero point ddr sum at point"<<g);
 	}
@@ -276,7 +278,8 @@ patReal patPathProbaAlgoV4::calPointArcProba(patString algoType,patULong j,pair<
 	for(map<patArc*,patReal>::iterator arcIter = prevLinkDDR->begin(); 
 					arcIter != prevLinkDDR->end();
 					++arcIter){ 
-		list<patArc*> interSeg = path->getSeg(arcIter->first,arcDDR.first);
+
+		list<pair<patArc*, TransportMode> >  interSeg = path->getSeg(arcIter->first,arcDDR.first);
 		if(interSeg.empty()){
 			continue;
 		}

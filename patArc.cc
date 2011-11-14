@@ -28,7 +28,6 @@ patArc::patArc(patULong theId,
   attributes(theAttr),
   upNode(theUpNode),
   downNode(theDownNode),
-  length(0.0),
   generalizedCost(0.0)  {
 
   if ((theUpNode == NULL) || (theDownNode == NULL)) {
@@ -38,7 +37,8 @@ patArc::patArc(patULong theId,
   }
   upNodeId = theUpNode->userId ;
   downNodeId = theDownNode->userId ;
-
+  length = theUpNode->geoCoord.distanceTo(theDownNode->geoCoord);
+  calHeading();
 }
 
 
@@ -46,9 +46,9 @@ patArc::patArc(patULong theId, patNode* theUpNode, patNode* theDownNode):
 		userId(theId),
 		upNode(theUpNode),
 		downNode(theDownNode),
-	length(0.0),
 	generalizedCost(0.0){
-
+	  length = theUpNode->geoCoord.distanceTo(theDownNode->geoCoord);
+	  calHeading();
 }
 patArc::patArc(patULong theId, 
 	       patNode* theUpNode, 
@@ -59,8 +59,7 @@ patArc::patArc(patULong theId,
   internalId(patBadId),
   name(theName),
    upNode(theUpNode),
-   downNode(theDownNode),
-  length(0.0) {
+   downNode(theDownNode) {
   if ((theUpNode == NULL) || (theDownNode == NULL)) {
     err = new patErrNullPointer("patNode") ;
     WARNING(err->describe()) ;
@@ -68,6 +67,8 @@ patArc::patArc(patULong theId,
   }
   upNodeId = theUpNode->userId ;
   downNodeId = theDownNode->userId ;
+  length = theUpNode->geoCoord.distanceTo(theDownNode->geoCoord);
+  calHeading();
 }
 void patArc::calPriority(){
 	if(attributes.type == "steps"){
@@ -129,6 +130,37 @@ void patArc::setLength(patReal l) {
   generalizedCost = l ;
 }
 
+patReal patArc::calHeading(){
+
+
+  patGeoCoordinates startCoord = upNode->geoCoord;
+  patGeoCoordinates nextCoord = downNode->geoCoord;
+	patReal lng1=startCoord.longitudeInRadians;
+	patReal lat1=startCoord.latitudeInRadians;
+	patReal lng2=nextCoord.longitudeInRadians;
+	patReal lat2=nextCoord.latitudeInRadians;
+
+	patReal numerator = sin(lat1)*sin(lng2-lng1);
+	patReal denumerator = sin(lat2)*cos(lat1)-cos(lat2)*sin(lat1)*cos(lng2-lng1);
+
+	patReal theArcHeading = atan(numerator/denumerator)*180/pi;
+
+	if(denumerator>0){
+		theArcHeading+=360;
+	}
+	else{
+		theArcHeading+=180;
+	}
+	if (theArcHeading<0)
+	{
+		theArcHeading+=360;
+	}
+	if(theArcHeading>=360){
+		theArcHeading-=360;
+	}
+	attributes.heading = theArcHeading;
+	return theArcHeading;
+}
 patReal patArc::calHeading(patNetwork* theNetwork, patError*& err) {
 
 	patNode* theUpNode = theNetwork->getNodeFromUserId(upNodeId);
@@ -181,9 +213,9 @@ ostream& operator<<(ostream& str, const patArc& x) {
       << " [" 
       << x.name 
       << "](" 
-      << x.upNodeId 
+      << x.upNode->getUserId()
       << "->" 
-      << x.downNodeId 
+      << x.downNode->getUserId()
       << ")" ;
   str << " length=" 
       << x.length << "m; " ;

@@ -13,7 +13,7 @@
 
 #include "patGpsPoint.h"
 #include "patType.h"
-
+#include "dataStruct.h"
 class patTrafficModel {
 protected:
 	patReal constValue;
@@ -23,8 +23,11 @@ public:
 	
 	void setParams(struct gps_params tgp, struct network_params tnp);
 	patReal getConstant(void);
-	virtual patReal integral(patReal ell_curr, patReal ell_prev)=0;
+	virtual patReal integral(patReal ell_curr, TrafficModelParam tm_param)=0;
+	virtual patReal integral(patReal a, patReal b, patReal c)=0;
+	virtual patReal integral(patReal ell_prev, patReal ell_curr)=0;
 	virtual void initiate()=0;
+
 };
 #endif
 
