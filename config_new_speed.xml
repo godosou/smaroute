@@ -132,9 +132,9 @@
     
 	<module name="SensivitityAnalysis">
 
-		<param name="doSensitivityAnalysis" value="0" type="int"/>
-        <param name="SAPathFolder" value="result/all_data_new_threshold/" type="string"/>
-        <param name="SAResultPath" value="result/SA/minPointDDR/" type="string"/>
+		<param name="doSensitivityAnalysis" value="1" type="int"/>
+        <param name="SAPathFolder" value="result/5451_all/" type="string"/>
+        <param name="SAResultPath" value="result/5451_all/" type="string"/>
         <param name="SAType" value="minPointDDR" type="string"/>
         <!-- networkAccuracy or minPointDDR -->
 
@@ -196,9 +196,10 @@
 
 	<module name="global">
 
-		<param name="randomSeed" value="471221" type="int"/>
-		<param name="dataDirectory" value="data/all data" type="string"/>
-		<param name="resultPath" value="/Users/jchen/Documents/Project/biogeme/newbioroute/result/" type="string"/>
+		<param name="randomSeed" value="471221" type
+        ="int"/>
+		<param name="dataDirectory" value="data/5451" type="string"/>
+		<param name="resultPath" value="/Users/jchen/Documents/Project/biogeme/newbioroute/result/5451_all" type="string"/>
 	</module>
 	
 	<module name="biogemeInput">

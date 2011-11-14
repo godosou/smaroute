@@ -5,8 +5,8 @@ include  $(MAKEHOME)/general.mk
 
 
 
-#TARGET = CheckDatabase
-TARGET = routeChoice_Jingmin
+TARGET = CheckDatabase
+#TARGET = routeChoice_Jingmin
 
 SOURCE =	patCalculateProbaForPaths.cc\
 			patReadPathFromShp.cc\

@@ -18,7 +18,7 @@
 #include "patCalculateProbaForPaths.h"
 #include "patNBParameters.h"
 int main(int argc, char *argv[]) {
-	patString gps_file="data/5451/5451.csv";
+	patString gps_file="/Users/jchen/Documents/Project/biogeme/newbioroute/data/5451/5451.csv";
 
 	patGeoBoundingBox bb = patGeoBoundingBox(6.56, 46.53, 6.58, 46.51);
 	//DEBUG_MESSAGE(bb.toString());
@@ -36,18 +36,18 @@ int main(int argc, char *argv[]) {
 	DEBUG_MESSAGE("Car network size" << carNetwork.size());
 	DEBUG_MESSAGE("finished");
 	patTripParser theTrip=patTripParser();
+
 	theTrip.readGPSFromFile(gps_file,err);
 
 	set<patPathJ> a_path_set;
 	patPathJ new_path = patPathJ();
-	patReadPathFromShp().read(&new_path, string("network/path.dbf"), &network, err);
+	patReadPathFromShp().read(&new_path, string("/Users/jchen/Documents/Project/biogeme/newbioroute/network/path.dbf"), &network, err);
 	new_path.detChangePoints();
 	DEBUG_MESSAGE("path arcs" << new_path.nbrOfArcs());
 	DEBUG_MESSAGE("path length" << new_path.getPathLength());
 	DEBUG_MESSAGE("change points:" << new_path.getNbrOfChangePoints());
 	DEBUG_MESSAGE(new_path);
 	a_path_set.insert(new_path);
-
 	DEBUG_MESSAGE("GPS POINTS: "<<  theTrip.getGpsSequence()->size());
 	patCalculateProbaForPaths pathCalculation(NULL, theTrip.getGpsSequence());
 	pathCalculation.fromPaths(a_path_set);
@@ -55,5 +55,6 @@ int main(int argc, char *argv[]) {
 	for (vector<patReal>::iterator iter=probas.begin(); iter!=probas.end(); ++iter) {
 		DEBUG_MESSAGE(*iter);
 	}
+	new_path.exportShpFiles( string("/Users/jchen/Documents/Project/biogeme/newbioroute/result/tmp_path"),&network,err);
 	return 1;
 }
