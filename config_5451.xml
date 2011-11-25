@@ -23,8 +23,8 @@
 		
 		<!-- =========select paths================= -->  
 		<param name="selectPathInversePercent" value="100.0" type="float"/>
-		<param name="selectPathCdfThreshold" value="1.0" type="float"/>
-		<param name="selectPathCte" value="cdf" type="string"/>
+		<param name="selectPathCdfThreshold" value="0.8" type="float"/>
+		<param name="selectPathCte" value="number" type="string"/>
 		<param name="algoInSelection" value="complex" type="string"/>
 		<param name="selectImportantDDRCdf" value="1.0" type="float"/>
 		<param name="minDomainSize" value="5" type="int"/>
@@ -52,7 +52,7 @@
 		<param name="maxSpeedAccuracy" value="200.0" type="float"/>
 		<param name="minNodeDDR" value="0.00001" type="float"/>
 		<param name="minArcDDR" value="0.0001" type="float"/>
-		<param name="pathLengthCeil" value="1.5" type="float"/>
+		<param name="pathLengthCeil" value="1.0" type="float"/>
 		<param name="maxHeadingGPSArc" value="60.0" type="float"/>
 		<param name="maxDistanceGPSArc" value="0.90" type="float"/>
 		<param name="maxDistanceGPSLoc" value="0.65" type="float"/>
@@ -80,9 +80,12 @@
 		
 		<param name="zoneRadius" value="500.0" type="float"/>
 		<param name="zoneTime" value="100.0" type="float"/>
-		<param name="maxDistanceRatioSP" value="2.0" type="float"/>
+		<param name="maxDistanceRatioSP" value="1.5" type="float"/>
+		
+        
+        <param name="minChangeLengthBackToTheSame" value="200.0" type="float"/>
 		<param name="" value=""/>
-		<param name="" value=""/>
+        
 		<param name="" value=""/>
 		
 	</module>
@@ -127,6 +130,23 @@
 		<param name="BIKEmu" value=" 2.90" type="float"/>
 		<param name="BIKEsigma" value="0.31" type="float"/>
 	
+    
+		<!-- ===========networks speed setting===== -->
+		<param name="walkNetworkMinSpeed" value="0" type="float"/>
+		<param name="walkNetworkMaxSpeed" value="10" type="float"/>
+		<param name="trainNetworkMinSpeed" value="15" type="float"/>
+		<param name="trainNetworkMaxSpeed" value="200" type="float"/>
+		<param name="busNetworkMinSpeed" value="8" type="float"/>
+		<param name="busNetworkMaxSpeed" value="100" type="float"/>
+		<param name="carNetworkMinSpeed" value="10" type="float"/>
+		<param name="carNetworkMaxSpeed" value="150" type="float"/>
+		<param name="bikeNetworkMinSpeed" value="10" type="float"/>
+		<param name="bikeNetworkMaxSpeed" value="35" type="float"/>
+        
+		<param name="minPathTravelTimeRatio" value="1.5" type="float"/>
+        
+        
+    
 	</module>
 <!-- ====================Path Sampling============================== -->
     
@@ -197,8 +217,8 @@
 	<module name="global">
 
 		<param name="randomSeed" value="471221" type="int"/>
-		<param name="dataDirectory" value="data/5451" type="string"/>
-		<param name="resultPath" value="/Users/jchen/Documents/Project/biogeme/newbioroute/result/5451_all" type="string"/>
+		<param name="dataDirectory" value="/Users/jchen/Documents/Project/biogeme/newbioroute/data/all data/done" type="string"/>
+		<param name="resultPath" value="/Users/jchen/Documents/Project/biogeme/newbioroute/result/" type="string"/>
 	</module>
 	
 	<module name="biogemeInput">

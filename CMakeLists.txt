@@ -25,6 +25,7 @@ find_package(PQXX)
 find_package(GSL)
 find_package(SHP)
 
+find_package(KML)
 SET(Boost_USE_STATIC_LIBS ON)
 SET(Boost_USE_MULTITHREAD OFF)
 include_directories("/usr/local/boost_1_46_1")
@@ -35,61 +36,13 @@ find_library(LIB_UTILS patUtils "${PROJECT_SOURCE_DIR}/../utils/")
 find_library(LIB_RANDOMNUMBER patRandomNumbers "${PROJECT_SOURCE_DIR}/../randomNumbers")
 find_library(LIB_PARAMETERS patParam "${PROJECT_SOURCE_DIR}/../parameters")
 find_library(LIB_XMLWRAPP xmlwrapp)
-set(LIB_EXTRA ${PQXX_LIBRARIES} ${SHP_LIBRARIES} ${GSLCBLAS_LIBRARIES} ${GSL_CONFIG_LIBS}
+set(LIB_EXTRA ${PQXX_LIBRARIES} ${SHP_LIBRARIES} ${KML_LIBRARIES} ${GSLCBLAS_LIBRARIES} ${GSL_CONFIG_LIBS}
      ${LIB_XMLWRAPP} ${LIB_UTILS} ${LIB_RANDOMNUMBER} ${LIB_PARAMETERS})
 
 #ADD_DEFINITIONS( "-g `xmlwrapp-config --cxxflags`") 
+add_subdirectory(Utilities)
+add_subdirectory(NetworkHandler)
+add_subdirectory(ShortestPath)
+add_subdirectory(MapMatching)
 
-add_executable(CheckDatabase CheckDatabase.cc
-    patCalculateProbaForPaths.cc 
-    patDisplay.cc
-			patReadPathFromShp.cc 
-			patNetworkElements.cc 
-			patGeoBoundingBox.cc 
-			patNetworkUnimodal.cc 
-			patNetworkCar.cc 
-			patWay.cc 
-			patPostGISDataType.cc 
-			patPostGreSQLConnector.cc 
-			patReadPathFromKML.cc 
-			patMapMatchingV2.cc 
-			patMapMatching.cc 
-			patMapMatchingRoute.cc 
-			patStreetSegment.cc 
-			patPathDevelop.cc 
-			patMeasurementModel.cc 
-			patTrafficModelComplex.cc 
-			patMeasurementModelV2.cc 
-			patTrafficModel.cc 
-			patGpsPoint.cc 
-			patTripParser.cc 
-			patPathSampling.cc 
-			patPathJ.cc 
-			patOdJ.cc 
-			patTraveler.cc 
-			patSample.cc 
-			patWriteBiogemeInput.cc 
-			patArc.cc 
-			patNode.cc 
-			patNetwork.cc 
-			patTrafficModelTriangular.cc 
-			patReadNetworkFromXml.cc 
-			patPathProbaAlgoV4.cc 
-			patWriteKML.cc 
-			patReadSample.cc 
-			patShortestPathAlgoDest.cc 
-			patShortestPathTreeDest.cc 
-			patShortestPathAlgoRange.cc 
-			patShortestPathTreeRange.cc 
-			patObservation.cc 
-			patDDR.cc 
-			patArcDDR.cc 
-			patPathDDR.cc 
-			patGenPathFromArcTranSet.cc 
-			patPath.cc 
-			patOd.cc 
-			patNBParameters.cc 
-			patTripGraph.cc 
-			patArcTransition.cc
-)
-target_link_libraries (CheckDatabase  ${LIB_EXTRA})
+#target_link_libraries (CheckDatabase  ${LIB_EXTRA})
