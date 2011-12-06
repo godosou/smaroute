@@ -6,16 +6,31 @@
  */
 
 #include "patRoadBase.h"
-
+#include "kml/dom.h"
+using kmldom::FolderPtr;
+using kmldom::KmlFactory;
+using kmldom::PlacemarkPtr;
+#include "patArc.h"
 patRoadBase::patRoadBase() {
-
+	m_length = 0.0;
 }
 
-void patRoadBase::setLength(bool the_length){
+void patRoadBase::setLength(bool the_length) {
 
-	length=the_length;
+	m_length = the_length;
 }
 patRoadBase::~patRoadBase() {
-	// TODO Auto-generated destructor stub
+
 }
 
+ FolderPtr patRoadBase::getKML(string mode) const {
+	KmlFactory* factory = KmlFactory::GetFactory();
+	FolderPtr road_folder = factory->CreateFolder();
+	list<const patArc*> arc_list = getArcList();
+	for (list<const patArc*>::iterator arc_iter = arc_list.begin();
+			arc_iter != arc_list.end(); ++arc_iter) {
+		road_folder->add_feature((*arc_iter)->getArcKML(mode));
+	}
+	return road_folder;
+
+}

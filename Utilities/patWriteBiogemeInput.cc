@@ -62,7 +62,7 @@ void patWriteBiogemeInput::computeMaxPathNumber(patError*& err){
 					for(map<patPathJ*, patPathSampling>::iterator pathIter = AllChoiceSet->begin();
 					pathIter!=AllChoiceSet->end();
 					++pathIter){
-						patULong curr=pathIter->second.getChoiceSet()->size();
+						unsigned long curr=pathIter->second.getChoiceSet()->size();
 						if(curr>maxPathNumber){
 							maxPathNumber=curr;
 						}
@@ -103,7 +103,7 @@ DEBUG_MESSAGE("Create " << fileName) ;
 	sampleFile << '\t' << "userId";
 	sampleFile << '\t' << "tripId";
 	//path spec
-	for (patULong alt = 1 ; alt <= maxPathNumber ; ++alt) {
+	for (unsigned long alt = 1 ; alt <= maxPathNumber ; ++alt) {
 		// First, the pathID
 		sampleFile << '\t' << "pathId" << alt ;
 		sampleFile << '\t' << "length" << alt ;
@@ -229,7 +229,7 @@ void patWriteBiogemeInput::writeSpecFile(const patString& fileName){
 	spec << "[Utilities]" << endl ;
 	spec << "// Id Name  Avail  linear-in-parameter expression (beta1*x1 + beta2*x2 + ... )" << endl ;
 	
-	for (patULong alt = 1 ; alt <= maxPathNumber ; ++alt) {
+	for (unsigned long alt = 1 ; alt <= maxPathNumber ; ++alt) {
 		spec << alt << '\t' ;// id
 		spec << "alt" << alt << '\t' ;//alt
 		spec << "avail" << alt << '\t' ;//avaiblability
@@ -309,13 +309,13 @@ void patWriteBiogemeInput::writeSpecFile(const patString& fileName){
 
 }
 struct observation{
-patULong id;
-patULong AggLast;
-patReal AggWeight;
-patReal ChoiceRP;
-patReal ChosenPathId;
-patULong Orig;
-patULong Dest;
+unsigned long id;
+unsigned long AggLast;
+double AggWeight;
+double ChoiceRP;
+double ChosenPathId;
+unsigned long Orig;
+unsigned long Dest;
 };
 void patWriteBiogemeInput::writeData(const patString& fileName){
 DEBUG_MESSAGE("Create " << fileName) ;
@@ -332,18 +332,18 @@ DEBUG_MESSAGE("Create " << fileName) ;
 		for(set<patObservation>::iterator obsIter = obs->begin();
 					obsIter!=obs->end();
 					obsIter++){
-				patULong i=0;
-				map<patPathJ*,vector<patReal> >* ddrs = const_cast<patObservation*>(&(*obsIter))->getPathDDRsReal();
-			map<patPathJ*,vector<patReal> >* ddrsNormalized = const_cast<patObservation*>(&(*obsIter))->getPathDDRsRealNormalized();
+				unsigned long i=0;
+				map<patPathJ*,vector<double> >* ddrs = const_cast<patObservation*>(&(*obsIter))->getPathDDRsReal();
+			map<patPathJ*,vector<double> >* ddrsNormalized = const_cast<patObservation*>(&(*obsIter))->getPathDDRsRealNormalized();
 			
 				if(ddrs->empty()){
 					DEBUG_MESSAGE("a null observation");
 					continue;
 				}
-				map<patPathJ*,vector<patReal> >::iterator endIter = ddrs->end();
+				map<patPathJ*,vector<double> >::iterator endIter = ddrs->end();
 				endIter--;
 				//DEBUG_MESSAGE("there are "<<ddrs->size()<<" paths");
-				for (map<patPathJ*,vector<patReal> >::iterator pathIter = ddrs->begin();
+				for (map<patPathJ*,vector<double> >::iterator pathIter = ddrs->begin();
 							pathIter!=ddrs->end();
 							pathIter++){
 						if(pathIter->second[0]==0.0){
@@ -369,7 +369,7 @@ DEBUG_MESSAGE("Create " << fileName) ;
 						
 						set<patPathJ*>* choiceSet = thePathSampling->getChoiceSet();
 						//DEBUG_MESSAGE("choice set size:"<<choiceSet->size());
-						patULong chosenRP = 1;
+						unsigned long chosenRP = 1;
 						
 						
 						for (set<patPathJ*>::iterator choiceIter = choiceSet->begin();
@@ -394,7 +394,7 @@ DEBUG_MESSAGE("Create " << fileName) ;
 						sampleFile<<'\t'<<const_cast<patTraveler*>(&(*travelerIter))->getId();//userid
 						sampleFile<<'\t'<<const_cast<patObservation*>(&(*obsIter))->getId();//userid
 						
-						patULong j=1;
+						unsigned long j=1;
 						for (set<patPathJ*>::iterator choiceIter = choiceSet->begin();
 								choiceIter!=choiceSet->end();
 							++choiceIter){
@@ -405,11 +405,11 @@ DEBUG_MESSAGE("Create " << fileName) ;
 								}
 							sampleFile<<'\t'<< pathAlter->getId();//path id
 							if(patNBParameters::the()->lengthUnit=="km"){
-								sampleFile<<'\t'<< pathAlter->getPathLength()/1000.0;//length
+								sampleFile<<'\t'<< pathAlter->getLenth()/1000.0;//length
 							
 							}
 							else{
-								sampleFile<<'\t'<< pathAlter->getPathLength();//length
+								sampleFile<<'\t'<< pathAlter->getLenth();//length
 							
 							}
 							sampleFile<<'\t'<< thePathSampling->getPathPS(pathAlter,err);

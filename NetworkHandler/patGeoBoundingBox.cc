@@ -13,8 +13,8 @@
 
 using namespace std;
 
-patGeoBoundingBox::patGeoBoundingBox( patReal tlat_top_lon,patReal tleft_top_lat,patReal tright_buttom_lon,
-		patReal tright_buttom_lat):
+patGeoBoundingBox::patGeoBoundingBox( double tlat_top_lon,double tleft_top_lat,double tright_buttom_lon,
+		double tright_buttom_lat):
 		left_top_lat(tleft_top_lat),
 		left_top_lon(tlat_top_lon),
 		right_buttom_lat(tright_buttom_lat),

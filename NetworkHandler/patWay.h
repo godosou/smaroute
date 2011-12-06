@@ -1,4 +1,3 @@
-
 /*
  * patWay.h
  *
@@ -14,71 +13,63 @@
 #include <pqxx/pqxx>
 #include <list>
 #include "patError.h"
+#include "patArcSequence.h"
 using namespace pqxx;
 using namespace std;
 class patNetworkElements;
-struct pt_info{
+struct pt_info {
 	patString type; /*< train, bus,...*/
 	patString route; /*< route number*/
-	patString name ;
-	map<patString,patString> attributes;
+	patString name;
+	map<patString, patString> attributes;
 };
 
-class patWay {
+class patWay : public patArcSequence{
 
 public:
 	patWay();
-	patWay(patULong the_way_id,map<patString, patString> the_attributes);
-	void appendArc(patArc* new_arc);
-	void appendReverseArc(patArc* new_arc);
-	patULong getId() const;
-	patULong getId();
-	signed short int  isOneway() const;
-	patBoolean isWay(map<patString,set<patString> >& include_rules,map<patString,set<patString> >& exclude_rules) const;
-	signed short int  isCarOneWay() const;
-	signed short int  isBikeOneWay() const;
-	signed short int  isWalkOneWay() const;
+	patWay(unsigned long the_way_id, map<patString, patString> the_attributes);
+
+	void appendArc(const patArc* new_arc);
+	void appendReverseArc(const patArc* new_arc);
+	unsigned long getId() const;
+	unsigned long getId();
+	signed short int isOneway() const;
+	bool isWay(map<patString, set<patString> >& include_rules
+			,map<patString, set<patString> >& exclude_rules) const;
+	signed short int isCarOneWay() const;
+	signed short int isBikeOneWay() const;
+	signed short int isWalkOneWay() const;
 	patString getTagValue(patString tag_key) const;
-	patBoolean readFromNodesIds(patNetworkElements* network, list<patULong> the_list_of_nodes_ids, patError*& err);
+	bool readFromNodesIds(patNetworkElements* network,
+			list<unsigned long> the_list_of_nodes_ids, patError*& err);
 	patString getHighwayType() const;
-	patBoolean isHighway() const;
-	patBoolean isHighway(patString highway_type);
-	void setId(patULong the_way_id);
-	static void loadRule(map<patString,set<patString> >& rule_map, patString key, patString value);
+	bool isHighway() const;
+	bool isHighway(patString highway_type);
+	void setId(unsigned long the_way_id);
+	static void loadRule(map<patString, set<patString> >& rule_map
+			, patString key, patString value);
 
-	/**
-	 * return pointer to the first node;
-	 */
-	patNode* getUpNode();
-	/**
-	 * return pointer to the last node;
-	 */
-	patNode* getDownNode();
-
-	/**
-	 * Get the length of the way.
-	 */
-	double getLength();
-	/**
-	 * Calculate the length of the way.
-	 */
-	double calLength();
-	const list<patArc*>* getListOfArcs(bool forward=true) const;
+	const list<const patArc*>* getArcListPointer(bool forward = true) const;
 	static void initiateNetworkTypeRules();
 	virtual ~patWay();
-	static map<patString,set<patString> > car_include_rules;
-	static map<patString,set<patString> > car_exclude_rules;
-	static map<patString,set<patString> > bike_include_rules;
-	static map<patString,set<patString> > bike_exclude_rules;
-	static map<patString,set<patString> > walk_include_rules;
-	static map<patString,set<patString> > walk_exclude_rules;
+	static map<patString, set<patString> > car_include_rules;
+	static map<patString, set<patString> > car_exclude_rules;
+	static map<patString, set<patString> > bike_include_rules;
+	static map<patString, set<patString> > bike_exclude_rules;
+	static map<patString, set<patString> > walk_include_rules;
+	static map<patString, set<patString> > walk_exclude_rules;
+
+
+	void setTags(map<string, string>& tags);
 protected:
-	map<patString,patString> attributes;
-	list<patArc*> arcs;
-	list<patArc*> reverse_arcs;
-	patULong way_id;
-	double length;
-	list<struct pt_info> pt_info_list;
+	map<patString, patString> m_tags;
+
+	map<patString, patString> m_attributes;
+	list<const patArc*> m_reverse_arcs;
+	unsigned long m_way_id;
+	double m_length;
+	list<struct pt_info> m_pt_info_list;
 };
 
 #endif /* PATWAY_H_ */

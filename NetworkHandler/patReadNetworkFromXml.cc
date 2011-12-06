@@ -15,8 +15,8 @@ patReadNetworkFromXml::patReadNetworkFromXml(patString fName) :
   fileName(fName), theNetwork(fName) {
 
 }
-patBoolean patReadNetworkFromXml::readFile(patError*& err) {
-	patReal networkScaler = 1;
+bool patReadNetworkFromXml::readFile(patError*& err) {
+	double networkScaler = 1;
 	if(patNBParameters::the()->doSimulation == 1){
 	
 		networkScaler = patNBParameters::the()->simNetworkScale;
@@ -31,7 +31,7 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
     str << "Error while parsing " << fileName ;
     err = new patErrMiscError(str.str()) ;
     WARNING(err->describe());
-    return patFALSE ;
+    return false ;
   }
 
 
@@ -54,7 +54,7 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
     theNodeTypes[theType]++ ;
 
     if (nodeName == "bounds") {
-      patReal minlat, maxlat, minlon, maxlon ;
+      double minlat, maxlat, minlon, maxlon ;
       
       xml::attributes attr = rootIter->get_attributes() ;
       xml::attributes::iterator i; 
@@ -87,15 +87,15 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 	      << "'" ;
 	  err = new patErrMiscError(str.str()) ;
 	  WARNING(err->describe());
-	  return patFALSE;
+	  return false;
 	}
       }
       theNetwork.setMapBounds(minlat, maxlat, minlon, maxlon) ;
     }
     else if (nodeName =="node") {
-      patULong id ;
-      patReal lat ;
-      patReal lon ;
+      unsigned long id ;
+      double lat ;
+      double lon ;
       patString name ;
       xml::attributes attr = rootIter->get_attributes() ;
       xml::attributes::iterator i; 
@@ -150,18 +150,18 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
       }
       
       patNode newNode(id,name,lat,lon,theAttr) ;
-      patBoolean success = theNetwork.addNode(newNode) ;
+      bool success = theNetwork.addNode(newNode) ;
       if (!success) {
 	stringstream str ;
 	str << "Node " << newNode << " not added to the network" ;
 	err = new patErrMiscError(str.str()) ;
 	WARNING(err->describe()) ;
-	return patFALSE;
+	return false;
       }
     }
     else if (nodeName == "od") {
-      patULong orig ;
-      patULong dest ;
+      unsigned long orig ;
+      unsigned long dest ;
       xml::attributes attr = rootIter->get_attributes() ;
       xml::attributes::iterator i; 
       for (i = attr.begin() ; i != attr.end() ; ++i) { 
@@ -181,9 +181,9 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 
     }
     else if (nodeName == "way") {
-      patULong id ;
-      patULong upNodeId ;
-      patULong downNodeId ;
+      unsigned long id ;
+      unsigned long upNodeId ;
+      unsigned long downNodeId ;
       patString theName ;
       xml::attributes attr = rootIter->get_attributes() ;
       xml::attributes::iterator i; 
@@ -198,8 +198,8 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 	} 
       }
 	  struct arc_attributes theAttr;
-      vector<patULong> nodes ;
-      patBoolean oneWay(patFALSE) ;
+      vector<unsigned long> nodes ;
+      bool oneWay(false) ;
       patString streetName ;
       xml::node::iterator linkIter ;
       for (linkIter = rootIter->begin() ; 
@@ -207,7 +207,7 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 	   ++linkIter) {
 	patString tagName(linkIter->get_name()) ;
 	if (tagName == "nd") {
-	  patULong nodeid = atoi(linkIter->get_attributes().begin()->get_value()) ;
+	  unsigned long nodeid = atoi(linkIter->get_attributes().begin()->get_value()) ;
 	  nodes.push_back(nodeid) ;
 	} 
 	else if (tagName == "tag") {
@@ -222,7 +222,7 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 	      ++i ;
 	      if ( (patString(i->get_value()) == "yes") ||  
 		   (patString(i->get_value()) == "true") ) {
-		oneWay = patTRUE ;
+		oneWay = true ;
 	      }
 	    }
 		else if (patString(i->get_value()) == "highway") {
@@ -233,31 +233,31 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 	}
       }
       if (!nodes.empty()) {
-	vector<patULong>::iterator j(nodes.begin()), k(nodes.begin()) ;
+	vector<unsigned long>::iterator j(nodes.begin()), k(nodes.begin()) ;
 	++k ;
-	patULong theArcId(id * 100) ;
+	unsigned long theArcId(id * 100) ;
 	for ( ;  k != nodes.end() ; ++j,++k) {
-	  patBoolean success = theNetwork.addArcWithIds(theArcId,*j,*k,theName,theAttr,err) ;
+	  bool success = theNetwork.addArcWithIds(theArcId,*j,*k,theName,theAttr,err) ;
 	  if (err != NULL) {
 	    WARNING(err->describe()) ;
-	    return patFALSE ;
+	    return false ;
 	  }
 	  theNetwork.computeArcLength(theArcId,err) ;
 	  if (err != NULL) {
 	    WARNING(err->describe()) ;
-	    return patFALSE ;
+	    return false ;
 	  }
 	  ++theArcId ;
 	  if (!oneWay) {
 	    success = theNetwork.addArcWithIds(theArcId,*k,*j,theName,theAttr,err) ;
 	    if (err != NULL) {
 	      WARNING(err->describe()) ;
-	      return patFALSE;
+	      return false;
 	    }
 	    theNetwork.computeArcLength(theArcId,err) ;
 	    if (err != NULL) {
 	      WARNING(err->describe()) ;
-	      return patFALSE  ;
+	      return false  ;
 	    }
 	    ++theArcId ;
 	  }
@@ -287,10 +287,10 @@ patBoolean patReadNetworkFromXml::readFile(patError*& err) {
 
   if (err != NULL) {
     WARNING(err->describe());
-    return patFALSE ;
+    return false ;
   }
 
-  return patTRUE ;
+  return true ;
   
 }
 

@@ -13,21 +13,60 @@
 #include "patRoadBase.h"
 #include "patArc.h"
 #include "patTransportMode.h"
+#include "patGeoBoundingBox.h"
 class patNetworkBase {
 public:
 	patNetworkBase();
 	virtual ~patNetworkBase();
-	const map<patNode*,set<patRoadBase*> >* getOutgoingIncidents();
-	bool isArcInNetwork(const patArc* an_arc);
-	bool hasDownStream(const patNode* a_node);
-	unsigned long getNodeSize();
-	const patTransportMode getTransportMode();
-	virtual void getFromNetwork(patNetworkElements* network)=0;
+
+	/**
+	 * Get the pointer to the outgoing incidents.
+	 */
+	const map<const patNode*, set<const patRoadBase*> >* getOutgoingIncidents();
+
+	/**
+	 * Determine if a node has downstream roads or not.
+	 */
+	bool hasDownStream( const patNode * const a_node) const;
+
+	/**
+	 * Get the number of conjunction nodes
+	 */
+	unsigned long getNodeSize() const;
+
+	/**
+	 * Get the transport mode;
+	 *
+	 */
+	TransportMode getTransportMode() const;
+
+	/**
+	 * Read transport network with network elements
+	 * @param network the network elements.
+	 */
+	virtual void getFromNetwork(patNetworkElements* network,patGeoBoundingBox bounding_box)=0;
+	double computeMinimumLabel();
+	double getMinimumLabel();
+	void finalizeNetwork();
+	/**
+	 * Get the roads that contain a gien arc.
+	 * @param arc the arc to be searched
+	 * @return set<patRoadBase*>  a set of roads.
+	 */
+	virtual set<const patRoadBase*> getRoadsContainArc(const patRoadBase* arc) const = 0;
+	bool exportShpFiles(const string file_path) const;
+
+	virtual double getMinSpeed() const = 0;
+	virtual double getMaxSpeed() const = 0;
+
+	set<const patArc*> getAllArcs() const;
+	void exportKML(const string file_path) const;
 protected:
 
-	map<patNode*,set<patRoadBase*> > outgoing_incidents;
-	string network_type;
-	patTransportMode transport_mode;
+	map<const patNode*, set<const patRoadBase*> > m_outgoing_incidents;
+	double m_minimum_label;
+	string m_network_type;
+	TransportMode m_transport_mode;
 };
 
 #endif /* PATNETWORKBASE_H_ */

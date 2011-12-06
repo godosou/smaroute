@@ -21,10 +21,10 @@ patNetwork::patNetwork(patString theName) :
 
 }
 
-void patNetwork::setMapBounds(patReal minLat, 
-			      patReal maxLat, 
-			      patReal minLon, 
-			      patReal maxLon) {
+void patNetwork::setMapBounds(double minLat, 
+			      double maxLat, 
+			      double minLon, 
+			      double maxLon) {
   minLatitude = minLat ;
   maxLatitude = maxLat ;
   minLongitude = minLon ;
@@ -32,22 +32,22 @@ void patNetwork::setMapBounds(patReal minLat,
 }
 
 
-patBoolean patNetwork::addNode(const patNode& theNode) {
-  map<patULong, patNode>::iterator found = theNodes.find(theNode.userId) ;
+bool patNetwork::addNode(const patNode& theNode) {
+  map<unsigned long, patNode>::iterator found = theNodes.find(theNode.userId) ;
   if (found != theNodes.end()) {
     // The node Id already exists
-    return patFALSE ;
+    return false ;
   } 
   else {
-    theNodes.insert(pair<patULong, patNode>(theNode.userId,theNode)) ; ; 
+    theNodes.insert(pair<unsigned long, patNode>(theNode.userId,theNode)) ; ; 
     //    DEBUG_MESSAGE("Node '" << theNode.name << "' added") ;  
-    return patTRUE ;
+    return true ;
   }
 }
 
-patBoolean patNetwork::addArcWithIds(patULong theId, 
-				     patULong aNodeId, 
-				     patULong bNodeId, 
+bool patNetwork::addArcWithIds(unsigned long theId, 
+				     unsigned long aNodeId, 
+				     unsigned long bNodeId, 
 				     patString theName,
 					 struct arc_attributes theAttr,
 				     patError*& err) {
@@ -55,23 +55,23 @@ patBoolean patNetwork::addArcWithIds(patULong theId,
   if (aNode == NULL) {
     err = new patErrNullPointer("patNode") ;
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
   patNode* bNode = getNodeFromUserId(bNodeId) ;
   if (bNode == NULL) {
     err = new patErrNullPointer("patNode") ;
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
-  patBoolean result = addArc(theId,aNode,bNode,theName,theAttr,err) ;
+  bool result = addArc(theId,aNode,bNode,theName,theAttr,err) ;
   if (err != NULL) {
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
   return result ;
 }
 
-patBoolean patNetwork::addArc(patULong theId, 
+bool patNetwork::addArc(unsigned long theId, 
 			      patNode* aNode, 
 			      patNode* bNode, 
 			      patString theName,
@@ -79,9 +79,9 @@ patBoolean patNetwork::addArc(patULong theId,
 			      patError*& err) {
 
   if (aNode == NULL || bNode == NULL) {
-    return patFALSE ;
+    return false ;
   }
-  map<patULong, patArc>::iterator found = theArcs.find(theId) ;
+  map<unsigned long, patArc>::iterator found = theArcs.find(theId) ;
   if (found == theArcs.end()) {
     aNode->addSuccessor(bNode->userId) ;
     bNode->addPredecessor(aNode->userId) ;
@@ -90,25 +90,25 @@ patBoolean patNetwork::addArc(patULong theId,
     patArc newArc(theId,aNode,bNode,theName, theAttr, err) ;
     if (err != NULL) {
       WARNING(err->describe()) ;
-      return patFALSE ;
+      return false ;
     }
-    newArc.polyline.push_back(aNode->geoCoord) ;
-    newArc.polyline.push_back(bNode->geoCoord) ;
-    theArcs.insert(pair<patULong, patArc>(theId,newArc)) ;
-    pair<patULong, patULong> pairOfNodeIds(aNode->userId, bNode->userId) ;
-    pair<pair<patULong, patULong>, patULong > elementToInsert(pairOfNodeIds,theId) ;
+    newArc.m_polyline.push_back(aNode->geoCoord) ;
+    newArc.m_polyline.push_back(bNode->geoCoord) ;
+    theArcs.insert(pair<unsigned long, patArc>(theId,newArc)) ;
+    pair<unsigned long, unsigned long> pairOfNodeIds(aNode->userId, bNode->userId) ;
+    pair<pair<unsigned long, unsigned long>, unsigned long > elementToInsert(pairOfNodeIds,theId) ;
     listOfArcsPerPairsOfNodes.insert(elementToInsert) ;
 
-    return patTRUE ;
+    return true ;
   }
   else {
-    return patFALSE ;
+    return false ;
   }
 }
 
 
-patNode* patNetwork::getNodeFromUserId(patULong id) {
-  map<patULong, patNode>::iterator found = theNodes.find(id) ;
+patNode* patNetwork::getNodeFromUserId(unsigned long id) {
+  map<unsigned long, patNode>::iterator found = theNodes.find(id) ;
   if (found == theNodes.end()) {
     return NULL ;
   }
@@ -117,8 +117,8 @@ patNode* patNetwork::getNodeFromUserId(patULong id) {
   }
 }
 
-patArc* patNetwork::getArcFromUserId(patULong id)  {
-  map<patULong, patArc>::iterator found = theArcs.find(id) ;
+patArc* patNetwork::getArcFromUserId(unsigned long id)  {
+  map<unsigned long, patArc>::iterator found = theArcs.find(id) ;
   if (found == theArcs.end()) {
     return NULL ;
   }
@@ -127,10 +127,10 @@ patArc* patNetwork::getArcFromUserId(patULong id)  {
   }
 }
 
-patArc* patNetwork::getArcFromNodesUserId(patULong aNodeId, patULong bNodeId)  {
+patArc* patNetwork::getArcFromNodesUserId(unsigned long aNodeId, unsigned long bNodeId)  {
 
-  pair<patULong, patULong> elementToFind(aNodeId,bNodeId) ;
-  map<pair<patULong, patULong>, patULong >::const_iterator found =
+  pair<unsigned long, unsigned long> elementToFind(aNodeId,bNodeId) ;
+  map<pair<unsigned long, unsigned long>, unsigned long >::const_iterator found =
     listOfArcsPerPairsOfNodes.find(elementToFind) ;
   if (found == listOfArcsPerPairsOfNodes.end()) {
     return NULL ;
@@ -140,17 +140,17 @@ patArc* patNetwork::getArcFromNodesUserId(patULong aNodeId, patULong bNodeId)  {
   }
 }
 
-short patNetwork::isArcOneWay(patULong aNodeId, patULong bNodeId) const {
+short patNetwork::isArcOneWay(unsigned long aNodeId, unsigned long bNodeId) const {
   
   short result(0) ;
-  pair<patULong, patULong> elementToFind(aNodeId,bNodeId) ;
-  map<pair<patULong, patULong>, patULong >::const_iterator found =
+  pair<unsigned long, unsigned long> elementToFind(aNodeId,bNodeId) ;
+  map<pair<unsigned long, unsigned long>, unsigned long >::const_iterator found =
     listOfArcsPerPairsOfNodes.find(elementToFind) ;
   if (found != listOfArcsPerPairsOfNodes.end()) {
     ++result ;
   }
 
-  elementToFind = pair<patULong, patULong>(bNodeId,aNodeId) ;
+  elementToFind = pair<unsigned long, unsigned long>(bNodeId,aNodeId) ;
   found = listOfArcsPerPairsOfNodes.find(elementToFind) ;
   if (found != listOfArcsPerPairsOfNodes.end()) {
     ++result ;
@@ -161,7 +161,7 @@ short patNetwork::isArcOneWay(patULong aNodeId, patULong bNodeId) const {
 
 
 
-void patNetwork::setArcLength(patULong arcId, patReal l, patError*& err) {
+void patNetwork::setArcLength(unsigned long arcId, double l, patError*& err) {
   patArc* theArc = getArcFromUserId(arcId) ;
   if (theArc == NULL) {
     stringstream str ;
@@ -173,7 +173,7 @@ void patNetwork::setArcLength(patULong arcId, patReal l, patError*& err) {
   theArc->setLength(l) ;
 }
 
-void patNetwork::computeArcLength(patULong arcId, patError*& err) {
+void patNetwork::computeArcLength(unsigned long arcId, patError*& err) {
   patArc* theArc = getArcFromUserId(arcId) ;
   if (theArc == NULL) {
     stringstream str ;
@@ -182,18 +182,18 @@ void patNetwork::computeArcLength(patULong arcId, patError*& err) {
     WARNING(err->describe()) ;
     return ;
   }
-  patNode* upNode = getNodeFromUserId(theArc->upNodeId) ;
+  patNode* upNode = getNodeFromUserId(theArc->m_up_node_id) ;
   if (upNode == NULL) {
     stringstream str ;
-    str << "Node " << theArc->upNodeId << " not found" ;
+    str << "Node " << theArc->m_up_node_id << " not found" ;
     err = new patErrMiscError(str.str()) ;
     WARNING(err->describe()) ;
     return ;
   }
-  patNode* downNode = getNodeFromUserId(theArc->downNodeId) ;
+  patNode* downNode = getNodeFromUserId(theArc->m_down_node_id) ;
   if (downNode == NULL) {
     stringstream str ;
-    str << "Node " << theArc->downNodeId << " not found" ;
+    str << "Node " << theArc->m_down_node_id << " not found" ;
     err = new patErrMiscError(str.str()) ;
     WARNING(err->describe()) ;
     return ;
@@ -202,11 +202,11 @@ void patNetwork::computeArcLength(patULong arcId, patError*& err) {
   return ;
 }
 
-patULong patNetwork::nbrOfArcs() const {
+unsigned long patNetwork::nbrOfArcs() const {
   return theArcs.size() ;
 }
 
-patULong patNetwork::nbrOfNodes() const {
+unsigned long patNetwork::nbrOfNodes() const {
   return theNodes.size() ;
 }
 
@@ -221,7 +221,7 @@ void patNetwork::writeKML(patString fileName, patError*& err) {
   kml << "            <name>" << theName <<"</name>" << endl ;
   kml << "            <description>File created by bioroute (Michel Bierlaire, EPFL)</description>" << endl ;
 
-  for (map<patULong, patNode>::iterator nIter = theNodes.begin() ;
+  for (map<unsigned long, patNode>::iterator nIter = theNodes.begin() ;
        nIter != theNodes.end() ;
        ++nIter) {
   
@@ -244,18 +244,18 @@ void patNetwork::writeKML(patString fileName, patError*& err) {
   }
   
   
-  for (map<patULong, patArc>::iterator aIter = theArcs.begin() ;
+  for (map<unsigned long, patArc>::iterator aIter = theArcs.begin() ;
        aIter != theArcs.end() ;
        ++aIter) {
     kml << "            <Placemark>" << endl ;
-    patString theName(aIter->second.name) ;
+    patString theName(aIter->second.m_name) ;
     replaceAll(&theName,patString("&"),patString("and")) ;
     kml << "                  <name>"<< theName <<"</name>" << endl ;
-    kml << "                  <description>Arc "<< aIter->second.userId 
+    kml << "                  <description>Arc "<< aIter->second.m_user_id 
 	<< " from node "
-	<< aIter->second.upNodeId 
+	<< aIter->second.m_up_node_id 
 	<< " to node "
-	<< aIter->second.downNodeId
+	<< aIter->second.m_down_node_id
 	<< "</description>" << endl ;
     kml << " " << endl ;
     kml << "                  <Style>" << endl ;
@@ -268,15 +268,15 @@ void patNetwork::writeKML(patString fileName, patError*& err) {
     kml << "                  <LineString>" << endl ;
     kml << "                        <coordinates>" << endl ;
     
-    list<patGeoCoordinates>::iterator gIter(aIter->second.polyline.begin()) ;
-    list<patGeoCoordinates>::iterator hIter(aIter->second.polyline.begin()) ;
+    list<patGeoCoordinates>::iterator gIter(aIter->second.m_polyline.begin()) ;
+    list<patGeoCoordinates>::iterator hIter(aIter->second.m_polyline.begin()) ;
     ++hIter ;
-    for ( ; hIter != aIter->second.polyline.end() ; ++gIter, ++hIter) {
+    for ( ; hIter != aIter->second.m_polyline.end() ; ++gIter, ++hIter) {
       
-      patReal a1 = gIter->longitudeInDegrees ;
-      patReal a2 = gIter->latitudeInDegrees ;
-      patReal b1 = hIter->longitudeInDegrees ;
-      patReal b2 = hIter->latitudeInDegrees ;
+      double a1 = gIter->longitudeInDegrees ;
+      double a2 = gIter->latitudeInDegrees ;
+      double b1 = hIter->longitudeInDegrees ;
+      double b2 = hIter->latitudeInDegrees ;
       
       // If the arc is two way, we need to shift it a little bit
       
@@ -317,16 +317,16 @@ void patNetwork::removeUselessNodes(patError*& err) {
 
 
   DEBUG_MESSAGE(theNodes.size() << " nodes") ;
-  patBoolean erase(patTRUE) ;
+  bool erase(true) ;
 
   while (erase) {
-    erase = patFALSE ;
-    for (map<patULong, patNode>::iterator i = theNodes.begin() ;
+    erase = false ;
+    for (map<unsigned long, patNode>::iterator i = theNodes.begin() ;
 	 i != theNodes.end() ;
 	 ++i) {
       if (i->second.disconnected()) {
 	theNodes.erase(i->first) ;
-	erase = patTRUE ;
+	erase = true ;
 	break ;
       }
     }
@@ -334,10 +334,10 @@ void patNetwork::removeUselessNodes(patError*& err) {
 
   DEBUG_MESSAGE("After removing disconnected nodes: " << theNodes.size() << " nodes") ;
 
-  erase = patTRUE ;
+  erase = true ;
 
   while (erase) {
-    for (map<patULong, patNode>::iterator i = theNodes.begin() ;
+    for (map<unsigned long, patNode>::iterator i = theNodes.begin() ;
 	 i != theNodes.end() ;
 	 ++i) {
       erase = removeUselessNode(i->first,err) ;
@@ -354,32 +354,32 @@ void patNetwork::removeUselessNodes(patError*& err) {
   DEBUG_MESSAGE("After removing intermediary nodes: " << theNodes.size() << " nodes") ;
 
 }
-patBoolean patNetwork::removeUselessNode(patULong id, patError*& err) {
+bool patNetwork::removeUselessNode(unsigned long id, patError*& err) {
   patNode* theNode = getNodeFromUserId(id) ;
   if (theNode == NULL) {
-    return patFALSE ;
+    return false ;
   }
 
   if (theNode->userPredecessors.size() != 1) {
-    return patFALSE ;
+    return false ;
   }
-  patULong thePred = *(theNode->userPredecessors.begin()) ;
+  unsigned long thePred = *(theNode->userPredecessors.begin()) ;
   patNode* thePredPtr = getNodeFromUserId(thePred) ;
   if (thePredPtr == NULL) {
     err = new patErrNullPointer("patNode") ;
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
   if (theNode->userSuccessors.size() != 1) {
-    return patFALSE ;
+    return false ;
   }
-  patULong theSucc = *(theNode->userSuccessors.begin()) ;
+  unsigned long theSucc = *(theNode->userSuccessors.begin()) ;
 
   patNode* theSuccPtr = getNodeFromUserId(theSucc) ;
   if (theSuccPtr == NULL) {
     err = new patErrNullPointer("patNode") ;
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
   theSuccPtr->userPredecessors.erase(id) ;
   theSuccPtr->userPredecessors.insert(thePred) ;
@@ -391,61 +391,61 @@ patBoolean patNetwork::removeUselessNode(patULong id, patError*& err) {
     WARNING("arc " << thePred << "->" << theNode->userId) ;
     err = new patErrNullPointer("patArc") ;
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
   patArc* arc2 = getArcFromNodesUserId(theNode->userId,theSucc) ;
   if (arc2 == NULL) {
     WARNING("arc " << theNode->userId << "->" << theSucc) ;
     err = new patErrNullPointer("patArc") ;
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
 
-  patULong newId = patMin(arc1->userId,arc2->userId) ;
+  unsigned long newId = patMin(arc1->m_user_id,arc2->m_user_id) ;
   patString newName ;
-  if (arc1->name != arc2->name) {
-    newName = arc1->name + " - " + arc2->name ;
+  if (arc1->m_name != arc2->m_name) {
+    newName = arc1->m_name + " - " + arc2->m_name ;
   }
   else {
-    newName = arc1->name ;
+    newName = arc1->m_name ;
   }
   patArc newArc(newId,thePredPtr,theSuccPtr,newName,err) ;
   if (err != NULL) {
     WARNING(err->describe()) ;
-    return patFALSE ;
+    return false ;
   }
   newArc.generalizedCost = arc1->generalizedCost + arc2->generalizedCost ;
   newArc.length = arc1->length + arc2->length ;
-  newArc.polyline.push_back(thePredPtr->geoCoord) ;
-  newArc.polyline.push_back(theNode->geoCoord) ;
-  newArc.polyline.push_back(theSuccPtr->geoCoord) ;
+  newArc.m_polyline.push_back(thePredPtr->geoCoord) ;
+  newArc.m_polyline.push_back(theNode->geoCoord) ;
+  newArc.m_polyline.push_back(theSuccPtr->geoCoord) ;
 
-  theArcs.erase(arc1->userId) ;  
-  theArcs.erase(arc2->userId) ;  
-  theArcs.insert(pair<patULong, patArc>(newArc.userId,newArc)) ;
+  theArcs.erase(arc1->m_user_id) ;  
+  theArcs.erase(arc2->m_user_id) ;  
+  theArcs.insert(pair<unsigned long, patArc>(newArc.m_user_id,newArc)) ;
 
-  pair<patULong, patULong> toremove1(thePred,id) ;
+  pair<unsigned long, unsigned long> toremove1(thePred,id) ;
   listOfArcsPerPairsOfNodes.erase(toremove1) ;
-  pair<patULong, patULong> toremove2(id,theSucc) ;
+  pair<unsigned long, unsigned long> toremove2(id,theSucc) ;
   listOfArcsPerPairsOfNodes.erase(toremove2) ;
-  pair<patULong, patULong> toadd(thePred,theSucc) ;
-  pair< pair<patULong, patULong>, patULong > toinsert(toadd,newArc.userId) ;
+  pair<unsigned long, unsigned long> toadd(thePred,theSucc) ;
+  pair< pair<unsigned long, unsigned long>, unsigned long > toinsert(toadd,newArc.m_user_id) ;
   listOfArcsPerPairsOfNodes.insert(toinsert) ;
 
 
   theNodes.erase(id) ;
 
-  return patTRUE ;
+  return true ;
 		 
 }
 
-void patNetwork::addOd(patULong o, patULong d) {
+void patNetwork::addOd(unsigned long o, unsigned long d) {
   theOds.insert(patOd(o,d)) ;
 }
 
 void patNetwork::registerOds(patError*& err) {
   DEBUG_MESSAGE("Register " << theOds.size() << " OD pairs") ;
-  vector<patULong> unknownNodes ;
+  vector<unsigned long> unknownNodes ;
   for (set<patOd>::iterator i = theOds.begin() ;
        i != theOds.end() ;
        ++i) {
@@ -455,21 +455,21 @@ void patNetwork::registerOds(patError*& err) {
       unknownNodes.push_back(i->orig) ;
     }
     else {
-      orig->isCentroid = patTRUE ;
+      orig->isCentroid = true ;
     }
     patNode* dest = getNodeFromUserId(i->dest) ;
     if (dest == NULL) {
       unknownNodes.push_back(i->dest) ;
     }
     else {
-      dest->isCentroid = patTRUE ;
+      dest->isCentroid = true ;
     }
   }
 
   if (!unknownNodes.empty()) {
     stringstream str ;
     str << "The following centroids are unknown nodes: " ;
-    for (vector<patULong>::iterator j = unknownNodes.begin() ;
+    for (vector<unsigned long>::iterator j = unknownNodes.begin() ;
 	 j != unknownNodes.end() ;
 	 ++j) {
       if (j != unknownNodes.begin()) {
@@ -484,8 +484,8 @@ void patNetwork::registerOds(patError*& err) {
 }
 
 
-patULong patNetwork::getInternalNodeIdFromUserId(patULong userId) const {
-  map<patULong, patNode>::const_iterator found = theNodes.find(userId) ;
+unsigned long patNetwork::getInternalNodeIdFromUserId(unsigned long userId) const {
+  map<unsigned long, patNode>::const_iterator found = theNodes.find(userId) ;
   if (found == theNodes.end()) {
     return patBadId ;
   }
@@ -495,8 +495,8 @@ patULong patNetwork::getInternalNodeIdFromUserId(patULong userId) const {
 }
 
 
-patULong patNetwork::getInternalArcIdFromUserId(patULong userId) const {
-  map<patULong, patArc>::const_iterator found = theArcs.find(userId) ;
+unsigned long patNetwork::getInternalArcIdFromUserId(unsigned long userId) const {
+  map<unsigned long, patArc>::const_iterator found = theArcs.find(userId) ;
   if (found == theArcs.end()) {
     return patBadId ;
   }
@@ -507,8 +507,8 @@ patULong patNetwork::getInternalArcIdFromUserId(patULong userId) const {
 }
 
 void patNetwork::computeInternalIds(patError*& err) {
-  patULong arcInternalId(0) ;
-  for (map<patULong, patArc>::iterator i = theArcs.begin() ;
+  unsigned long arcInternalId(0) ;
+  for (map<unsigned long, patArc>::iterator i = theArcs.begin() ;
        i != theArcs.end() ;
        ++i) {
     i->second.internalId = arcInternalId ;
@@ -516,8 +516,8 @@ void patNetwork::computeInternalIds(patError*& err) {
     ++arcInternalId ;
   }
 
-  patULong nodeInternalId(0) ;
-  for (map<patULong, patNode>::iterator i = theNodes.begin() ;
+  unsigned long nodeInternalId(0) ;
+  for (map<unsigned long, patNode>::iterator i = theNodes.begin() ;
        i != theNodes.end() ;
        ++i) {
     i->second.internalId = nodeInternalId ;
@@ -571,15 +571,15 @@ void patNetwork::finalizeNetwork(patError*& err) {
 
 void patNetwork::buildAdjacencyLists(patError*& err) {
   if (adjacencyLists == NULL) {
-    adjacencyLists = new vector< list <  pair<patReal,patULong> > > ;
+    adjacencyLists = new vector< list <  pair<double,unsigned long> > > ;
   }
   else {
     adjacencyLists->erase(adjacencyLists->begin(),adjacencyLists->end()) ;
   }
-  for (patULong n = 0 ; n < internalNodes.size() ; ++n) {
-    list <  pair<patReal,patULong> >  currentList ;
+  for (unsigned long n = 0 ; n < internalNodes.size() ; ++n) {
+    list <  pair<double,unsigned long> >  currentList ;
     patNode* theNode = internalNodes[n] ;
-    for (set<patULong>::iterator succ = theNode->userPredecessors.begin() ;
+    for (set<unsigned long>::iterator succ = theNode->userPredecessors.begin() ;
 	 succ != theNode->userPredecessors.end() ;
 	 ++succ) {
       patArc* theArc = getArcFromNodesUserId(*succ,theNode->userId) ;
@@ -590,14 +590,14 @@ void patNetwork::buildAdjacencyLists(patError*& err) {
 	WARNING(err->describe()) ;
 	return ;
       }
-	  if(theArc->name!="M1" && theArc->attributes.priority>=4 && theArc->attributes.priority<=14 ){
-      patULong internalIdSucc = getInternalNodeIdFromUserId(*succ) ;
+	  if(theArc->m_name!="M1" && theArc->m_attributes.priority>=4 && theArc->m_attributes.priority<=14 ){
+      unsigned long internalIdSucc = getInternalNodeIdFromUserId(*succ) ;
 /*	  if (theArc->generalizedCost<1.0){
 		DEBUG_MESSAGE("arc"<<*theArc<<theArc->generalizedCost);
 	  }
 	  */
 	  
-      currentList.push_back(pair<patReal,patULong>(theArc->generalizedCost,
+      currentList.push_back(pair<double,unsigned long>(theArc->generalizedCost,
 						   internalIdSucc)) ;
 						   }
     }
@@ -607,7 +607,7 @@ void patNetwork::buildAdjacencyLists(patError*& err) {
 
 void patNetwork::computeMinimalLabel(patError*& err) {
   minimumLabelForShortestPath = patMaxReal ;
-  for (map<patULong, patArc>::iterator i = theArcs.begin() ;
+  for (map<unsigned long, patArc>::iterator i = theArcs.begin() ;
        i != theArcs.end() ;
        ++i) {
     if (i->second.generalizedCost < minimumLabelForShortestPath) {

@@ -9,10 +9,15 @@
 #define PATNETWORKBIKE_H_
 
 #include "patNetworkElements.h"
+#include "patNetworkUnimodal.h"
+#include "patGeoBoundingBox.h"
 class patNetworkBike  : public patNetworkUnimodal {
 public:
-	void getFromNetwork(patNetworkElements* network);
+	patNetworkBike();
+	void getFromNetwork(patNetworkElements* network, patGeoBoundingBox bb);
 	virtual ~patNetworkBike();
+	 double getMinSpeed() const;
+	 double getMaxSpeed() const;
 };
 
 #endif /* PATNETWORKBIKE_H_ */

@@ -8,11 +8,16 @@
 #ifndef PATNETWORKCAR_H_
 #define PATNETWORKCAR_H_
 
+#include "patNetworkElements.h"
 #include "patNetworkUnimodal.h"
 
+#include "patGeoBoundingBox.h"
 class patNetworkCar: public patNetworkUnimodal {
 public:
-	void getFromNetwork(patNetworkElements* network);
+	 patNetworkCar();
+	void getFromNetwork(patNetworkElements* network, patGeoBoundingBox bb);
+	 double getMinSpeed() const;
+	 double getMaxSpeed() const;
 	virtual ~patNetworkCar();
 };
 

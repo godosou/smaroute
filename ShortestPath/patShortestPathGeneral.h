@@ -13,32 +13,37 @@
 
 #include "patNetworkBase.h"
 #include "patNode.h"
-#include "patGpsDDR.h"
 #include "patArc.h"
 #include "patShortestPathTreeGeneral.h"
-
+class patMeasurementDDR;
+class patGpsDDR;
 class patShortestPathGeneral {
 public:
-	patShortestPathGeneral(patNetworkBase* a_network, double the_min_label);
+	patShortestPathGeneral(patNetworkBase* a_network);
 
 	/**
 	 * Compute the shortest path tree for single source;
 	 * Simply call to multiple source version;
 	 * @return true if successful; false otherwise.
 	 */
-	bool buildShortestPathTree(patNode* root_node, double ceil);
+	bool buildShortestPathTree(const patNode* root_node, double ceil);
 
 	/**
-		 * Build the shortest path tree for multiple sources;
-		 * @return false if negative cycle detected; true otherwise.
-	*/
-	bool buildShortestPathTree(set<patNode*> root_nodes, patGpsDDR* gps_ddr, set<patArc*> ddr_arcs,
-				double ceil);
+	 * Build the shortest path tree for multiple sources;
+	 * @return false if negative cycle detected; true otherwise.
+	 */
+	bool buildShortestPathTree(const patNode* root_node, patMeasurementDDR* gps_ddr ,
+			set<pair<const patArc*, const patRoadBase*> >* ddr_arcs
+			, double ceil );
+	/**
+	 * Build the shortest path tree for multiple sources;
+	 * @return false if negative cycle detected; true otherwise.
+	 */
+	bool buildShortestPathTree(set<const patNode*> root_nodes, patMeasurementDDR* gps_ddr =
+			NULL, set<pair<const patArc*, const patRoadBase*> >* ddr_arcs= NULL
+			, double ceil = patMaxReal);
 
-
-	patShortestPathTreeGeneral* getTree() {
-		return shortest_path_tree;
-	}
+	patShortestPathTreeGeneral* getTree();
 
 	virtual ~patShortestPathGeneral();
 
@@ -46,7 +51,7 @@ protected:
 	patNetworkBase* network;
 	double minimum_label;
 	patShortestPathTreeGeneral shortest_path_tree;
-	deque<patNode*> list_of_nodes;
+	deque<const patNode*> m_list_of_nodes;
 };
 
 #endif /* PATSHORTESTPATHGENERAL_H_ */

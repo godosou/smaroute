@@ -21,13 +21,13 @@ class patReadNetworkFromXml {
   // in the file are maintained.
 
   patReadNetworkFromXml(patString fName);
-  patBoolean readFile(patError*& err) ;
+  bool readFile(patError*& err) ;
   patNetwork getNetwork() ;
  private:
   patString fileName ;
   patNetwork theNetwork ;
-  patULong multiplierForTwoWaysIds ;
-  patBoolean cleanTheNetwork ;
+  unsigned long multiplierForTwoWaysIds ;
+  bool cleanTheNetwork ;
 
 };
 

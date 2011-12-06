@@ -6,65 +6,44 @@
  */
 
 #include "patPublicTransportSegment.h"
-
-patPublicTransportSegment::patPublicTransportSegment():
-error(false),
-length(-1.0){
-	//
-
+#include "patNetworkElements.h"
+#include "patDisplay.h"
+patPublicTransportSegment::patPublicTransportSegment() {
+	m_length = -1.0;
 }
 
 patPublicTransportSegment::~patPublicTransportSegment() {
 	//
 }
 
-
-/**
- * Append way_id way to the end;
- * @param way_id the id of the way
- */
-bool patPublicTransportSegment::pushBack(patNetworkElements* network, patULong way_id){
-	patWay* the_way = network.getWay(way_id);
-	if (the_way==NULL){
-		return false;
-	}
-	else{
-		ways.push_back(the_way);
-		return the_way;
+ostream& operator<<(ostream& str, const patPublicTransportSegment& x) {
+	list<const patArc*> arc_list = x.getArcList();
+	for (list<const patArc*>::iterator arc_iter = arc_list.begin();
+			arc_iter != arc_list.end(); ++arc_iter) {
+		str << **arc_iter << "\n";
 	}
 }
 
-/**
- * Append way_id way to the end;
- * @param way_id the id of the way
- */
-bool patPublicTransportSegment::pushFront(patNetworkElements* network,patULong way_id){
-	patWay* the_way = network->getWay(way_id);
-		if (the_way==NULL){
+ bool patPublicTransportSegment::addArcToBack(const patArc* arc,
+		int direction) {
+	if (m_directions.back() != 3 && direction != 3) {
+		if (m_directions.back() != direction) {
 			return false;
 		}
-		else{
-			ways.push_front(the_way);
-			return the_way;
-		}
-}
-bool patPublicTransportSegment::isError(){
-	return error;
-}
-
-double patPublicTransportSegment::getLength(){
-	if(length<0){
-		return calLength();
 	}
-}
-
-double patPublicTransportSegment::calLength(){
-	length=0.0;
-	list<patWay*> ways;
-	for(list<patWay*>::iterator way_iter = ways.begin();
-			way_iter!=ways.end();
-			++way_iter){
-		length += (*way_iter)->getLength();
+	if (patArcSequence::addArcToBack(arc) == false) {
+		return false;
 	}
-	return length;
+	m_directions.push_back(direction);
+	return true;
+}
+ const patArc* patPublicTransportSegment::deleteArcToBack() {
+
+	if (m_arcs.empty() || m_directions.empty()) {
+		return NULL;
+	}
+	const patArc* backArc = m_arcs.back();
+	m_arcs.pop_back();
+	m_directions.pop_back();
+	return backArc;
 }

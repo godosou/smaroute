@@ -8,11 +8,10 @@
 #include "patHyperNetwork.h"
 
 patHyperNetwork::patHyperNetwork() {
-	// TODO Auto-generated constructor stub
+
 
 }
 
 patHyperNetwork::~patHyperNetwork() {
-	// TODO Auto-generated destructor stub
 }
 

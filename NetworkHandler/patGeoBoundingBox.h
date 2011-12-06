@@ -11,15 +11,15 @@
 
 class patGeoBoundingBox {
 public:
-	patGeoBoundingBox(patReal tleft_top_lat, patReal tlat_top_lon,
-			patReal tright_buttom_lat,patReal tright_buttom_lon);
+	patGeoBoundingBox(double tleft_top_lat, double tlat_top_lon,
+			double tright_buttom_lat,double tright_buttom_lon);
 	patString toString();
 	virtual ~patGeoBoundingBox();
 protected:
-	patReal left_top_lat;
-	patReal left_top_lon;
-	patReal right_buttom_lat;
-	patReal right_buttom_lon;
+	double left_top_lat;
+	double left_top_lon;
+	double right_buttom_lat;
+	double right_buttom_lon;
 };
 
 #endif /* PATGEOBOUNDINGBOX_H_ */

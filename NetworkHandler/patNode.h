@@ -13,6 +13,8 @@
 #include "patString.h"
 #include "patArc.h"
 #include <set>
+#include "kml/dom.h"
+using kmldom::PlacemarkPtr;
 using namespace std;
 struct node_attributes {
 	patString type;
@@ -33,7 +35,7 @@ class patNode {
 	friend class patReadSampleFromCsv; //add by Jingmin
 	friend class patTripParser; //add by Jingmin
 	friend class patOdJ; //add by Jingmin
-	friend class patPathJ; //add by Jingmin
+	friend class patMultiModalPath; //add by Jingmin
 	friend class patReadSample; //add by Jingmin
 	friend class patSample; //add by Jingmin
 	friend class patObservation; //add by Jingmin
@@ -50,7 +52,7 @@ class patNode {
 	friend class patNetworkElements; //added by Jingmin
 
 	friend ostream& operator<<(ostream& str, const patNode& x);
-	friend patBoolean operator<(const patOdJ& od1, const patOdJ& od2);
+	friend bool operator<(const patOdJ& od1, const patOdJ& od2);
 
 public:
 	/**
@@ -60,43 +62,52 @@ public:
 	 @param lon Longitude of the node
 	 */
 
-	patNode(patULong theId, patString theName, patReal lat, patReal lon,
+	patNode(unsigned long theId, patString theName, double lat, double lon,
 			struct node_attributes theAttr);
-	patNode(patULong theId, patReal lat, patReal lon);
+	patNode(unsigned long theId, double lat, double lon);
 
 	patString getName() const;
-	patArc* getOutgoingArc(patULong down_node_id);
+	const patArc* getOutgoingArc(unsigned long down_node_id) const;
 
-	patIterator<patULong>* getSuccessors();
+	patIterator<unsigned long>* getSuccessors();
 
-	patULong getUserId() const;
-protected:
+	unsigned long getUserId() const;
 	/**
 	 @param aSucc user ID of the successor to add
 	 */
-	void addSuccessor(patULong aSucc);
+	void addSuccessor(unsigned long aSucc);
 	/**
 	 @param aPred user ID of the predecessor to add
 	 */
-	void addPredecessor(patULong aPred);
+	void addPredecessor(unsigned long aPred);
 
 	/**
 	 */
-	patBoolean disconnected() const;
+	bool disconnected() const;
 
-	patGeoCoordinates getGeoCoord();
+	patGeoCoordinates getGeoCoord() const;
+	double getLatitude() const;
+	double getLongitude() const;
+	void setName(string the_name) ;
+	void setTags(map<string, string>& tags);
 	/**
 	 */
-	patBoolean isCentroid;
+	bool isCentroid;
+	PlacemarkPtr getKML() const;
+	string getTag(string tag_key) const;
+	string getTagString() const;
+ void setTag(string key, string value);
+	map<string, string > getTags() const;
 protected:
-	patULong userId;
-	patULong internalId;
+	map<string, string > m_tags;
+	unsigned long userId;
+	unsigned long internalId;
 	patString name;
 	patGeoCoordinates geoCoord;
-	set<patULong> userPredecessors;
-	set<patULong> userSuccessors;
-	map<patULong, patArc*> outgoingArcs;
-	map<patULong, patArc*> incomingArcs;
+	set<unsigned long> userPredecessors;
+	set<unsigned long> userSuccessors;
+	map<unsigned long, patArc*> outgoingArcs;
+	map<unsigned long, patArc*> incomingArcs;
 	struct node_attributes attributes;
 };
 

@@ -17,42 +17,45 @@
 
 using namespace std;
 patNetworkElements::patNetworkElements() :
-		total_nbr_of_arcs(0) {
+		total_nbr_of_arcs(0), total_nbr_of_pt_segs(0) {
 	//
 
 }
-patBoolean patNetworkElements::addNode(patULong theId, patNode& theNode,
+bool patNetworkElements::addNode(unsigned long theId, patNode& theNode,
 		patError*& err) {
 
-	map<patULong, patNode>::iterator found = nodes.find(theNode.getUserId());
-	if (found != nodes.end()) {
+	map<unsigned long, patNode>::iterator found = m_nodes.find(
+			theNode.getUserId());
+	if (found != m_nodes.end()) {
 		// The node Id already exists
 		DEBUG_MESSAGE("node exists");
-		return patFALSE;
+		return false;
 	} else {
-		pair<map<patULong, patNode>::iterator, bool> insert_result =
-				nodes.insert(pair<patULong, patNode>(theNode.userId, theNode));
+		pair<map<unsigned long, patNode>::iterator, bool> insert_result =
+				m_nodes.insert(
+						pair<unsigned long, patNode>(theNode.userId, theNode));
 		;
 		//    DEBUG_MESSAGE("Node '" << theNode.name << "' added") ;
 		if (insert_result.second == false) {
 			err = new patErrMiscError("insert node not successful");
 			WARNING(err->describe());
-			return patFALSE;
+			return false;
 		}
 
-		return patTRUE;
+		return true;
 	}
 
-	return patTRUE;
+	return true;
 }
 
 patArc* patNetworkElements::addArc(patNode* up_node, patNode* down_node,
 		patWay* the_way, patError*& err) {
 
-	patArc new_arc = patArc(total_nbr_of_arcs, up_node, down_node);
-	new_arc.way_id = the_way->getId();
-	pair<map<patULong, patArc>::iterator, bool> insert_result = arcs.insert(
-			pair<patULong, patArc>(total_nbr_of_arcs, new_arc));
+	patArc new_arc(total_nbr_of_arcs, up_node, down_node);
+	new_arc.m_way_id = the_way->getId();
+	pair<map<unsigned long, patArc>::iterator, bool> insert_result =
+			m_arcs.insert(
+					pair<unsigned long, patArc>(total_nbr_of_arcs, new_arc));
 	if (insert_result.second == false) {
 		err = new patErrMiscError("insert arc not successful");
 		WARNING(err->describe());
@@ -61,27 +64,46 @@ patArc* patNetworkElements::addArc(patNode* up_node, patNode* down_node,
 		//DEBUG_MESSAGE("New arc: "<<up_node_id<<" - "<<down_node_id<<"");
 		patArc* new_arc_pointer = &(insert_result.first->second);
 		up_node->outgoingArcs.insert(
-				pair<patULong, patArc*>(down_node->userId, new_arc_pointer));
+				pair<unsigned long, patArc*>(down_node->userId,
+						new_arc_pointer));
 		down_node->incomingArcs.insert(
-				pair<patULong, patArc*>(up_node->userId, new_arc_pointer));
+				pair<unsigned long, patArc*>(up_node->userId, new_arc_pointer));
 		total_nbr_of_arcs++;
 		return new_arc_pointer;
 	}
 }
-const map<patULong, patWay>* patNetworkElements::getWays() {
-	return &ways;
+
+patPublicTransportSegment* patNetworkElements::addPTSegment(patPublicTransportSegment* ptSeg,patError*& err) {
+
+	pair<map<unsigned long, patPublicTransportSegment>::iterator, bool> insert_result =
+			m_pt_segments.insert(
+					pair<unsigned long, patPublicTransportSegment>(
+							total_nbr_of_pt_segs, *ptSeg));
+	if (insert_result.second == false) {
+		err = new patErrMiscError("insert arc not successful");
+		WARNING(err->describe());
+		return NULL;
+	} else {
+		patPublicTransportSegment* new_pt_pointer = &(insert_result.first->second);
+
+		++total_nbr_of_pt_segs;
+		return new_pt_pointer;
+	}
+}
+const map<unsigned long, patWay>* patNetworkElements::getWays() {
+	return &m_ways;
 }
 
-patBoolean patNetworkElements::addProcessedWay(patWay& the_way,
-		list<patULong> the_list_of_nodes_ids, patULong source, patULong target,
-		patError*& err) {
+bool patNetworkElements::addProcessedWay(patWay& the_way,
+		list<unsigned long> the_list_of_nodes_ids, unsigned long source,
+		unsigned long target, patError*& err) {
 	if (source == target) {
 		DEBUG_MESSAGE("a loop");
-		return patFALSE;
+		return false;
 	}
-	if (processed_ways.find(the_way.getId()) != processed_ways.end()) {
-		DEBUG_MESSAGE("duplicate ways"<<the_way.getId());
-		return patTRUE;
+	if (m_processed_ways.find(the_way.getId()) != m_processed_ways.end()) {
+		DEBUG_MESSAGE("duplicate m_ways" << the_way.getId());
+		return true;
 	}
 	//DEBUG_MESSAGE(source<<"-"<<target);
 
@@ -89,9 +111,9 @@ patBoolean patNetworkElements::addProcessedWay(patWay& the_way,
 	//For example, the_list_of_nodes_ids=[1 2 3 4 5]
 	//source = 2, target =4
 	//effective_nodes = [2 3 4].
-	list<patULong> effective_nodes;
+	list<unsigned long> effective_nodes;
 	bool start = false;
-	for (list<patULong>::iterator iter = the_list_of_nodes_ids.begin();
+	for (list<unsigned long>::iterator iter = the_list_of_nodes_ids.begin();
 			iter != the_list_of_nodes_ids.end(); ++iter) {
 		//DEBUG_MESSAGE(*iter);
 		if (start) {
@@ -108,62 +130,66 @@ patBoolean patNetworkElements::addProcessedWay(patWay& the_way,
 		}
 
 	}
-	if(the_way.readFromNodesIds(this, effective_nodes, err)){
+	if (the_way.readFromNodesIds(this, effective_nodes, err)) {
 
-		processed_ways[the_way.getId()] = the_way;
-		return patTRUE;
-	}
-	else{
-		return patFALSE;
+		m_processed_ways[the_way.getId()] = the_way;
+		return true;
+	} else {
+		return false;
 	}
 
 }
 
-patBoolean patNetworkElements::addWay(patWay* the_way,
-		list<patULong> the_list_of_nodes_ids, patError*& err) {
-	if (ways.find(the_way->getId()) != ways.end()) {
-		DEBUG_MESSAGE("duplicate ways"<<the_way->getId());
-		return patTRUE;
+bool patNetworkElements::addWay(patWay* the_way,
+		list<unsigned long> the_list_of_nodes_ids, patError*& err) {
+	if (m_ways.find(the_way->getId()) != m_ways.end()) {
+		DEBUG_MESSAGE("duplicate m_ways" << the_way->getId());
+		return true;
 	}
 	the_way->readFromNodesIds(this, the_list_of_nodes_ids, err);
 
-	ways[the_way->getId()] = *the_way;
-	return patTRUE;
+	m_ways[the_way->getId()] = *the_way;
+	return true;
 }
 
-patULong patNetworkElements::getArcSize() {
-	return arcs.size();
+unsigned long patNetworkElements::getArcSize() const {
+	return m_arcs.size();
 }
-patULong patNetworkElements::getWaySize() {
-	return ways.size();
+unsigned long patNetworkElements::getWaySize()  const{
+	return m_ways.size();
 }
 
 void patNetworkElements::readNetworkFromPostGreSQL(
 		patGeoBoundingBox bounding_box, patError*& err) {
 	readNodesFromPostGreSQL(bounding_box, err);
 	readWaysFromPostGreSQL(bounding_box, err);
-
+	summarizeMembership();
 }
 void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box,
 		patError*& err) {
 
 	string bb_box;
 	stringstream query_stream(bb_box);
-	query_stream << "SELECT id, ST_AsText(geom) as geom from nodes"
+	query_stream << "SELECT id, tags, tags -> 'name'::text AS name, ST_AsText(geom) as geom from nodes"
 			<< " where geom && 'BOX3D(" << bounding_box.toString()
 			<< ")'::box3d;";
 	DEBUG_MESSAGE(query_stream.str());
 	result R = patPostGreSQLConnector::makeSelectQuery(query_stream.str());
-	DEBUG_MESSAGE("Total Records: "<<R.size());
+	DEBUG_MESSAGE("Total nodes: " << R.size());
 	for (result::const_iterator i = R.begin(); i != R.end(); ++i) {
 
-		patPostGISDataType tt = patPostGISDataType();
-		pair<patReal, patReal> lon_lat = patPostGISDataType::PointToLonLat(
+		pair<double, double> lon_lat = patPostGISDataType::PointToLonLat(
 				(*i)["geom"].c_str());
-		patULong id;
+		map<patString, patString> tags = patPostGISDataType::hstoreToMap((*i)["tags"].c_str());
+		unsigned long id;
 		(*i)["id"].to(id);
+		string name;
+
+		(*i)["name"].to(name);
 		//DEBUG_MESSAGE(id<<":"<<lon_lat.first<<","<<lon_lat.second);
 		patNode new_node(id, lon_lat.second, lon_lat.first);
+		new_node.setTags(tags);
+		new_node.setName(name);
 		addNode(id, new_node, err);
 	}
 
@@ -171,7 +197,8 @@ void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box,
 
 void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 		patError*& err) {
-
+/*
+ 	 //swiss_edges table has some problem that does not include all the ways (probably pt are excluded
 	string bb_box;
 	stringstream query_stream(bb_box);
 	query_stream
@@ -181,10 +208,10 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 	DEBUG_MESSAGE(query_stream.str());
 
 	result R = patPostGreSQLConnector::makeSelectQuery(query_stream.str());
-	DEBUG_MESSAGE("Total Records: "<<R.size());
-	patULong last_way_id = 0;
+	DEBUG_MESSAGE("Total Records: " << R.size());
+	unsigned long last_way_id = 0;
 	for (result::const_iterator i = R.begin(); i != R.end(); ++i) {
-		patULong way_id;
+		unsigned long way_id;
 
 		(*i)["id"].to(way_id);
 		int edge_id;
@@ -194,18 +221,10 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 		(*i)["source"].to(source);
 		(*i)["target"].to(target);
 
-		list<patULong> nodes_list = patPostGISDataType::IntArrayToULongList(
-				(*i)["nodes"].c_str());
-		map<patString, patString> tags = patPostGISDataType::hstoreToMap(
+		list<unsigned long> nodes_list =
+				patPostGISDataType::IntArrayToULongList((*i)["nodes"].c_str());
+		map < patString, patString > tags = patPostGISDataType::hstoreToMap(
 				(*i)["tags"].c_str());
-		/*
-		 for(map<patString,patString>::iterator iter=tags.begin();
-		 iter!=tags.end();
-		 ++iter){
-
-		 DEBUG_MESSAGE(iter->first<<"=>"<<iter->second);
-		 }
-*/
 		patWay new_processed_way = patWay(edge_id, tags);
 		addProcessedWay(new_processed_way, nodes_list, source, target, err);
 		if (way_id != last_way_id) {
@@ -214,10 +233,40 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 		}
 		last_way_id = way_id;
 	}
-	DEBUG_MESSAGE("network node size: "<<getNodeSize());
-	DEBUG_MESSAGE("network arc size: "<<getArcSize());
-		DEBUG_MESSAGE("network way size: "<<getWaySize());
-	DEBUG_MESSAGE("network processed way size: "<<processed_ways.size());
+	*/
+
+	string bb_box;
+	stringstream query_stream(bb_box);
+	query_stream
+	<< "select ways.tags,ways.nodes,ways.id from ways "
+	<< "JOIN( "
+	<< "select distinct(osm_id) as osm_id from pg_ways where the_geom && 'BOX3D("
+	<< bounding_box.toString() << ")'::box3d) ways_in_region"
+	<< " on ways.id=ways_in_region.osm_id;";
+	DEBUG_MESSAGE(query_stream.str());
+
+	result R = patPostGreSQLConnector::makeSelectQuery(query_stream.str());
+	DEBUG_MESSAGE("Total ways: " << R.size());
+	unsigned long last_way_id = 0;
+	for (result::const_iterator i = R.begin(); i != R.end(); ++i) {
+		unsigned long way_id;
+
+		(*i)["id"].to(way_id);
+
+		list<unsigned long> nodes_list =
+				patPostGISDataType::IntArrayToULongList((*i)["nodes"].c_str());
+		map < patString, patString > tags = patPostGISDataType::hstoreToMap(
+				(*i)["tags"].c_str());
+		if (way_id != last_way_id) {
+			patWay new_way = patWay(way_id, tags);
+			addWay(&new_way, nodes_list, err);
+		}
+		last_way_id = way_id;
+	}
+	DEBUG_MESSAGE("network node size: " << getNodeSize());
+	DEBUG_MESSAGE("network arc size: " << getArcSize());
+	DEBUG_MESSAGE("network way size: " << getWaySize());
+	DEBUG_MESSAGE("network processed way size: " << m_processed_ways.size());
 }
 
 patNetworkElements::~patNetworkElements() {
@@ -227,8 +276,8 @@ patNetworkElements::~patNetworkElements() {
 patNode* patNetworkElements::getNode(int node_id) {
 
 	//map<patULong, patNode> nodes;
-	map<patULong, patNode>::iterator node_find = nodes.find(node_id);
-	if (node_find == nodes.end()) {
+	map<unsigned long, patNode>::iterator node_find = m_nodes.find(node_id);
+	if (node_find == m_nodes.end()) {
 		return NULL;
 	} else {
 		return &(node_find->second);
@@ -236,9 +285,9 @@ patNode* patNetworkElements::getNode(int node_id) {
 }
 patArc* patNetworkElements::getArc(int arc_id) {
 
-	//map<patULong, patArc> arcs;
-	map<patULong, patArc>::iterator arc_find = arcs.find(arc_id);
-	if (arc_find == arcs.end()) {
+	//map<patULong, patArc> m_arcs;
+	map<unsigned long, patArc>::iterator arc_find = m_arcs.find(arc_id);
+	if (arc_find == m_arcs.end()) {
 		return NULL;
 	} else {
 		return &(arc_find->second);
@@ -247,26 +296,78 @@ patArc* patNetworkElements::getArc(int arc_id) {
 
 patWay* patNetworkElements::getProcessedWay(int way_id) {
 
-	//map<patULong, patWay> ways;
-	map<patULong, patWay>::iterator way_find = processed_ways.find(way_id);
-	if (way_find == processed_ways.end()) {
+	//map<patULong, patWay> m_ways;
+	map<unsigned long, patWay>::iterator way_find = m_processed_ways.find(
+			way_id);
+	if (way_find == m_processed_ways.end()) {
 		return NULL;
 	} else {
 		return &(way_find->second);
 	}
-}patWay* patNetworkElements::getWay(int way_id) {
+}
+patWay* patNetworkElements::getWay(int way_id) {
+	//DEBUG_MESSAGE(way_id);
+	//map<patULong, patWay> m_ways;
+	map<unsigned long, patWay>::iterator way_find = m_ways.find(way_id);
+	if (way_find == m_ways.end()) {
+		//DEBUG_MESSAGE("way not found");
+		return NULL;
+	} else {
 
-	//map<patULong, patWay> ways;
-	map<patULong, patWay>::iterator way_find = ways.find(way_id);
-	if (way_find == ways.end()) {
-		return NULL;
-	} else {
+	//	DEBUG_MESSAGE("way  found");
 		return &(way_find->second);
 	}
 }
-patULong patNetworkElements::getNodeSize(){
-	return nodes.size();
+unsigned long patNetworkElements::getNodeSize() const{
+	return m_nodes.size();
 }
-const map<patULong, patArc>* patNetworkElements::getAllArcs(){
-	return &arcs
+const map<unsigned long, patArc>* patNetworkElements::getAllArcs() const {
+	return &m_arcs;
+}
+
+void patNetworkElements::summarizeMembership() {
+	for (map<unsigned long, patArc>::const_iterator arc_iter = m_arcs.begin();
+			arc_iter != m_arcs.end(); ++arc_iter) {
+		m_node_arc_membership[arc_iter->second.getUpNode()];
+		m_node_arc_membership[arc_iter->second.getUpNode()][arc_iter->second.getDownNode()] =
+				&arc_iter->second;
+	}
+
+}
+void patNetworkElements::computeLength() {
+	for(map<unsigned long, patArc>::iterator arc_iter = m_arcs.begin();
+			arc_iter!=m_arcs.end();
+			++arc_iter){
+		arc_iter->second.computeLength();
+	}
+	for(map<unsigned long, patWay>::iterator arc_iter = m_ways.begin();
+			arc_iter!=m_ways.end();
+			++arc_iter){
+		arc_iter->second.computeLength();
+	}
+	for(map<unsigned long, patWay>::iterator arc_iter = m_processed_ways.begin();
+			arc_iter!=m_processed_ways.end();
+			++arc_iter){
+		arc_iter->second.computeLength();
+	}
+	for(map<unsigned long, patPublicTransportSegment>::iterator arc_iter = m_pt_segments.begin();
+			arc_iter!=m_pt_segments.end();
+			++arc_iter){
+		arc_iter->second.computeLength();
+	}
+}
+const patArc* patNetworkElements::findArcByNodes(const patNode* up_node,
+		const patNode* down_node) const {
+
+	map<const patNode*, map<const patNode*, const patArc*> >::const_iterator find_up_node =
+			m_node_arc_membership.find(up_node);
+	if (find_up_node == m_node_arc_membership.end()) {
+		return NULL;
+	}
+	map<const patNode*, const patArc*>::const_iterator find_down_node =
+			find_up_node->second.find(down_node);
+	if (find_down_node == find_up_node->second.end()) {
+		return NULL;
+	}
+	return find_down_node->second;
 }

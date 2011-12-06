@@ -8,11 +8,11 @@
 #include "patVirtualNetwork.h"
 
 patVirtualNetwork::patVirtualNetwork() {
-	// TODO Auto-generated constructor stub
+	//
 
 }
 
 patVirtualNetwork::~patVirtualNetwork() {
-	// TODO Auto-generated destructor stub
+	//
 }
 

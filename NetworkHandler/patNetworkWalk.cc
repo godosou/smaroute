@@ -11,8 +11,12 @@
 #include "patWay.h"
 #include "patType.h"
 #include "patDisplay.h"
+#include "patNBParameters.h"
+patNetworkWalk::patNetworkWalk(){
+	m_transport_mode=TransportMode(WALK);
+}
 
-void patNetworkWalk::getFromNetwork(patNetworkElements* network) {
+void patNetworkWalk::getFromNetwork(patNetworkElements* network, patGeoBoundingBox bb) {
 	DEBUG_MESSAGE("read walk network");
 	unsigned long walk_way_count = 0;
 	unsigned long not_walk_way_count = 0;
@@ -31,8 +35,11 @@ void patNetworkWalk::getFromNetwork(patNetworkElements* network) {
 			addWay(&(way_iter->second), false);
 			addWay(&(way_iter->second), true);
 		}
+		else{
+			WARNING("wrong indicator"<<walk_way_indicator);
+		}
 
-	}DEBUG_MESSAGE("walk double way: "<<walk_doubleway_count);
+	}DEBUG_MESSAGE("walk double way: "<<walk_way_count);
 	DEBUG_MESSAGE("not walk way: "<<not_walk_way_count);
 	return;
 }
@@ -41,3 +48,11 @@ void patNetworkWalk::getFromNetwork(patNetworkElements* network) {
 patNetworkWalk::~patNetworkWalk() {
 }
 
+
+double patNetworkWalk::getMinSpeed() const{
+	return patNBParameters::the()->walkNetworkMinSpeed;
+}
+double patNetworkWalk::getMaxSpeed() const{
+
+	return patNBParameters::the()->walkNetworkMaxSpeed;
+}

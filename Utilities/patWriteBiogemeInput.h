@@ -22,10 +22,10 @@ class patWriteBiogemeInput{
 	void writeObservation(patObservation* theObservation);
 	void writeData(const patString& fileName);
 	protected:
-	patULong nbrOfAlternatives;
+	unsigned long nbrOfAlternatives;
 	 patSample* theSample;
 	patNetwork* theNetwork;
-		patULong maxPathNumber;
+		unsigned long maxPathNumber;
 };
 
 #endif

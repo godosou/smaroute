@@ -25,15 +25,15 @@ patStreetSegment(patNetwork* aNetwork, patArc* anArc, patError*& err);
     patNode* getEndNode(patError*& err);
     patArc* getStartArc();
     patArc* getEndArc();
-    patBoolean addArcToBack( patArc* anArc);
-    patBoolean addArcToFront( patArc* anArc);
-    patBoolean deleteArcFromFront();
-    patBoolean deleteArcFromBack();
-    patReal getLength();
-    patBoolean checkUpwardSingleWay(patNode* aNode, patNode* nextNode);
- patULong size();
+    bool addArcToBack( patArc* anArc);
+    bool addArcToFront( patArc* anArc);
+    bool deleteArcFromFront();
+    bool deleteArcFromBack();
+    double getLength();
+    bool checkUpwardSingleWay(patNode* aNode, patNode* nextNode);
+ unsigned long size();
 
-patBoolean checkDownwardSingleWay(patNode* aNode, patNode* prevNode);
+bool checkDownwardSingleWay(patNode* aNode, patNode* prevNode);
 
     void generateStreetFromArc( patArc* anArc, patError*& err);
     const list<patArc*>* getArcList() const;

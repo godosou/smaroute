@@ -47,10 +47,10 @@ for (list<patArc*>::iterator aIter= listOfArcs->begin();
     ++hIter ;
     for ( ; hIter != (*aIter)->polyline.end() ; ++gIter, ++hIter) {
       
-      patReal a1 = gIter->longitudeInDegrees ;
-      patReal a2 = gIter->latitudeInDegrees ;
-      patReal b1 = hIter->longitudeInDegrees ;
-      patReal b2 = hIter->latitudeInDegrees ;
+      double a1 = gIter->longitudeInDegrees ;
+      double a2 = gIter->latitudeInDegrees ;
+      double b1 = hIter->longitudeInDegrees ;
+      double b2 = hIter->latitudeInDegrees ;
 
       kml << a1 <<"," << a2 << ",0 "  
 	  << b1 <<"," << b2 << ",0" << ' ' ;

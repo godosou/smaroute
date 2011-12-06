@@ -89,7 +89,7 @@ void patDisplay::initProgressReport(const patString message,
 }
 
 patBoolean patDisplay::updateProgressReport(unsigned long currentValue) {
-  return patTRUE ;
+  return true ;
 }
 
 void patDisplay::terminateProgressReport() {

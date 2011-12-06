@@ -1,11 +1,7 @@
 #include "patDisplay.h"
 #include "patNBParameters.h"
 #include "patErrMiscError.h"
-#include "patArcTransition.h"
 #include <xmlwrapp/xmlwrapp.h>
-#include "dataStruct.h"
-#include "patTransportMode.h"
-#include "patTrafficModelComplex.h"
 patNBParameters::patNBParameters(patString fname)
 {
 	 
@@ -25,7 +21,7 @@ patNBParameters* patNBParameters::the() {
   return patNBParameters::ins ;
 }
 
-patBoolean patNBParameters::readFile(patString fileName,patError*& err){
+bool patNBParameters::readFile(patString fileName,patError*& err){
 
 DEBUG_MESSAGE("parsing config file:"<<fileName);
 	xml::init xmlinit ;  
@@ -38,7 +34,7 @@ DEBUG_MESSAGE("parsing config file:"<<fileName);
     str << "Error while parsing " << fileName ;
     err = new patErrMiscError(str.str()) ;
     WARNING(err->describe());
-    return patFALSE ;
+    return false ;
   }
 
   xml::node theRoot = doc.get_root_node() ;
@@ -58,7 +54,7 @@ DEBUG_MESSAGE("parsing config file:"<<fileName);
 		else{
 			patString moduleName(attrIter1->get_value());		
 			xml::nodes_view params(mIter->elements("param"));
-			patULong k=0;
+			unsigned long k=0;
 			for(xml::nodes_view::iterator pIter = params.begin();
 				pIter!=params.end();
 				++pIter){
@@ -89,91 +85,85 @@ DEBUG_MESSAGE("parsing config file:"<<fileName);
 		
 	}
 	setTrafficModelParam();
-  return patTRUE ;
+  return true ;
 }
-patBoolean patNBParameters::setParam(patString name,patString value,patString type){
+bool patNBParameters::setParam(patString name,patString value,patString type){
 	pair<patString, pair<patString,patString> > el = pair<patString,pair<patString,patString> >(name,pair<patString,patString>(value,type)) ;
 	if(params.insert(el).second){
-		return patTRUE;
+		return true;
 	}
-	return patFALSE;
+	return false;
 }
-patBoolean patNBParameters::setTrafficModelParam(){
-	TrafficModelParam car_param;
-	getParam(patString("CARw"),&car_param.w);
-	getParam(patString("CARlambda"),&car_param.lambda);
-	getParam(patString("CARmu"),&car_param.mu);
-	getParam(patString("CARsigma"),&car_param.sigma);
-	patTrafficModelComplex::tm_params[CAR]=car_param;
+bool patNBParameters::setTrafficModelParam(){
+	getParam(patString("CARw"),&CAR_param.w);
+	getParam(patString("CARlambda"),&CAR_param.lambda);
+	getParam(patString("CARmu"),&CAR_param.mu);
+	getParam(patString("CARsigma"),&CAR_param.sigma);
+	CAR_param.mode = TransportMode(CAR);
 
-	TrafficModelParam BUS_param;
 	getParam(patString("BUSw"),&BUS_param.w);
 	getParam(patString("BUSlambda"),&BUS_param.lambda);
 	getParam(patString("BUSmu"),&BUS_param.mu);
 	getParam(patString("BUSsigma"),&BUS_param.sigma);
-	patTrafficModelComplex::tm_params[BUS]=BUS_param;
+	BUS_param.mode = TransportMode(BUS);
 
-	TrafficModelParam WALK_param;
 	getParam(patString("WALKw"),&WALK_param.w);
 	getParam(patString("WALKlambda"),&WALK_param.lambda);
 	getParam(patString("WALKmu"),&WALK_param.mu);
 	getParam(patString("WALKsigma"),&WALK_param.sigma);
-	patTrafficModelComplex::tm_params[WALK]=WALK_param;
+	WALK_param.mode = TransportMode(WALK);
 
-	TrafficModelParam BIKE_param;
 	getParam(patString("BIKEw"),&BIKE_param.w);
 	getParam(patString("BIKElambda"),&BIKE_param.lambda);
 	getParam(patString("BIKEmu"),&BIKE_param.mu);
 	getParam(patString("BIKEsigma"),&BIKE_param.sigma);
-	patTrafficModelComplex::tm_params[BIKE]=BIKE_param;
+	BIKE_param.mode = TransportMode(BIKE);
 
-	TrafficModelParam TRAIN_param;
 	getParam(patString("TRAINw"),&TRAIN_param.w);
 	getParam(patString("TRAINlambda"),&TRAIN_param.lambda);
 	getParam(patString("TRAINmu"),&TRAIN_param.mu);
 	getParam(patString("TRAINsigma"),&TRAIN_param.sigma);
-	patTrafficModelComplex::tm_params[TRAIN]=TRAIN_param;
+	TRAIN_param.mode = TransportMode(TRAIN);
 
-	TrafficModelParam METRO_param;
 	getParam(patString("METROw"),&METRO_param.w);
 	getParam(patString("METROlambda"),&METRO_param.lambda);
 	getParam(patString("METROmu"),&METRO_param.mu);
 	getParam(patString("METROsigma"),&METRO_param.sigma);
-	patTrafficModelComplex::tm_params[METRO]=METRO_param;
+	METRO_param.mode = TransportMode(METRO);
 
 }
-patBoolean patNBParameters::getParam(patString name, patReal* value){
+bool patNBParameters::getParam(patString name, double* value){
 	map<patString, pair<patString,patString> >::iterator pIter = params.find(name);
 	if (pIter==params.end()||pIter->second.second != "float"){
-		return patFALSE;
+		return false;
 	}
 	else{
 		*value = atof(pIter->second.first.c_str());
-		return patTRUE;
+		return true;
 	}
 }
 
 
-patBoolean patNBParameters::getParam(patString name, patULong* value){
+bool patNBParameters::getParam(patString name, unsigned long* value){
 	map<patString, pair<patString,patString> >::iterator pIter = params.find(name);
 	if (pIter==params.end()||pIter->second.second != "int"){
-		return patFALSE;
+		return false;
 	}
 	else{
 		*value = atol(pIter->second.first.c_str());
-		return patTRUE;
+		return true;
 	}
 }
 
 
-patBoolean patNBParameters::getParam(patString name, patString* value){
+bool patNBParameters::getParam(patString name, patString* value){
 	map<patString, pair<patString,patString> >::iterator pIter = params.find(name);
 	if (pIter==params.end()||pIter->second.second != "string"){
-		return patFALSE;
+		return false;
 	}
 	else{
 		*value = pIter->second.first;
-		return patTRUE;
+		return true;
 	}
 }
 
@@ -187,8 +177,8 @@ void patNBParameters::showAll(){
 }
 
 void patNBParameters::init(patError*& err){
-	map<patString,patReal*> realParams;
-	map<patString,patULong*> intParams;
+	map<patString,double*> realParams;
+	map<patString,unsigned long*> intParams;
 	map<patString,patString*> strParams;
 	realParams["maxHorizonAccuracy"]=&maxHorizonAccuracy;
 	realParams["maxHeadingAccuracy"]=&maxHeadingAccuracy;
@@ -254,8 +244,30 @@ void patNBParameters::init(patError*& err){
 	realParams["tmcsigma"]=&tmcsigma;
 	realParams["routeJoiningQualityThreshold"]=&routeJoiningQualityThreshold;
 	realParams["newGpsSamplingInterval"]=&newGpsSamplingInterval;
+
+
+	realParams["boundingBoxLeftUpLatitude"]=&boundingBoxLeftUpLatitude;
+	realParams["boundingBoxLeftUpLongitude"]=&boundingBoxLeftUpLongitude;
+	realParams["boundingBoxRightBottumLatitude"]=&boundingBoxRightBottumLatitude;
+	realParams["boundingBoxRightBottumLongitude"]=&boundingBoxRightBottumLongitude;
+
+	realParams["walkNetworkMinSpeed"]=&walkNetworkMinSpeed;
+	realParams["walkNetworkMaxSpeed"]=&walkNetworkMaxSpeed;
+	realParams["trainNetworkMinSpeed"]=&trainNetworkMinSpeed;
+	realParams["trainNetworkMaxSpeed"]=&trainNetworkMaxSpeed;
+	realParams["busNetworkMinSpeed"]=&busNetworkMinSpeed;
+	realParams["busNetworkMaxSpeed"]=&busNetworkMaxSpeed;
+	realParams["carNetworkMinSpeed"]=&carNetworkMinSpeed;
+	realParams["carNetworkMaxSpeed"]=&carNetworkMaxSpeed;
+	realParams["bikeNetworkMinSpeed"]=&bikeNetworkMinSpeed;
+	realParams["bikeNetworkMaxSpeed"]=&bikeNetworkMaxSpeed;
 	
-	
+
+	realParams["minPathTravelTimeRatio"]=&minPathTravelTimeRatio;
+
+	realParams["minChangeLengthBackToTheSame"]=&minChangeLengthBackToTheSame;
+
+
 	intParams["stepsPriority"]=&stepsPriority;
 	intParams["footwayPriority"]=&footwayPriority;
 	intParams["cyclewayPriority"]=&cyclewayPriority;
@@ -333,13 +345,13 @@ void patNBParameters::init(patError*& err){
         strParams["SAType"]=&SAType;
         strParams["SAPathFolder"]=&SAPathFolder;
 
-	for(map<patString,patReal*>::iterator realIter = realParams.begin();
+	for(map<patString,double*>::iterator realIter = realParams.begin();
 			realIter!=realParams.end();
 			++realIter){
 		patString name= realIter->first;
-		patReal* value = realIter->second;
+		double* value = realIter->second;
 		//DEBUG_MESSAGE(name);
-		if(getParam(name,value)!=patTRUE){
+		if(getParam(name,value)!=true){
 		stringstream str ;
 		str << "Error reading param "<<name ;
 		err = new patErrMiscError(str.str()) ;
@@ -349,14 +361,14 @@ void patNBParameters::init(patError*& err){
 		//DEBUG_MESSAGE(name<<": "<<*value);
 	}
 	
-	for(map<patString,patULong*>::iterator intIter = intParams.begin();
+	for(map<patString,unsigned long*>::iterator intIter = intParams.begin();
 			intIter != intParams.end();
 			++intIter){
 		patString name= intIter->first;
-		patULong* value = intIter->second;
+		unsigned long* value = intIter->second;
 		//DEBUG_MESSAGE(name);
 		
-		if(getParam(name,value)!=patTRUE){
+		if(getParam(name,value)!=true){
 		stringstream str ;
 		str << "Error reading param "<<name ;
 		err = new patErrMiscError(str.str()) ;
@@ -372,7 +384,7 @@ void patNBParameters::init(patError*& err){
 		patString* value = strIter->second;
 		//DEBUG_MESSAGE(name);
 		
-		if(getParam(name,value)!=patTRUE){
+		if(getParam(name,value)!=true){
 		stringstream str ;
 		str << "Error reading param "<<name ;
 		err = new patErrMiscError(str.str()) ;

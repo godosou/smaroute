@@ -8,9 +8,12 @@
 #ifndef PATPATHEXTENSION_H_
 #define PATPATHEXTENSION_H_
 #include <set>
-#include "patPathJ.h"
+#include "patMultiModalPath.h"
 #include "patNode.h"
 #include "patNetworkBase.h"
+#include "patNetworkEnvironment.h"
+#include "patGpsDDR.h"
+#include "patMeasurementDDR.h"
 /**
  * A connection of methods for path extension.
  */
@@ -26,17 +29,17 @@ public:
 	 * @param ddr: the ddr of the current gps point;
 	 * @return a set of connected paths.
 	 */
-	set<patPathJ> extendFromNode(const set<patPathJ>* up_streams, const patNode* connect_node, const set<patPathJ>* down_streams, patGpsDDR* ddr);
+	set<patMultiModalPath> extendFromNode(const set<const patMultiModalPath*>* up_streams, const patNode* connect_node, const set<patMultiModalPath>* down_streams, patMeasurementDDR* ddr);
 
 	/**
-	 * Build initiate paths by connecting arcs in ddr.
+	 * Build initiate paths by creating a path for each arc.
 	 */
-	set<patPathJ> init(patGpsDDR* ddr);
+	set<patMultiModalPath> init(const map<const patArc*, double>* ddr_arcs);
 
-	void assignMode();
 	virtual ~patPathExtension();
 protected:
-	const patNetworkBase* network;
+	const patNetworkBase* m_network;
+	//const patNetworkEnvironment* m_network_environment;
 };
 
 #endif /* PATPATHEXTENSION_H_ */

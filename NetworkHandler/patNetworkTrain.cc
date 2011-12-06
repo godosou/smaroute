@@ -7,15 +7,25 @@
 
 #include "patNetworkTrain.h"
 
+#include "patNBParameters.h"
 patNetworkTrain::patNetworkTrain() {
 
+		m_transport_mode=TransportMode(TRAIN);
 
 }
 
-void patNetworkBus::getFromNetwork(patNetworkElements* network){
+void patNetworkTrain::getFromNetwork(patNetworkElements* network,patGeoBoundingBox bounding_box){
 
-	getRoutes(network,"train_routes_relations");
+	getRoutes(network,"train_routes_relations",bounding_box);
 }
 patNetworkTrain::~patNetworkTrain() {
 }
 
+
+double patNetworkTrain::getMinSpeed() const{
+	return patNBParameters::the()->trainNetworkMinSpeed;
+}
+double patNetworkTrain::getMaxSpeed() const{
+
+	return patNBParameters::the()->trainNetworkMaxSpeed;
+}

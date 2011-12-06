@@ -81,10 +81,10 @@ void patReadPathFromShp::readSequence(DBFHandle& file_handler) {
 		sequence_list[sequence] = i;
 	}
 }
-bool patReadPathFromShp::read(patPathJ* path, string file_path,
+bool patReadPathFromShp::read(patMultiModalPath* path, string file_path,
 		patNetworkElements* network, patError*& err) {
 
-	patPathJ new_path;
+	patMultiModalPath new_path;
 	DBFHandle file_handler = DBFOpen(file_path.c_str(), "rb");
 	readIndex(file_handler); //read column indices
 
@@ -191,12 +191,12 @@ bool patReadPathFromShp::read(patPathJ* path, string file_path,
 		tmp_modes.pop_front();
 		edges_forward_direction.pop_front();
 
-		const list<patArc*>* the_arc_list = way->getListOfArcs(forward);
+		const list<const patArc*>* the_arc_list = way->getArcListPointer(forward);
 		DEBUG_MESSAGE("way size: " << the_arc_list->size()<<", forward direction: "<<forward);
-		for (list<patArc*>::const_iterator arc_iter = the_arc_list->begin();
+		for (list<const patArc*>::const_iterator arc_iter = the_arc_list->begin();
 				arc_iter != the_arc_list->end(); ++arc_iter) {
 			DEBUG_MESSAGE(**arc_iter);
-			path->addArcToBack(*arc_iter, mode);
+			path->addRoadTravelToBack(*arc_iter, mode,0.0);
 		}
 	}
 

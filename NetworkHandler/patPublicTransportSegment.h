@@ -10,30 +10,33 @@
 
 #include "patWay.h"
 #include "patNode.h"
-#include "patNetworkElements.h"
 #include "patRoadBase.h"
+#include "patArcSequence.h"
+class patNetworkElements;
 #include <list>
 
 /**
- * Public transport segment between two stops. It is essentially an ordered list of ways;
+ * Public transport segment between two stops. It is essentially an ordered list of arcs;
  */
-class patPublicTransportSegment:public patRoadBase {
+class patPublicTransportSegment: public patArcSequence {
+	friend ostream& operator<<(ostream& str, const patPublicTransportSegment& x) ;
+
 public:
 	patPublicTransportSegment();
 
+	virtual bool addArcToBack(const patArc* arc, int direction);
+	virtual const patArc* deleteArcToBack();
 	/**
 	 * Append way_id way to the end;
 	 * @param way_id the id of the way
 	 */
-	bool pushBack(patNetworkElements* network,patULong way_id);
+	bool pushBack(patNetworkElements* network, unsigned long way_id);
 
 	/**
 	 * Append way_id way to the end;
 	 * @param way_id the id of the way
 	 */
-	bool pushFront(patNetworkElements* network,patULong way_id);
-
-	bool isError();
+	bool pushFront(patNetworkElements* network, unsigned long way_id);
 	/**
 	 * Append new way to the end;
 	 * @param new_way Pointer to the new way
@@ -44,29 +47,13 @@ public:
 	 * @param new_way Pointer to the new way
 	 */
 	void pushFront(patWay* new_way);
-
-	/**
-	 * return the pointer to the up node
-	 */
-	const patNode* getUpNode();
-
-	/**
-	 * return the pointer to the down node
-	 */
-	const patNode* getDownNode();
-
-	/**
-	 * Get the length of the segment.
-	 */
-	double getLength();
-	/**
-	 * Calculate the length of the segment.
-	 */
-	double calLength();
 	virtual ~patPublicTransportSegment();
+	map<string, string> attributes;
 protected:
-	list<patWay*> ways;
-	bool error;
+	list<int> m_directions;
+	string m_name;
+	string m_route_type;
+	string m_ref;
 };
 
 #endif /* PATPUBLICTRANSPORTSEGMENT_H_ */

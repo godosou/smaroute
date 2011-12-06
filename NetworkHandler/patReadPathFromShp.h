@@ -8,7 +8,7 @@
 #ifndef PATREADPATHFROMSHP_H_
 #define PATREADPATHFROMSHP_H_
 #include "patNetworkElements.h"
-#include "patPathJ.h"
+#include "patMultiModalPath.h"
 #include "patError.h"
 #include <shapefil.h>
 #include "patWay.h"
@@ -44,7 +44,7 @@ public:
 	 * @param network NetworkElement object.
 	 * @param err Error pointer.
 	 */
-	bool read(patPathJ* path, string file_path, patNetworkElements* network, patError*& err);
+	bool read(patMultiModalPath* path, string file_path, patNetworkElements* network, patError*& err);
 
 	/**
 	 * Read sequence of arcs in the path.

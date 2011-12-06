@@ -19,8 +19,28 @@ using namespace std;
 class patNetworkUnimodal:public patNetworkBase {
 public:
 	patNetworkUnimodal();
-	patBoolean addWay(const patWay*  the_way,patBoolean reverse);
+
+	/**
+	 * Add a way to the network, if it is reverse, add the way reversely.
+	 * @param the_way, the way to be added.
+	 * @param reverse, reverse the way or not.
+	 */
+	bool addWay(const patWay*  the_way,bool reverse);
 	virtual ~patNetworkUnimodal();
+
+	/**
+	 * Find a arc by the up node and down node.
+	 * @param up_node the up node
+	 * @param down_node the down node
+	 * @return the pointer the the found arc, NULL if not found.
+	 */
+	const patRoadBase* findArc(const patArc* const an_arc) const;
+
+	/**
+	 * Implement patNetworkBase::getRoadsContainArc()
+	 * @see patNetworkBase::getRoadsContainArc()
+	 */
+	 virtual set<const patRoadBase*> getRoadsContainArc(const patRoadBase* arc) const ;
 protected:
 };
 
