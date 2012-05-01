@@ -50,7 +50,8 @@ add_subdirectory(Math)
 add_subdirectory(PathGeneration/MetropolishHastings)
 add_subdirectory(bin)
 add_subdirectory(test)
-configure_file(params ${CMAKE_CURRENT_BINARY_DIR}/params COPYONLY)
+#configure_file(params ${CMAKE_CURRENT_BINARY_DIR}/params COPYONLY)
+execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_SOURCE_DIR}/params ${CMAKE_BINARY_DIR}/params)
 
 
 #target_link_libraries (CheckDatabase  ${LIB_EXTRA})

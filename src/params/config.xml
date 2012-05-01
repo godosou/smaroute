@@ -82,7 +82,7 @@
 	</module>
 	<module name="MultimodalMapMatching">
 		<!-- ===========Params Folder===== -->
-		<param name="paramFolder" value="/Users/jchen/Documents/Project/newbioroute/src/params/" type="string"/>
+		<param name="paramFolder" value="../params/" type="string"/>
         
         <!-- ===========Data type===== -->
 		<param name="enableBT" value="0" type="int"/>

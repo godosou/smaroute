@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 		//Read parameters
 		if (argc == 1) {
 			patNBParameters::the()->readFile(
-					"/Users/jchen/Documents/Project/newbioroute/src/config.xml",
+					"../params/config.xml",
 					err);
 
 		} else {
