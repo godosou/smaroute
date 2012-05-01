@@ -7,13 +7,14 @@ set(CMAKE_OSX_ARCHITECTURES x86_64 )
 set(CMAKE_CXX_FLAGS "-DMACOSX")
 set(CMAKE_C_FLAGS -DMACOSX)
 set(CMAKE_CXX_FLAGS "-g -Wall")
+set(BIOGEME_FOLDER "/Users/jchen/Documents/Project/biogeme")
 
 #SET(XMLWRAPP_CXX_FLAGS "-g `xmlwrapp-config --cxxflags`")
 
 include_directories("${PROJECT_BINARY_DIR}")
-include_directories("${PROJECT_SOURCE_DIR}/../include")
-include_directories("${PROJECT_SOURCE_DIR}/../randomNumbers")
-include_directories("${PROJECT_SOURCE_DIR}/../parameters")
+include_directories("${BIOGEME_FOLDER}/include")
+include_directories("${BIOGEME_FOLDER}/randomNumbers")
+include_directories("${BIOGEME_FOLDER}/parameters")
 include_directories("/opt/local/include")
 include_directories("/usr/local/include")
 include_directories("${PROJECT_BINARY_DIR}")
@@ -32,9 +33,9 @@ SET(Boost_USE_STATIC_LIBS ON)
 SET(Boost_USE_MULTITHREAD OFF)
 
 
-find_library(LIB_UTILS patUtils "${PROJECT_SOURCE_DIR}/../utils/")
-find_library(LIB_RANDOMNUMBER patRandomNumbers "${PROJECT_SOURCE_DIR}/../randomNumbers")
-find_library(LIB_PARAMETERS patParam "${PROJECT_SOURCE_DIR}/../parameters")
+find_library(LIB_UTILS patUtils "${BIOGEME_FOLDER}/utils/")
+find_library(LIB_RANDOMNUMBER patRandomNumbers "${BIOGEME_FOLDER}/randomNumbers")
+find_library(LIB_PARAMETERS patParam "${BIOGEME_FOLDER}/parameters")
 find_library(LIB_XMLWRAPP xmlwrapp)
 
 set(LIB_EXTRA ${PQXX_LIBRARIES} ${SHP_LIBRARIES} ${KML_LIBRARIES} ${GSLCBLAS_LIBRARIES} ${GSL_CONFIG_LIBS}

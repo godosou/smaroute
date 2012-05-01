@@ -82,7 +82,7 @@
 	</module>
 	<module name="MultimodalMapMatching">
 		<!-- ===========Params Folder===== -->
-		<param name="paramFolder" value="/Users/jchen/Documents/Project/biogeme/newbioroute/params/" type="string"/>
+		<param name="paramFolder" value="/Users/jchen/Documents/Project/newbioroute/src/params/" type="string"/>
         
         <!-- ===========Data type===== -->
 		<param name="enableBT" value="0" type="int"/>
@@ -141,9 +141,9 @@
 	</module>
     
 	<module name="MHPathSampling">
-		<param name="RANDOMSEED_ELEMENT" value="42" type="int"/>
-		<param name="MSGINTERVAL_ELEMENT" value="1000" type="int"/> 
-		<param name="TOTALITERATIONS_ELEMENT" value="20000" type="int"/>
+		<param name="RANDOMSEED_ELEMENT" value="4213332" type="int"/>
+		<param name="MSGINTERVAL_ELEMENT" value="100" type="int"/> 
+		<param name="TOTALITERATIONS_ELEMENT" value="10000" type="int"/>
 		<param name="SAMPLEINTERVAL_ELEMENT" value="1000" type="int"/>
 		<param name="CUTOFFPROBABILITY_ELEMENT" value="0.000000001" type="float"/>
 		<param name="RELATIVECOSTSCALE_ELEMENT" value="1.15" type="float"/>
