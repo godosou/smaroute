@@ -1,0 +1,35 @@
+
+include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
+include_directories("${NewBioroute_SOURCE_DIR}/NetworkHandler")
+include_directories("${NewBioroute_SOURCE_DIR}/ShortestPath")
+include_directories("${NewBioroute_SOURCE_DIR}/Math")
+add_library(MapMatching
+                    patSpeedDistributions.cc
+                    patObservations.cc
+                    patTrafficModel.cc
+                    patTrafficModelComplex.cc
+                    patMeasurementModel.cc
+                    patMeasurementModelV2.cc
+                    patDDR.cc
+                    patArcDDR.cc
+                    patMeasurementDDR.cc
+                    patGpsDDR.cc
+                    patBTDDR.cc
+                    patAccelDDR.cc
+                    patMeasurement.cc
+                    patGpsPoint.cc
+                    patBTMeasurement.cc
+                    patAccelMeasurement.cc
+                    patMeasurementSequence.cc
+                    patBTSequence.cc
+                    patGpsSequence.cc
+                    patAccelSequence.cc
+                    patArcTransition.cc
+                    patAccelMeasurementModel.cc
+                    patBTMeasurementModel.cc
+                    patMultiModalPathMatching.cc
+                    patPathExtension.cc
+                    patMapMatchingIteration.cc
+                    patProbabilisticMapMatching.cc
+                    )
+target_link_libraries (MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})

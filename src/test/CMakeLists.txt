@@ -1,0 +1,23 @@
+set(CXXTEST_USE_PYTHON true)
+find_package(CxxTest)
+INCLUDE_DIRECTORIES(${CXXTEST_INCLUDE_DIR})
+include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
+include_directories("${NewBioroute_SOURCE_DIR}/MapMatching")
+include_directories("${NewBioroute_SOURCE_DIR}/NetworkHandler")
+include_directories("${NewBioroute_SOURCE_DIR}/ShortestPath")
+include_directories("${NewBioroute_SOURCE_DIR}/Math")
+include_directories("${NewBioroute_SOURCE_DIR}/PathGeneration")
+include_directories("${NewBioroute_SOURCE_DIR}/PathGeneration/MetropolishHastings")
+include_directories("${NewBioroute_SOURCE_DIR}/MetropolisHasting")
+ENABLE_TESTING()
+CXXTEST_ADD_TEST(testAccelDistribution testAccelDistribution.cc ${CMAKE_CURRENT_SOURCE_DIR}/testAccelDistribution.h)
+target_link_libraries (testAccelDistribution MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+
+CXXTEST_ADD_TEST(testSpeedDistribution testSpeedDistribution.cc ${CMAKE_CURRENT_SOURCE_DIR}/testSpeedDistribution.h)
+target_link_libraries (testSpeedDistribution MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+
+CXXTEST_ADD_TEST(testRandomNumber testRandomNumber.cc ${CMAKE_CURRENT_SOURCE_DIR}/testRandomNumber.h)
+target_link_libraries (testRandomNumber MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+
+CXXTEST_ADD_TEST(testMHPath testMHPath.cc ${CMAKE_CURRENT_SOURCE_DIR}/testMHPath.h)
+target_link_libraries (testMHPath  MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})

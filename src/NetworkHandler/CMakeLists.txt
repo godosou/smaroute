@@ -1,0 +1,28 @@
+include_directories("${NewBioroute_SOURCE_DIR}/MapMatching")
+
+include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
+add_library(NetworkHandler
+                patPathWriter.cc
+                patKMLPathWriter.cc
+                patRoadBase.cc
+                patArc.cc
+                patNode.cc
+                patArcSequence.cc
+                patWay.cc
+                patOdJ.cc
+                patMultiModalPath.cc
+                patPublicTransportSegment.cc
+                patGeoBoundingBox.cc
+                patNetworkElements.cc
+                patNetworkBase.cc
+                patNetworkUnimodal.cc
+                patNetworkPublicTransport.cc
+                patNetworkBike.cc
+                patNetworkBus.cc
+                patNetworkMetro.cc
+                patNetworkCar.cc
+                patNetworkTrain.cc
+                patNetworkWalk.cc
+                patNetworkEnvironment.cc
+                patReadPathFromShp.cc)
+#target_link_libraries (NetworkHandler Utilities  ${LIB_EXTRA})
