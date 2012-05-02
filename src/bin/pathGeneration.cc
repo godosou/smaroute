@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 		//Read parameters
 		if (argc == 1) {
 			patNBParameters::the()->readFile(
-					"../params/config.xml",
+					"/Users/jchen/Documents/Project/newbioroute/src/params/config.xml",
 					err);
 
 		} else {
@@ -70,13 +70,15 @@ int main(int argc, char *argv[]) {
 		/*
 		 * (5) Instantiate and initialize the path generator.
 		 */
-		patRandomNumber rng(patNBParameters::the()->randomSeed);
-		MHPathGenerator path_generator(&rng);
+		//patRandomNumber rng(patNBParameters::the()->randomSeed);
+		MHPathGenerator path_generator(patNBParameters::the()->randomSeed);
 		path_generator.setNetwork(network);
 		path_generator.setPathWriter(&path_writer);
+				const patNode* origin_node  = network_environment.getNetworkElements().getNode(252684219);
+				const patNode* destination_node  = network_environment.getNetworkElements().getNode(332090285);
 
-		const patNode* origin_node  = network_environment.getNetworkElements().getNode(252683850);
-		const patNode* destination_node  = network_environment.getNetworkElements().getNode(312048942);
+//		const patNode* origin_node  = network_environment.getNetworkElements().getNode(252683850);
+//		const patNode* destination_node  = network_environment.getNetworkElements().getNode(312048942);
 		path_generator.run(origin_node,destination_node);
 		path_writer.close();
 		DEBUG_MESSAGE("..DONE");

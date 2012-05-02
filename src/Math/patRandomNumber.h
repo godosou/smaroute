@@ -12,7 +12,7 @@
 using namespace std;
 class patRandomNumber {
 public:
-	patRandomNumber(unsigned long);
+	patRandomNumber(unsigned long seed);
 	double nextDouble() const;
 	int nextInt(int n) const;//including n
 	int sampleWithProba(map<int, double> probas) const;

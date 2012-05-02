@@ -9,7 +9,7 @@
 #include "patNBParameters.h"
 #include "MHPathWriterWrapper.h"
 #include "patNetworkReducer.h"
-MHPathGenerator::MHPathGenerator(boost::mt19937& rng):m_rnd(rng) {
+MHPathGenerator::MHPathGenerator(unsigned long rng):m_rnd(rng) {
 	int DEFAULT_MSGINTERVAL = INT_MAX;
 
 	int DEFAULT_BURNINITERATIONS = 0;

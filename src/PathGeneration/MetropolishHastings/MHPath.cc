@@ -8,19 +8,15 @@
 #include "MHPath.h"
 
 MHPath::MHPath() :
-		m_cost(0.0), m_spliceable(-1),m_points(0,0,0),
-		m_modified_fwd_cost(FWD),
-		m_modified_bwd_cost(BWD){
+		m_cost(0.0), m_spliceable(-1), m_points(0, 0, 0), m_modified_fwd_cost(
+				FWD), m_modified_bwd_cost(BWD) {
 
 }
 
 MHPath::MHPath(const patMultiModalPath& path, const MHPoints& points,
 		const patRouter* router) :
-		m_cost(0.0), m_spliceable(-1),
-		m_points(points),
-		m_router(router),
-		m_modified_fwd_cost(FWD),
-		m_modified_bwd_cost(BWD){
+		m_cost(0.0), m_spliceable(-1), m_points(points), m_router(router), m_modified_fwd_cost(
+				FWD), m_modified_bwd_cost(BWD) {
 	append(path);
 }
 void MHPath::setRouter(const patRouter* router) {
@@ -32,16 +28,26 @@ MHPath::~MHPath() {
 
 patShortestPathTreeGeneral MHPath::modifiedFwdCost() {
 	if (m_modified_fwd_cost.empty()) {
-
+//		DEBUG_MESSAGE("foward cost");
 		//Exclude nodes not between A and C
 		set<const patNode*> excluded_nodes;
 		list<pair<const patArc*, TransportMode> > a_arcs = getArcsWithMode();
 		list<pair<const patArc*, TransportMode> >::const_iterator a_arc_iter =
 				a_arcs.begin();
 		for (int i = 0; i < m_points.getA(); ++i) {
+
 			excluded_nodes.insert(a_arc_iter->first->getUpNode());
 			++a_arc_iter;
 		}
+		//DEBUG_MESSAGE(excluded_nodes.size());
+		a_arc_iter = a_arcs.end();
+		for (int i = 0; i < size() - m_points.getC() + 1; ++i) {
+			--a_arc_iter;
+			excluded_nodes.insert(a_arc_iter->first->getDownNode());
+		}
+//		DEBUG_MESSAGE(
+//				"build forward router excluds nodes" << excluded_nodes.size());
+
 		m_modified_fwd_cost = m_router->fwdCostWithoutExcludedNodes(getNodeA(),
 				m_router->getNetwork()->getNodes(), excluded_nodes, NULL);
 	}
@@ -56,13 +62,19 @@ patShortestPathTreeGeneral MHPath::modifiedBwdCost() {
 		set<const patNode*> excluded_nodes;
 		list<pair<const patArc*, TransportMode> > a_arcs = getArcsWithMode();
 		list<pair<const patArc*, TransportMode> >::const_iterator a_arc_iter =
-				a_arcs.end();
+				a_arcs.begin();
+		for (int i = 0; i < m_points.getA() + 1; ++i) {
+			excluded_nodes.insert(a_arc_iter->first->getUpNode());
+			++a_arc_iter;
+		}
+		a_arc_iter = a_arcs.end();
 		for (int i = 0; i < size() - m_points.getC(); ++i) {
 			--a_arc_iter;
 			excluded_nodes.insert(a_arc_iter->first->getDownNode());
 		}
 
-		DEBUG_MESSAGE("build backward router excluds nodes"<<excluded_nodes.size());
+//		DEBUG_MESSAGE(
+//				"build backward router excluds nodes" << excluded_nodes.size());
 		m_modified_bwd_cost = m_router->bwdCostWithoutExcludedNodes(getNodeC(),
 				m_router->getNetwork()->getNodes(), excluded_nodes, NULL);
 
@@ -81,7 +93,7 @@ const patNode* MHPath::getNodeC() const {
 	return getNode(m_points.getC());
 }
 
-unsigned long MHPath::pointCombinationSize() const{
+unsigned long MHPath::pointCombinationSize() const {
 	return 1 * (size() + 1) * (size()) * (size() - 1) / 6;
 }
 
@@ -95,13 +107,15 @@ void MHPath::setPoints(MHPoints points) {
 	m_spliceable = -1;
 }
 
-bool MHPath::equalsSubPath(patMultiModalPath& b_path, int start, int end) const{
+bool MHPath::equalsSubPath(patMultiModalPath& b_path, int start,
+		int end) const {
 	list<pair<const patArc*, TransportMode> > b_arcs = b_path.getArcsWithMode();
 	list<pair<const patArc*, TransportMode> > a_arcs = getArcsWithMode();
 
 	int b_size = b_arcs.size();
-	int a_size = a_arcs.size() - end + start;
+	int a_size = end-start;
 	if (b_size != a_size) {
+//		DEBUG_MESSAGE("size different"<<b_size<<","<<a_size);
 		return false;
 	}
 
@@ -123,16 +137,15 @@ bool MHPath::equalsSubPath(patMultiModalPath& b_path, int start, int end) const{
 }
 
 bool MHPath::isSpliceable() {
+//	DEBUG_MESSAGE(size()<<":"<<m_points);
 	if (m_spliceable == -1) {
-		patMultiModalPath path_AB = fwdRoute(getNodeA(),
-				getNodeB());
+		patMultiModalPath path_AB = fwdRoute(getNodeA(), getNodeB());
 		if (!equalsSubPath(path_AB, m_points.getA(), m_points.getB())) {
 			m_spliceable = 0;
 			return false;
 		} else {
 
-			patMultiModalPath path_BC = bwdRoute(getNodeB(),
-					getNodeC());
+			patMultiModalPath path_BC = bwdRoute(getNodeB(), getNodeC());
 			bool sp = equalsSubPath(path_BC, m_points.getB(), m_points.getC());
 			if (sp == true) {
 				m_spliceable = 1;
@@ -163,7 +176,7 @@ map<const patNode*, double> MHPath::getInsertProbs(
 			fwd_cost.begin(); f_c_iter != fwd_cost.end(); ++f_c_iter) {
 		map<const patNode*, double>::const_iterator find_b_c = bwd_cost.find(
 				f_c_iter->first);
-		if (find_b_c->second < DBL_MAX && f_c_iter->second < DBL_MAX) {
+		if (find_b_c!=bwd_cost.end () &&find_b_c->second < DBL_MAX && f_c_iter->second < DBL_MAX) {
 			candidate_nodes.insert(f_c_iter->first);
 		}
 	}
@@ -197,13 +210,14 @@ map<const patNode*, double> MHPath::getInsertProbs(
 	/*
 	 * (3.3) put exp(-detourScale * (cost - minCost)) into result
 	 */
-	double exp_sum = 0;
+	double exp_sum = 0.0;
 	for (set<const patNode*>::iterator c_n_iter = candidate_nodes.begin();
 			c_n_iter != candidate_nodes.end(); ++c_n_iter) {
 
 		double val = exp(
 				-detour_cost_scale * (insert_probas[*c_n_iter] - min_cost));
 		insert_probas[*c_n_iter] = val;
+		exp_sum+=val;
 
 	}
 	/*
@@ -232,7 +246,7 @@ patMultiModalPath MHPath::fwdRoute(const patNode* origin,
 }
 
 patMultiModalPath MHPath::bwdRoute(const patNode* origin,
-		const patNode* destination)  {
+		const patNode* destination) {
 	return m_router->bestRouteBwd(origin, destination, &modifiedBwdCost());
 }
 
@@ -249,23 +263,25 @@ void MHPath::insertDetour(const patNode* nodeB) {
 	 * (2) build new path
 	 */
 	patMultiModalPath new_path;
-	DEBUG_MESSAGE(nbrOfNodes()<<":"<<m_points.getA()<<","<<m_points.getB()<<","<<m_points.getC());
-	if(!new_path.append(getSubPathWithNodesIndecis(0, m_points.getA()))){
+//	DEBUG_MESSAGE(
+//			nbrOfNodes() << ":" << m_points.getA() << "," << m_points.getB()
+//					<< "," << m_points.getC());
+	if (!new_path.append(getSubPathWithNodesIndecis(0, m_points.getA()))) {
 		WARNING("WRONG PATH 0A"); //TODO check the append check the points inex
 		throw RuntimeException("Wrong path 0A");
 	}
 	//DEBUG_MESSAGE("CORRECT PATH 0A, "<<new_path.size());
-	if(!new_path.append(pathAB)){
+	if (!new_path.append(pathAB)) {
 		WARNING("WRONG PATH AB");
 		throw RuntimeException("Wrong path AB");
 	}
 //	DEBUG_MESSAGE("CORRECT PATH AB, "<<new_path.size());
-	if(!new_path.append(pathBC)){
+	if (!new_path.append(pathBC)) {
 		WARNING("WRONG PATH BC");
 		throw RuntimeException("Wrong path BC");
 	}
 	//DEBUG_MESSAGE("CORRECT PATH BC, "<<new_path.size());
-	if(!new_path.append(getSubPathWithNodesIndecis(m_points.getC(), size()))){
+	if (!new_path.append(getSubPathWithNodesIndecis(m_points.getC(), size()))) {
 		WARNING("WRONG PATH C1");
 		throw RuntimeException("Wrong path C1");
 	}
@@ -326,13 +342,12 @@ void MHPath::insertDetour(const patNode* nodeB) {
 // -------------------- CONSTRUCTION --------------------
 // -------------------- GETTERS --------------------
 // -------------------- PATH MANIPULATIONS --------------------
-
-int MHPath::getA() const{
+int MHPath::getA() const {
 	return m_points.getA();
 }
-int MHPath::getB() const{
+int MHPath::getB() const {
 	return m_points.getB();
 }
-int MHPath::getC() const{
+int MHPath::getC() const {
 	return m_points.getC();
 }

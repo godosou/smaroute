@@ -22,7 +22,7 @@ public:
 
 	// CONFIG ELEMENTS
 
-	MHPathGenerator(boost::mt19937& rng);
+	MHPathGenerator(unsigned long rng);
 	virtual ~MHPathGenerator();
 	void setNetwork( patNetworkBase* network_base);
 	void run(const patNode* origin, const patNode* destination);

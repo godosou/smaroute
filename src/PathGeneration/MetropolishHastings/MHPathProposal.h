@@ -26,6 +26,9 @@ public:
 	MHPath newInitialState() ;
 	const patNode* drawInsertNode(const map<const patNode*, double>& probas);
 	MHTransition<MHPath> newTransition( MHPath& from_route);
+	double transitionLogProb(MHPath& from_route, MHPath& to_route,
+			bool splice) ;
+
 	virtual ~MHPathProposal();
 private:
 

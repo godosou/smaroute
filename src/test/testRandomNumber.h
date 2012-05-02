@@ -20,7 +20,7 @@ class MyTestRandomNumberGenrator: public CxxTest::TestSuite{
 public:
 	void testRNG(void){
 		patError* err(NULL);
-		patNBParameters::the()->readFile("/Users/jchen/Documents/Project/newbioroute/src/config.xml", err);
+		patNBParameters::the()->readFile("/Users/jchen/Documents/Project/newbioroute/src/params/config.xml", err);
 		patNBParameters::the()->init(err);
 		TS_ASSERT_EQUALS(err,(void*)0);
 		int count= 100000;
