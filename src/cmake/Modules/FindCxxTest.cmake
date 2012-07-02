@@ -48,7 +48,7 @@
 #           input_files_to_testgen  The list of header files containing the
 #                                   CxxTest::TestSuite's to be included in
 #                                   this runner
-#           
+#
 #       #==============
 #       Example Usage:
 #
@@ -66,13 +66,13 @@
 #              1. Invoke the testgen executable to autogenerate foo_test.cc in the
 #                 binary tree from "foo_test.h" in the current source directory.
 #              2. Create an executable and test called unittest_foo.
-#               
+#
 #      #=============
 #      Example foo_test.h:
 #
 #          #include <cxxtest/TestSuite.h>
-#          
-#          class MyTestSuite : public CxxTest::TestSuite 
+#
+#          class MyTestSuite : public CxxTest::TestSuite
 #          {
 #          public:
 #             void testAddition( void )
@@ -153,18 +153,18 @@ endif()
 find_package(PythonInterp QUIET)
 find_package(Perl QUIET)
 
-find_path(CXXTEST_INCLUDE_DIR cxxtest/TestSuite.h 
+find_path(CXXTEST_INCLUDE_DIR cxxtest/TestSuite.h
   PATHS ${PROJECT_SOURCE_DIR}/../libs/cxxtest)
-find_program(CXXTEST_PYTHON_TESTGEN_EXECUTABLE 
-        NAMES cxxtestgen 
-         PATHS ${CXXTEST_INCLUDE_DIR})
+find_program(CXXTEST_PYTHON_TESTGEN_EXECUTABLE
+        NAMES cxxtestgen
+         PATHS ${CXXTEST_INCLUDE_DIR}  ${CXXTEST_INCLUDE_DIR}/bin)
 find_program(CXXTEST_PERL_TESTGEN_EXECUTABLE cxxtestgen.pl
          PATHS ${CXXTEST_INCLUDE_DIR})
 
 if(PYTHONINTERP_FOUND OR PERL_FOUND)
    include(FindPackageHandleStandardArgs)
          message(STATUS ${CXXTEST_INCLUDE_DIR})
-
+message(STATUS ${CXXTEST_PYTHON_TESTGEN_EXECUTABLE})
    if(PYTHONINTERP_FOUND AND (CXXTEST_USE_PYTHON OR NOT PERL_FOUND))
       set(CXXTEST_TESTGEN_EXECUTABLE ${CXXTEST_PYTHON_TESTGEN_EXECUTABLE})
       set(CXXTEST_TESTGEN_INTERPRETER ${PYTHON_EXECUTABLE})

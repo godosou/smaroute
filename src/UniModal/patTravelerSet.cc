@@ -6,7 +6,7 @@ patTraveler* patTravlerSet::addTraveler(const patTraveler& theTraveler){
 	return &(*(insertResult->first));
 }
 
-patTraveler* patTravlerSet::addTraveler(const unsigned long& theTravelerId){
+patTraveler* patTravlerSet::addTraveler(const patULong& theTravelerId){
 	patTraveler* travelerFound = findTraveler(theTravelerId);
 	if(travelerFound!=NULL){
 		return travelerFound;
@@ -16,7 +16,7 @@ patTraveler* patTravlerSet::addTraveler(const unsigned long& theTravelerId){
 	}
 }
 
-patTraveler* patTravlerSet::findTraveler(const unsigned long& theTravelerId){
+patTraveler* patTravlerSet::findTraveler(const patULong& theTravelerId){
 	patTraveler travelerToFind(theTravelerId);
 	set<patTravler>::iterator travelerFound = travelerSet.find(travelerToFind);
 	if(travelerFound == travelerSet.end()){
@@ -29,8 +29,8 @@ set<patTraveler>* patTravlerSet::getAllTravelers(){
 	return &travelerSet;
 }
 
-unsigned long patTravlerSet::getNumberofObservations(){
-	unsigned long nbrOfObservations = 0;
+patULong patTravlerSet::getNumberofObservations(){
+	patULong nbrOfObservations = 0;
 	for(set<patTraveler>::iterator travelerIter = travelerSet.begin();
 							travelerIter !=travelerSet.end();
 							++travelerIter){

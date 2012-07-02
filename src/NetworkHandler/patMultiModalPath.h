@@ -6,8 +6,7 @@
 #include "patString.h"
 #include "patArc.h"
 #include <iostream>
-#include "patOdJ.h"
-
+#include "patOD.h"
 #include "patTransportMode.h"
 #include "patNetworkElements.h"
 #include "patArcSequence.h"
@@ -37,8 +36,10 @@ public:
 	 *Constructor
 	 */
 	patMultiModalPath();
-	patMultiModalPath(list<const patArc*> theListOfArcs, bool& success);
-	patMultiModalPath(list<const patRoadBase*> theListOfArcs, bool& success);
+
+	patMultiModalPath(const patMultiModalPath& anotherPath);
+	patMultiModalPath(list<const patArc*> theListOfArcs);
+	patMultiModalPath(list<const patRoadBase*> theListOfArcs);
 	/**
 	 * Multi-modal path definition
 	 */
@@ -66,7 +67,7 @@ public:
 	bool addRoadTravelToBack(const patRoadBase* road, TransportMode t_m =
 			TransportMode(NONE), double stop_time = 0.0);
 	bool addRoadTravelToBack(const RoadTravel road);
-
+	void removeRoadTravelToBack();
 	bool addRoadTravelToFront(const patRoadBase* road, TransportMode t_m =
 			TransportMode(NONE), double stop_time = 0.0);
 
@@ -75,13 +76,13 @@ public:
 	 *@return Od of the path
 	 */
 
-	patOdJ generateOd();
+	patOd generateOd();
 
 	/**
 	 *Assign an Od to the path
 	 *@param theOd pointer of od to be assigned
 	 */
-	void assignOd(patOdJ* theOd);
+	void assignOd(patOd* theOd);
 
 	/**
 	 *get gamma length defined by ramming's path size method
@@ -103,7 +104,7 @@ public:
 	 *@return pointer of the Od
 	 */
 
-	patOdJ* getOd() const;
+	patOd* getOd() const;
 	patString genDescription() const;
 	bool append(const list<const patArc*>& newSeg);
 	/**
@@ -224,7 +225,7 @@ public:
 	TransportMode backMode() const;
 
 	bool containsRoad(const patArc* arc, TransportMode mode) const;
-	bool containsPT() const ;
+	bool containsPT() const;
 	void detDistanceToStop(patNetworkEnvironment* network_environment);
 	void setDistanceToStop(double d);
 	const list<double>* getDistanceToStop() const;
@@ -232,7 +233,7 @@ public:
 protected:
 	list<RoadTravel> m_roads;
 	set<TransportMode> m_unique_modes;
-	patOdJ* m_od;
+	patOd* m_od;
 	patString m_name;
 	unsigned long m_id;
 	struct path_attributes m_attributes;

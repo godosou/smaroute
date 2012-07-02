@@ -55,15 +55,15 @@ public:
 	 *Generate Od of the path according to arc sequence
 	 *@return Od of the path
 	 */
-	patOdJ generateOd(patNetwork* theNetwork, patError*& err);
+	patOd generateOd(patNetwork* theNetwork, patError*& err);
 
-	patOdJ generateOd();
+	patOd generateOd();
 
 	/**
 	 *Assign an Od to the path
 	 *@param theOd pointer of od to be assigned
 	 */
-	void assignOd(patOdJ* theOd);
+	void assignOd(patOd* theOd);
 
 	/**
 	 *get gamma length defined by ramming's path size method
@@ -91,7 +91,7 @@ public:
 	 * get od of the path
 	 *@return pointer of the Od
 	 */
-	patOdJ* getOd();
+	patOd* getOd();
 	patString genDescription();
 	unsigned long getId();
 	int size();
@@ -209,7 +209,7 @@ public:
 protected:
 	list<TransportMode> m_modes;
 	vector<short> m_change_points;
-	patOdJ* m_od;
+	patOd* m_od;
 	patString m_name;
 	unsigned long m_id;
 //	patNetwork* theNetwork;

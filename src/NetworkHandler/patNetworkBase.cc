@@ -28,22 +28,29 @@ patNetworkBase::patNetworkBase() :
 
 }
 
+patNetworkBase::patNetworkBase(const patNetworkBase& other) :
+		m_outgoing_incidents(other.m_outgoing_incidents), m_incoming_incidents(
+				other.m_incoming_incidents), m_minimum_label(
+				other.m_minimum_label), m_nodes(other.m_nodes), m_network_type(
+				other.m_network_type), m_transport_mode(other.m_transport_mode) {
+
+}
 unsigned long patNetworkBase::getNodeSize() const {
 	return m_outgoing_incidents.size();
 }
 patNetworkBase::~patNetworkBase() {
 }
 
-const map<const patNode*, set<const patRoadBase*> >* patNetworkBase::getOutgoingIncidents() const{
+const unordered_map<const patNode*, set<const patRoadBase*> >* patNetworkBase::getOutgoingIncidents() const {
 	return &m_outgoing_incidents;
 }
 
-const map<const patNode*, set<const patRoadBase*> >* patNetworkBase::getIncomingIncidents() const{
+const unordered_map<const patNode*, set<const patRoadBase*> >* patNetworkBase::getIncomingIncidents() const {
 	return &m_incoming_incidents;
 }
 bool patNetworkBase::hasDownStream(const patNode * const a_node) const {
 
-	map<const patNode*, set<const patRoadBase*> >::const_iterator find_node =
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_node =
 			m_outgoing_incidents.find(a_node);
 	if (!find_node->second.empty()) {
 		return true;
@@ -56,7 +63,7 @@ TransportMode patNetworkBase::getTransportMode() const {
 }
 double patNetworkBase::computeMinimumLabel() {
 
-	for (map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
 			m_outgoing_incidents.begin(); n_iter != m_outgoing_incidents.end();
 			++n_iter) {
 		for (set<const patRoadBase*>::const_iterator road_iter =
@@ -69,8 +76,9 @@ double patNetworkBase::computeMinimumLabel() {
 	}
 	return m_minimum_label;
 }
-void patNetworkBase::buildIncomingIncidents(){
-	for (map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
+void patNetworkBase::buildIncomingIncidents() {
+	m_incoming_incidents.clear();
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
 			m_outgoing_incidents.begin(); n_iter != m_outgoing_incidents.end();
 			++n_iter) {
 		for (set<const patRoadBase*>::const_iterator road_iter =
@@ -82,13 +90,25 @@ void patNetworkBase::buildIncomingIncidents(){
 		}
 	}
 }
-double patNetworkBase::getMinimumLabel() const{
+double patNetworkBase::getMinimumLabel() const {
 
 	return m_minimum_label;
 }
 
 void patNetworkBase::finalizeNetwork() {
 	computeMinimumLabel();
+	m_nodes.clear();
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
+			m_outgoing_incidents.begin(); n_iter != m_outgoing_incidents.end();
+			++n_iter) {
+		for (set<const patRoadBase*>::const_iterator road_iter =
+				n_iter->second.begin(); road_iter != n_iter->second.end();
+				++road_iter) {
+
+			m_nodes.insert((*road_iter)->getUpNode());
+			m_nodes.insert((*road_iter)->getDownNode());
+		}
+	}
 	buildIncomingIncidents();
 }
 
@@ -104,7 +124,7 @@ void patNetworkBase::exportKML(const string file_path) const {
 
 	stop_folder->set_name(string("Stop"));
 	links_folder->set_name(string("Links"));
-	for (map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
 			m_outgoing_incidents.begin();
 			incid_iter != m_outgoing_incidents.end(); ++incid_iter) {
 
@@ -131,6 +151,63 @@ void patNetworkBase::exportKML(const string file_path) const {
 	kml_file.close();
 	DEBUG_MESSAGE(kml_file_path << " written");
 }
+void patNetworkBase::exportCadytsOSM(const string file_path) const {
+
+	unordered_set<const patArc*> arc_set;
+	unordered_set<const patNode*> node_set;
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
+			m_outgoing_incidents.begin();
+			incid_iter != m_outgoing_incidents.end(); ++incid_iter) {
+
+		for (set<const patRoadBase*>::const_iterator road_iter =
+				incid_iter->second.begin();
+				road_iter != incid_iter->second.end(); ++road_iter) {
+			vector<const patArc*> arc_list = (*road_iter)->getArcList();
+			for (vector<const patArc*>::iterator arc_iter = arc_list.begin();
+					arc_iter != arc_list.end(); ++arc_iter) {
+				if (*arc_iter == NULL) {
+					continue;
+				} else {
+					arc_set.insert(*arc_iter);
+					node_set.insert((*arc_iter)->getUpNode());
+					node_set.insert((*arc_iter)->getDownNode());
+				}
+			}
+		}
+	}
+
+	ofstream cadyts_vis_data(file_path.c_str());
+	cadyts_vis_data << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
+	cadyts_vis_data << "\t<osm>" << endl;
+
+	for (unordered_set<const patNode*>::const_iterator node_iter =
+			node_set.begin(); node_iter != node_set.end(); ++node_iter) {
+		if (*node_iter != NULL) {
+			cadyts_vis_data << "\t<node id=\"" << (*node_iter)->getUserId()
+					<< "\" lon=\"" << (*node_iter)->getLongitude()
+					<< "\" lat=\"" << (*node_iter)->getLatitude() << "\" />"
+					<< endl;
+		}
+	}
+
+	for (unordered_set<const patArc*>::const_iterator arc_iter =
+			arc_set.begin(); arc_iter != arc_set.end(); ++arc_iter) {
+		if (*arc_iter != NULL) {
+			cadyts_vis_data << "\t<way id=\""
+					<< (*arc_iter)->getUpNode()->getUserId() << "_"
+					<< (*arc_iter)->getDownNode()->getUserId() << "\" >" << endl;
+			cadyts_vis_data << "\t\t<nd ref=\""
+					<< (*arc_iter)->getUpNode()->getUserId() << "\" />" << endl;
+			cadyts_vis_data << "\t\t<nd ref=\""
+					<< (*arc_iter)->getDownNode()->getUserId() << "\" />"
+					<< endl;
+			cadyts_vis_data << "\t</way>" << endl;
+
+		}
+	}
+	cadyts_vis_data << "</osm>" << endl;
+	cadyts_vis_data.close();
+}
 bool patNetworkBase::exportShpFiles(const string file_path) const {
 
 	string shape_file_path = file_path + ".shp";
@@ -139,7 +216,7 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 	SHPHandle stop_file_handler = SHPCreate(stop_file_path.c_str(), SHPT_POINT);
 
 	DEBUG_MESSAGE("writing path to" << shape_file_path);
-	for (map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
 			m_outgoing_incidents.begin();
 			incid_iter != m_outgoing_incidents.end(); ++incid_iter) {
 
@@ -192,7 +269,7 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 
 set<const patArc*> patNetworkBase::getAllArcs() const {
 	set<const patArc*> all_arcs;
-	for (map<const patNode*, set<const patRoadBase*> >::const_iterator node_iter =
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator node_iter =
 			m_outgoing_incidents.begin();
 			node_iter != m_outgoing_incidents.end(); ++node_iter) {
 		for (set<const patRoadBase*>::const_iterator road_iter =
@@ -206,7 +283,7 @@ set<const patArc*> patNetworkBase::getAllArcs() const {
 }
 
 void patNetworkBase::addArc(const patArc* arc) {
-
+	DEBUG_MESSAGE(arc->getUpNode()->getUserId()<<"-"<<arc->getDownNode()->getUserId());
 	const patNode* up_node = arc->getUpNode();
 	m_outgoing_incidents[up_node];
 	m_outgoing_incidents[up_node].insert(arc);
@@ -215,23 +292,21 @@ void patNetworkBase::addArc(const patArc* arc) {
 bool patNetworkBase::isPT() const {
 	return isPublicTransport(m_transport_mode);
 }
-set<const patNode*> patNetworkBase::getNodes() const{
-	set<const patNode*> nodes;
-	for (map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
-			m_outgoing_incidents.begin(); n_iter != m_outgoing_incidents.end();
-			++n_iter) {
-		for (set<const patRoadBase*>::const_iterator road_iter =
-				n_iter->second.begin(); road_iter != n_iter->second.end();
-				++road_iter) {
-
-			nodes.insert((*road_iter)->getUpNode());
-			nodes.insert((*road_iter)->getDownNode());
-		}
-	}
-	return nodes;
+set<const patNode*> patNetworkBase::getNodes() const {
+	return m_nodes;
 }
 
-void patNetworkBase::removeNode(const patNode* node){
+void patNetworkBase::removeNode(const patNode* node) {
 	m_outgoing_incidents.erase(node);
+
+}
+const set<const patRoadBase*> patNetworkBase::getOutgoingRoads(const patNode* node) const{
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_outgoing =  m_outgoing_incidents.find(node);
+	if(find_outgoing == m_outgoing_incidents.end()){
+		return set<const patRoadBase*>();
+	}
+	else{
+		return find_outgoing->second;
+	}
 
 }

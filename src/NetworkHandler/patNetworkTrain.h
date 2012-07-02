@@ -13,6 +13,11 @@
 class patNetworkTrain : public patNetworkPublicTransport{
 public:
 	patNetworkTrain();
+
+	virtual patNetworkBase* clone() const {
+		return new patNetworkTrain(*this);
+	}
+	;
 	void getFromNetwork(patNetworkElements* network,patGeoBoundingBox bounding_box);
 	virtual ~patNetworkTrain();
 	 double getMinSpeed() const;

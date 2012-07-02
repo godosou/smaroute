@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   patReadPathFromKML.h
  * Author: jchen
  *
@@ -17,16 +17,16 @@
 #include <list>
 #include "patPathJ.h"
 
-class patReadPathFromKML {
+class patReadObservationFromKML {
 public:
-    patReadPathFromKML(patString a_file_name,patNetwork* a_network);
+    patReadObservationFromKML(patString a_file_name,patNetwork* a_network);
 
     bool parseFile(patError*& err);
 
     set<patPathJ> getPathSet();
-    
-    patReadPathFromKML(const patReadPathFromKML& orig);
-    virtual ~patReadPathFromKML();
+
+    patReadObservationFromKML(const patReadObservationFromKML& orig);
+    virtual ~patReadObservationFromKML();
     set<patPathJ> path_set;
 private:
     patNetwork* network;

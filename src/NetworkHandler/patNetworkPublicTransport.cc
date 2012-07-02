@@ -42,17 +42,17 @@ const patNode* patNetworkPublicTransport::findNearestNode(const patNode* node,
 	}
 	return nearest_node;
 }
-map<patString, map<const patArc*, const patNode*> > patNetworkPublicTransport::findStopsIncomingLinks(
+map<string, map<const patArc*, const patNode*> > patNetworkPublicTransport::findStopsIncomingLinks(
 		map<const patNode*, int>& stops,
 		map<const patNode*, list<const patArc*> >& outgoing_incidents,
 		map<const patNode*, list<const patArc*> >& incoming_incidents,
 		set<const patArc*>& forward_arcs,
 		set<const patArc*>& backward_arcs) {
 
-	map<patString, map<const patArc*, const patNode*> > stops_incoming_links;
+	map<string, map<const patArc*, const patNode*> > stops_incoming_links;
 	for (map<const patNode*, int>::iterator stop_iter = stops.begin();
 			stop_iter != stops.end(); ++stop_iter) {
-		patString stop_name = (stop_iter->first)->getName();
+		string stop_name = (stop_iter->first)->getName();
 		map<const patNode*, list<const patArc*> >::iterator find_incoming =
 				incoming_incidents.find(stop_iter->first);
 		bool find_tag = false;
@@ -166,7 +166,7 @@ map<const patNode*, int> patNetworkPublicTransport::findStops(
 			const_cast<patNode*>(nearest_node)->setName(
 					stop_iter->first->getName());
 
-			map<string, string> tags = stop_iter->first->getTags();
+			unordered_map<string, string> tags = stop_iter->first->getTags();
 			const_cast<patNode*>(nearest_node)->setTags(tags);
 		}
 		int direction;
@@ -330,7 +330,7 @@ void patNetworkPublicTransport::getDownStream(
  void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
  vector<pair<unsigned long, string> >& way_ids
  , vector<pair<unsigned long, string> >& node_ids,
- map<patString, patString>& tags) {
+ map<string, string>& tags) {
 
  if (tags["ref"] != "m1") {
  return;
@@ -361,7 +361,7 @@ void patNetworkPublicTransport::getDownStream(
  break;
  }
  }
- patString file_path = tags["ref"];
+ string file_path = tags["ref"];
  string kml_file_path = file_path + ".kml";
  ofstream kml_file(kml_file_path.c_str());
  patCreateKmlStyles doc;
@@ -397,7 +397,7 @@ void patNetworkPublicTransport::getDownStream(
 void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 		vector<pair<unsigned long, string> >& way_ids
 		, vector<pair<unsigned long, string> >& node_ids,
-		map<patString, patString>& tags) {
+		unordered_map<string, string>& tags) {
 	if (tags["ref"] != "m1") {
 		//return;
 	}
@@ -456,7 +456,7 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 		}
 	}
 
-	map<patString, map<const patArc*, const patNode*> > stops_incoming =
+	map<string, map<const patArc*, const patNode*> > stops_incoming =
 			findStopsIncomingLinks(stops, outgoing_incidents,
 					incoming_incidents, forward_arcs, backward_arcs);
 	list<const patNode*> true_stops;
@@ -466,7 +466,7 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 
 	map<const patNode*, map<const patNode*, patPublicTransportSegment> > lines;
 
-	patString file_path = tags["ref"];
+	string file_path = tags["ref"];
 	string kml_file_path = file_path + ".kml";
 	ofstream kml_file(kml_file_path.c_str());
 	patCreateKmlStyles doc;
@@ -476,8 +476,8 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 	FolderPtr stops_folder = factory->CreateFolder();
 	FolderPtr segs_folder = factory->CreateFolder();
 
-	map<pair<patString, patString> , set<patPublicTransportSegment> > pt_incidents;
-	for (map<patString, map<const patArc*, const patNode*> >::iterator stop_iter =
+	map<pair<string, string> , set<patPublicTransportSegment> > pt_incidents;
+	for (map<string, map<const patArc*, const patNode*> >::iterator stop_iter =
 			stops_incoming.begin(); stop_iter != stops_incoming.end();
 			++stop_iter) {
 		for (map<const patArc*, const patNode*>::iterator arc_iter =
@@ -493,7 +493,7 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 					PlacemarkPtr node = original_stop->getKML();
 					node->set_styleurl("#stop");
 					incoming_arc_kml->add_feature(node);
-					list<patString> stop_names;
+					list<string> stop_names;
 					stop_names.push_back(true_stop->getName());
 					//DEBUG_MESSAGE("from up node"<<*up_node);
 					patPublicTransportSegment new_seg;
@@ -507,7 +507,7 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 			}
 	DEBUG_MESSAGE("segs:" << pt_incidents.size());
 
-	for (map<pair<patString, patString> , set<patPublicTransportSegment> >::iterator pt_iter =
+	for (map<pair<string, string> , set<patPublicTransportSegment> >::iterator pt_iter =
 			pt_incidents.begin(); pt_iter != pt_incidents.end(); ++pt_iter) {
 		if (pt_iter->second.size() > 1) {
 
@@ -566,13 +566,13 @@ void patNetworkPublicTransport::getSegFromNode(
 		,
 		patPublicTransportSegment& seg
 		,
-		map<patString, map<const patArc*, const patNode*> >& stops
+		map<string, map<const patArc*, const patNode*> >& stops
 		,
 		list<map<const patArc*, const patNode*> >& arcs_to_stop
 		,
-		list<patString>& stop_names
+		list<string>& stop_names
 		,
-		map<pair<patString, patString> , set<patPublicTransportSegment> >& pt_incidents) {
+		map<pair<string, string> , set<patPublicTransportSegment> >& pt_incidents) {
 
 	if (up_node == NULL) {
 		return;
@@ -604,16 +604,16 @@ void patNetworkPublicTransport::getSegFromNode(
 					continue;
 				}
 				const patNode *up_node = seg.getUpNode();
-				patString up_name = up_node->getName();
-				patString down_name = down_node->getName();
+				string up_name = up_node->getName();
+				string down_name = down_node->getName();
 
-				pair<patString, patString> stop_pair(up_name, down_name);
+				pair<string, string> stop_pair(up_name, down_name);
 //				DEBUG_MESSAGE(stop_pair.first<<"->"<<stop_pair.second);
 				if (stops.find(down_name) != stops.end()
 						and stops[down_name].find(down_arc)
 								!= stops[down_name].end()) {
 					stop_names.push_back(down_name);
-					set<patString> unique_stops;
+					set<string> unique_stops;
 					unique_stops.insert(stop_names.begin(), stop_names.end());
 					if (!findArcInForbidenList(arcs_to_stop, down_arc)
 							and unique_stops.size() == 2) {
@@ -702,15 +702,15 @@ void patNetworkPublicTransport::getRoutes(patNetworkElements* network_elements,
 	vector<pair<unsigned long, string> > way_ids;
 	vector<pair<unsigned long, string> > node_ids;
 	string prev_route_type;
-	map<patString, patString> tags;
+	unordered_map<string, string> tags;
 	for (result::const_iterator i = R.begin(); i != R.end(); ++i) {
 
 		//get new information
 		string route_type;
 		unsigned long current_id;
 		unsigned long osm_id;
-		patString member_type;
-		patString member_role;
+		string member_type;
+		string member_role;
 		int short current_sequence_id;
 		(*i)["route_type"].to(route_type);
 		(*i)["id"].to(current_id);
@@ -777,7 +777,7 @@ set<const patRoadBase*> patNetworkPublicTransport::getRoadsContainArc(
 		const patRoadBase* arc) const {
 
 	set<const patRoadBase*> roads;
-	map<const patNode*, set<const patRoadBase*> >::const_iterator find_up_node =
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_up_node =
 			m_outgoing_incidents.find(arc->getUpNode());
 
 	if (find_up_node == m_outgoing_incidents.end()) {
@@ -875,7 +875,7 @@ void patNetworkPublicTransport::walkOnTrack(
 			"Buil walk access " << getTransportModeString(getTransportMode()));
 
 
-	for(map<const patNode*, set<const patRoadBase*> >::const_iterator node_iter = m_outgoing_incidents.begin();
+	for(unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator node_iter = m_outgoing_incidents.begin();
 				node_iter!=m_outgoing_incidents.end();
 				++node_iter){
 		for(set<const patRoadBase*>::const_iterator road_iter = node_iter->second.begin();

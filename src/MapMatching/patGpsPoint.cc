@@ -170,8 +170,8 @@ double patGpsPoint::calHeading(const patGpsPoint* prevGpsPoint,
 	//	DEBUG_MESSAGE("incoming:"<<incoming<<",outgoing:"<<outGoing);
 	if (fabs(incoming - outGoing) <= 180.0) {
 
-		double s1 = prevGpsPoint->getSpeed();
-		double s2 = m_speed;
+//		double s1 = prevGpsPoint->getSpeed();
+//		double s2 = m_speed;
 
 		//ratio= s1 / (s1 + s2);
 		//double ratio  = 0.5;
@@ -179,14 +179,14 @@ double patGpsPoint::calHeading(const patGpsPoint* prevGpsPoint,
 	} else {
 		double h1 = incoming;
 		double h2 = outGoing;
-		double s1 = prevGpsPoint->getSpeed();
-		double s2 = m_speed;
+//		double s1 = prevGpsPoint->getSpeed();
+//		double s2 = m_speed;
 		if (incoming > 180.0) {
 			h2 = incoming;
 			h1 = outGoing;
 
-			s1 = m_speed;
-			s2 = prevGpsPoint->getSpeed();
+//			s1 = m_speed;
+//			s2 = prevGpsPoint->getSpeed();
 		}
 		double diff = 360.0 - (h2 - h1);
 		//double ratio = s1 / (s1 + s2);
@@ -363,7 +363,7 @@ pair<double, double> patGpsPoint::calSpeedInZone(
 
 		//speedProfile.second += pow( (gpsIter->first->getSpeedMS()-speedProfile.first),2);
 	}
-	speedProfile.second /= pow(gpsPointsInZone.size(), 2);
+	speedProfile.second /= pow((double)gpsPointsInZone.size(), 2);
 
 	//speedProfile.second/=(gpsPointsInZone.size()-1);
 

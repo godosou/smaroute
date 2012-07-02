@@ -6,7 +6,7 @@ patObservation::patObservation(){
 
 
 patObservation::patObservation( patTraveler* theTraveler,
-		 unsigned long& theTripId):
+		 patULong& theTripId):
 		traveler(theTraveler),
 		id(theTripId)
 
@@ -19,28 +19,28 @@ patObservation::patObservation( patTraveler* theTraveler,
 *@param[in] observation1 observations2 observations to be compared
 *@return patTRUE, if the observations have the same id and the same traveler; 
 */
-bool operator==(const patObservation& observation1, 
+patBoolean operator==(const patObservation& observation1, 
 				const patObservation& observation2){
 	
 	if (observation1.id == observation2.id && 
 		observation1.traveler == observation2.traveler){
-		return true;
+		return patTRUE;
 
 	}
 	else{
-		return false;
+		return patFALSE;
 	}
 	
 }
-bool operator<(const patObservation& observation1, 
+patBoolean operator<(const patObservation& observation1, 
 				const patObservation& observation2){
 	
 	if (observation1.traveler < observation2.traveler){
-		return true;
+		return patTRUE;
 
 	}
 	if (observation1.traveler > observation2.traveler){
-		return false;
+		return patFALSE;
 
 	}
 	
@@ -48,18 +48,18 @@ bool operator<(const patObservation& observation1,
 	return (observation1.id < observation2.id);
 
 }
-void patObservation::setStartTime(const unsigned long& theStartTime){
+void patObservation::setStartTime(const patULong& theStartTime){
 	startTime = theStartTime;
 }
 
-void patObservation::setEndTime(const unsigned long& theEndTime){
+void patObservation::setEndTime(const patULong& theEndTime){
 	endTime = theEndTime;
 }
 
-void patObservation::setMapBounds(double minLat, 
-			      double maxLat, 
-			      double minLon, 
-			      double maxLon) {
+void patObservation::setMapBounds(patReal minLat, 
+			      patReal maxLat, 
+			      patReal minLon, 
+			      patReal maxLon) {
 				  
   minLatitude = minLat ;
   maxLatitude = maxLat ;
@@ -82,11 +82,11 @@ map<patPathJ*,patPathDDR>* patObservation::getPathDDRs(){
 /*
 *od utilities
 */
-void patObservation::setOdDDRs(const map<patOdJ*,double>& theOdDDRs){
+void patObservation::setOdDDRs(const map<patOd*,patReal>& theOdDDRs){
 	odDDRs = theOdDDRs;
 }
 
-map<patOdJ*,double>* patObservation::getOdDDRs(){
+map<patOd*,patReal>* patObservation::getOdDDRs(){
 	return &odDDRs;
 }
 
@@ -94,7 +94,7 @@ map<patOdJ*,double>* patObservation::getOdDDRs(){
 	return traveler;
 }
 
-unsigned long patObservation::getId() {
+patULong patObservation::getId() {
 	return id;
 }
 
@@ -102,13 +102,13 @@ unsigned long patObservation::getId() {
 *calculate sum of likelihood values of all generated paths
 *return a vector with kinds of likelihood from 4 algorithms
 */
-vector<double> patObservation::calDDRAll(){
-	vector<double> rtnValues;
+vector<patReal> patObservation::calDDRAll(){
+	vector<patReal> rtnValues;
 	ddrAll = 0.0;
 	ddrSimpleAll = 0.0;
 	ddrRawAll = 0.0;
 	ddrMMAll = 0.0;
-	for(map<patPathJ*,vector< double> >::iterator pathIter=  pathDDRsReal.begin();
+	for(map<patPathJ*,vector< patReal> >::iterator pathIter=  pathDDRsReal.begin();
 	pathIter!=  pathDDRsReal.end();
 	++pathIter){
 	
@@ -124,12 +124,12 @@ vector<double> patObservation::calDDRAll(){
 	return rtnValues;
 }
 
-double patObservation::getDDRAll(){
+patReal patObservation::getDDRAll(){
 	return ddrAll;
 }
 
 
-double patObservation::getDDRRawAll(){
+patReal patObservation::getDDRRawAll(){
 	return ddrRawAll;
 }
 
@@ -137,8 +137,8 @@ double patObservation::getDDRRawAll(){
 * get path candidates ordered by OD
 *return a map, the keys are pointers to ODs, the values are map of related paths and likelihood values
 */
-map<patOdJ*,map<patPathJ*,patPathDDR> >  patObservation::getPathDDRsOrderByOd_Object(){
-	map<patOdJ*,map<patPathJ*,patPathDDR> > pathDDRsOrderByOd;
+map<patOd*,map<patPathJ*,patPathDDR> >  patObservation::getPathDDRsOrderByOd_Object(){
+	map<patOd*,map<patPathJ*,patPathDDR> > pathDDRsOrderByOd;
 	
 	 for(map<patPathJ*,patPathDDR>::iterator pathIter = pathDDRs.begin();
 					pathIter != pathDDRs.end();
@@ -151,10 +151,10 @@ map<patOdJ*,map<patPathJ*,patPathDDR> >  patObservation::getPathDDRsOrderByOd_Ob
 	return pathDDRsOrderByOd;
 }
 
-map<patOdJ*,map<patPathJ*,vector<double> > >  patObservation::getPathDDRsOrderByOd_Real(){
-	map<patOdJ*,map<patPathJ*,vector<double> > > pathDDRsOrderByOd;
+map<patOd*,map<patPathJ*,vector<patReal> > >  patObservation::getPathDDRsOrderByOd_Real(){
+	map<patOd*,map<patPathJ*,vector<patReal> > > pathDDRsOrderByOd;
 	
-	 for(map<patPathJ*,vector<double> >::iterator pathIter = pathDDRsReal.begin();
+	 for(map<patPathJ*,vector<patReal> >::iterator pathIter = pathDDRsReal.begin();
 					pathIter != pathDDRsReal.end();
 					++pathIter){
 
@@ -164,14 +164,14 @@ map<patOdJ*,map<patPathJ*,vector<double> > >  patObservation::getPathDDRsOrderBy
 	}
 	return pathDDRsOrderByOd;
 }
-map<patPathJ*,vector<double> >* patObservation::getPathDDRsReal(){
+map<patPathJ*,vector<patReal> >* patObservation::getPathDDRsReal(){
 	return &pathDDRsReal;
 }
-map<patPathJ*,vector<double> >* patObservation::getPathDDRsRealNormalized(){
+map<patPathJ*,vector<patReal> >* patObservation::getPathDDRsRealNormalized(){
 	return &pathDDRsRealNormalized;
 }
 
-	map<patPathJ*,double>* patObservation::getPathDDRsRealRaw(){
+	map<patPathJ*,patReal>* patObservation::getPathDDRsRealRaw(){
 	return &pathDDRsRealRaw;
 	}
 /*	
@@ -187,13 +187,13 @@ void patObservation::setOdPathSetByDDRs(){
 }
 */
 void patObservation::normalizeDDRs(){
-vector<double> ddrAll = calDDRAll();
-	vector<double> badDDR;
+vector<patReal> ddrAll = calDDRAll();
+	vector<patReal> badDDR;
 	badDDR.push_back(9999.9);
 	badDDR.push_back(9999.9);
 	badDDR.push_back(9999.9);
 	badDDR.push_back(9999.9);
-	for (map<patPathJ*,vector<double> >::iterator pathIter= pathDDRsReal.begin();
+	for (map<patPathJ*,vector<patReal> >::iterator pathIter= pathDDRsReal.begin();
 		 pathIter!=pathDDRsReal.end();
 		 ++pathIter){
 		pathDDRsRealNormalized[const_cast<patPathJ*>(pathIter->first)]=badDDR;
@@ -202,7 +202,7 @@ vector<double> ddrAll = calDDRAll();
 	
 	if (ddrAll[0]!=0.0){
 	
-	for (map<patPathJ*,vector<double> >::iterator pathIter= pathDDRsReal.begin();
+	for (map<patPathJ*,vector<patReal> >::iterator pathIter= pathDDRsReal.begin();
 		pathIter!=pathDDRsReal.end();
 		++pathIter){
 		pathDDRsRealNormalized[pathIter->first][0]=pathIter->second[0]/(ddrAll[0]);
@@ -214,7 +214,7 @@ vector<double> ddrAll = calDDRAll();
 
 	if (ddrAll[1]!=0.0){
 	
-	for (map<patPathJ*,vector<double> >::iterator pathIter= pathDDRsReal.begin();
+	for (map<patPathJ*,vector<patReal> >::iterator pathIter= pathDDRsReal.begin();
 		pathIter!=pathDDRsReal.end();
 		++pathIter){
 		pathDDRsRealNormalized[pathIter->first][1]=pathIter->second[1]/(ddrAll[1]);
@@ -223,7 +223,7 @@ vector<double> ddrAll = calDDRAll();
 	}
 	if (ddrAll[2]!=0.0){
 	
-	for (map<patPathJ*,vector<double> >::iterator pathIter= pathDDRsReal.begin();
+	for (map<patPathJ*,vector<patReal> >::iterator pathIter= pathDDRsReal.begin();
 		pathIter!=pathDDRsReal.end();
 		++pathIter){
 		pathDDRsRealNormalized[pathIter->first][2]=pathIter->second[2]/(ddrAll[2]);
@@ -233,7 +233,7 @@ vector<double> ddrAll = calDDRAll();
 	
 	if (ddrAll[3]!=0.0){
 	
-	for (map<patPathJ*,vector<double> >::iterator pathIter= pathDDRsReal.begin();
+	for (map<patPathJ*,vector<patReal> >::iterator pathIter= pathDDRsReal.begin();
 		pathIter!=pathDDRsReal.end();
 		++pathIter){
 		pathDDRsRealNormalized[pathIter->first][3]=pathIter->second[3]/(ddrAll[3]);
@@ -254,14 +254,14 @@ patPathSampling* patObservation::getPathSampling(patPathJ* aPath){
 map<patPathJ*, patPathSampling>* patObservation::getChoiceSet(){
 	return &ChoiceSet;
 }
-void patObservation::sampleChoiceSet(patNetwork* theNetwork,vector< list < pair<patArc*, unsigned long> > >* adjList,patError*& err){
+void patObservation::sampleChoiceSet(patNetwork* theNetwork,vector< list < pair<patArc*, patULong> > >* adjList,patError*& err){
 	DEBUG_MESSAGE("sample choice set for an observation");
-	for (map<patPathJ*,vector<double> >::iterator pathIter = pathDDRsReal.begin();
+	for (map<patPathJ*,vector<patReal> >::iterator pathIter = pathDDRsReal.begin();
 				pathIter!=pathDDRsReal.end();
 				pathIter++)
 	{
 		patPathSampling thePathSampling=patPathSampling(theNetwork,adjList,pathIter->first);
-		thePathSampling.run(unsigned long(1),err);
+		thePathSampling.run(patULong(1),err);
 		ChoiceSet.insert(pair<patPathJ*,patPathSampling>(pathIter->first,thePathSampling));
 
 	}

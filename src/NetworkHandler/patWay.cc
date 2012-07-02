@@ -9,27 +9,29 @@
 #include "patPostGreSQLConnector.h"
 #include "patDisplay.h"
 #include "patNetworkElements.h"
-map<patString, set<patString> > patWay::car_include_rules;
-map<patString, set<patString> > patWay::car_exclude_rules;
-map<patString, set<patString> > patWay::bike_include_rules;
-map<patString, set<patString> > patWay::bike_exclude_rules;
-map<patString, set<patString> > patWay::walk_include_rules;
-map<patString, set<patString> > patWay::walk_exclude_rules;
+#include<iostream>
+#include<sstream>
+#include<fstream>
+#include "patException.h"
+map<string, set<string> > patWay::car_include_rules;
+map<string, set<string> > patWay::car_exclude_rules;
+map<string, set<string> > patWay::bike_include_rules;
+map<string, set<string> > patWay::bike_exclude_rules;
+map<string, set<string> > patWay::walk_include_rules;
+map<string, set<string> > patWay::walk_exclude_rules;
 
-patWay::patWay() :
-		m_length(-1.0) {
+patWay::patWay() {
 	//
-
 }
 
-patWay::patWay(unsigned long the_way_id,
-		map<patString, patString> the_attributes) :
-		m_way_id(the_way_id), m_attributes(the_attributes), m_length(-1.0) {
+patWay::patWay(unsigned long the_way_id, unordered_map<string, string> the_tags) :
+		m_way_id(the_way_id), m_tags(the_tags) {
+	m_length=-1.0;
 }
 bool patWay::isHighway() const {
-	map<patString, patString>::const_iterator find_highway = m_attributes.find(
+	unordered_map<string, string>::const_iterator find_highway = m_tags.find(
 			"highway");
-	if (find_highway == m_attributes.end()) {
+	if (find_highway == m_tags.end()) {
 		return false;
 	} else {
 		return true;
@@ -37,12 +39,12 @@ bool patWay::isHighway() const {
 }
 
 signed short int patWay::isOneway() const {
-	map<patString, patString>::const_iterator find_oneway = m_attributes.find(
+	unordered_map<string, string>::const_iterator find_oneway = m_tags.find(
 			"oneway");
-	if (find_oneway == m_attributes.end()) {
+	if (find_oneway == m_tags.end()) {
 		return 0;
 	} else {
-		patString one_way_stirng = find_oneway->second;
+		string one_way_stirng = find_oneway->second;
 		if (one_way_stirng == "yes" || one_way_stirng == "1"
 				|| one_way_stirng == "true") {
 			return 1;
@@ -55,10 +57,12 @@ signed short int patWay::isOneway() const {
 
 }
 signed short int patWay::isCarOneWay() const {
-
-	if (!isWay(patWay::car_include_rules, patWay::car_exclude_rules)) {
+	if (patWay::car_include_rules.size() > 0
+			&& !isWay(patWay::car_include_rules, patWay::car_exclude_rules)) {
 		return -2; //not car
 	} else {
+		//DEBUG_MESSAGE("no car rule");
+
 		return isOneway(); //"-1" reverse, "0" two ways, "1" one way;
 	}
 }
@@ -76,34 +80,33 @@ signed short int patWay::isWalkOneWay() const {
 		return 0;
 	}
 }
-patString patWay::getHighwayType() const {
+string patWay::getHighwayType() const {
 
-	map<patString, patString>::const_iterator find_highway = m_attributes.find(
+	unordered_map<string, string>::const_iterator find_highway = m_tags.find(
 			"highway");
-	if (find_highway == m_attributes.end()) {
+	if (find_highway == m_tags.end()) {
 		return "";
 	} else {
 		return find_highway->second;
 	}
 }
-patString patWay::getTagValue(patString tag_key) const {
+string patWay::getTagValue(string tag_key) const {
 
-	map<patString, patString>::const_iterator find_tag = m_attributes.find(
+	unordered_map<string, string>::const_iterator find_tag = m_tags.find(
 			tag_key);
-	if (find_tag == m_attributes.end()) {
+	if (find_tag == m_tags.end()) {
 		return "";
 	} else {
 		return find_tag->second;
 	}
 }
 
-bool patWay::isWay(map<patString, set<patString> >& include_rules
-		,map<patString, set<patString> >& exclude_rules) const {
-	for (map<patString, set<patString> >::iterator rule_iter =
-			exclude_rules.begin(); rule_iter != exclude_rules.end();
-			++rule_iter) {
-		patString rule_key = rule_iter->first;
-		patString tag_value = getTagValue(rule_key);
+bool patWay::isWay(map<string, set<string> >& include_rules
+		,map<string, set<string> >& exclude_rules) const {
+	for (map<string, set<string> >::iterator rule_iter = exclude_rules.begin();
+			rule_iter != exclude_rules.end(); ++rule_iter) {
+		string rule_key = rule_iter->first;
+		string tag_value = getTagValue(rule_key);
 		if (!tag_value.empty()) {
 			if (rule_iter->second.find(tag_value) != rule_iter->second.end()) {
 				//if the tag is set as excluded, exclude it.
@@ -112,27 +115,26 @@ bool patWay::isWay(map<patString, set<patString> >& include_rules
 			}
 		}
 	}
-	for (map<patString, set<patString> >::iterator rule_iter =
-			include_rules.begin(); rule_iter != include_rules.end();
-			++rule_iter) {
-		patString rule_key = rule_iter->first;
-		patString tag_value = getTagValue(rule_key);
+	for (map<string, set<string> >::iterator rule_iter = include_rules.begin();
+			rule_iter != include_rules.end(); ++rule_iter) {
+		string rule_key = rule_iter->first;
+		string tag_value = getTagValue(rule_key);
 		if (tag_value.empty()) {
 			//DEBUG_MESSAGE("no tag"<<rule_key);
 			//no tag avaiable, exclude it
 			continue;
 		}
-	//	DEBUG_MESSAGE(rule_key<<":"<<tag_value);
+		//	DEBUG_MESSAGE(rule_key<<":"<<tag_value);
 		if (rule_iter->second.find(tag_value) != rule_iter->second.end()) {
 			return true;
 		}
 	}
 	return false;
 }
-bool patWay::isHighway(patString highway_type) {
-	map<patString, patString>::iterator find_highway = m_attributes.find(
+bool patWay::isHighway(string highway_type) {
+	unordered_map<string, string>::iterator find_highway = m_tags.find(
 			"highway");
-	if (find_highway == m_attributes.end()) {
+	if (find_highway == m_tags.end()) {
 		return false;
 	} else {
 		if (find_highway->second == highway_type) {
@@ -144,31 +146,92 @@ bool patWay::isHighway(patString highway_type) {
 	}
 }
 
-void patWay::loadRule(map<patString, set<patString> >& rule_map, patString key
-		, patString value) {
-	map<patString, set<patString> >::iterator find_key = rule_map.find(value);
+void patWay::loadRule(map<string, set<string> >& rule_map, string key
+		, string value) {
+	map<string, set<string> >::iterator find_key = rule_map.find(value);
 	if (find_key == rule_map.end()) {
-		set < patString > value_set;
-		rule_map.insert(pair<patString, set<patString> >(key, value_set));
+		set<string> value_set;
+		rule_map.insert(pair<string, set<string> >(key, value_set));
 	}
 	rule_map[key].insert(value);
 	//DEBUG_MESSAGE(rule_map[key].size());
 }
+
+//void patWay::initiateNetworkTypeRulesNULL() {
+//}
+
+void patWay::initiateNetworkTypeRules(string file_name) {
+	ifstream file_stream_handler;
+	file_stream_handler.open(file_name.c_str(), ios::in);
+	if (!file_stream_handler) {
+		throw RuntimeException("network rules not found");
+	}DEBUG_MESSAGE("Read file:" << file_name);
+
+	string line;
+	while (getline(file_stream_handler, line)) {
+
+		istringstream linestream(line);
+		string item;
+
+		getline(linestream, item, ',');
+		string key = item;
+
+		getline(linestream, item, ',');
+		string type = item;
+
+		getline(linestream, item, ',');
+		bool include = atoi(item.c_str());
+
+		getline(linestream, item, ',');
+		int id = atof(item.c_str());
+
+		getline(linestream, item, '\n');
+		string value = item;
+		DEBUG_MESSAGE(type<<","<<key<<":"<<value<<", include: "<<include);
+		if (type == "car") {
+			if (include) {
+				loadRule(car_include_rules, key, value);
+			} else {
+
+				loadRule(car_exclude_rules, key, value);
+			}
+		} else if (type == "bike") {
+
+			if (include) {
+				loadRule(bike_include_rules, key, value);
+				loadRule(walk_include_rules, key, value);
+			} else {
+
+				loadRule(bike_exclude_rules, key, value);
+			}
+		} else if (type == "walk") {
+
+			if (include) {
+				loadRule(walk_include_rules, key, value);
+			} else {
+
+				loadRule(walk_exclude_rules, key, value);
+			}
+
+		}
+	}
+	file_stream_handler.close();
+}
 void patWay::initiateNetworkTypeRules() {
 
-	patString query_string = "select type,key,value,include from network_rules;";
+	string query_string = "select type,key,value,include from network_rules;";
 	result R = patPostGreSQLConnector::makeSelectQuery(query_string);
 
 	for (result::const_iterator i = R.begin(); i != R.end(); ++i) {
 		bool include;
-		patString type;
-		patString key;
-		patString value;
+		string type;
+		string key;
+		string value;
 		(*i)["include"].to(include);
 		(*i)["type"].to(type);
 		(*i)["key"].to(key);
 		(*i)["value"].to(value);
-		DEBUG_MESSAGE(include << " " << type << " " << key << " " << value);
+//		DEBUG_MESSAGE(include << " " << type << " " << key << " " << value);
 		if (type == "car") {
 			if (include) {
 				loadRule(car_include_rules, key, value);
@@ -195,13 +258,13 @@ void patWay::initiateNetworkTypeRules() {
 			}
 		}
 	}
-	DEBUG_MESSAGE("Network configuration loaded");
-	DEBUG_MESSAGE("car include rules:" << car_include_rules.size());
-	DEBUG_MESSAGE("car exclude rules:" << car_exclude_rules.size());
-	DEBUG_MESSAGE("bike include rules:" << bike_include_rules.size());
-	DEBUG_MESSAGE("bike exclude rules:" << bike_exclude_rules.size());
-	DEBUG_MESSAGE("walk include rules:" << walk_include_rules.size());
-	DEBUG_MESSAGE("walk exclude rules:" << walk_exclude_rules.size());
+//	DEBUG_MESSAGE("Network configuration loaded");
+//	DEBUG_MESSAGE("car include rules:" << car_include_rules.size());
+//	DEBUG_MESSAGE("car exclude rules:" << car_exclude_rules.size());
+//	DEBUG_MESSAGE("bike include rules:" << bike_include_rules.size());
+//	DEBUG_MESSAGE("bike exclude rules:" << bike_exclude_rules.size());
+//	DEBUG_MESSAGE("walk include rules:" << walk_include_rules.size());
+//	DEBUG_MESSAGE("walk exclude rules:" << walk_exclude_rules.size());
 }
 const vector<const patArc*>* patWay::getArcListPointer(bool forward) const {
 	if (forward) {
@@ -218,7 +281,7 @@ void patWay::appendArc(const patArc* new_arc) {
 }
 
 void patWay::appendReverseArc(const patArc* new_arc) {
-	m_reverse_arcs.insert(m_reverse_arcs.begin(),new_arc);
+	m_reverse_arcs.insert(m_reverse_arcs.begin(), new_arc);
 }
 unsigned long patWay::getId() {
 	return m_way_id;
@@ -247,13 +310,14 @@ bool patWay::readFromNodesIds(patNetworkElements* network,
 	unsigned long down_node_id;
 	const patNode* down_node;
 	node_iter++;
-	if(getId()==27335918){
-		DEBUG_MESSAGE(the_list_of_nodes_ids.size());
-	}
+//	if(getId()==27335918){
+////		DEBUG_MESSAGE(the_list_of_nodes_ids.size());
+//	}
 	unsigned long wrong_arc_counts = 0;
 	for (; node_iter != the_list_of_nodes_ids.end(); ++node_iter) {
 		down_node_id = *node_iter;
 		down_node = network->getNode(down_node_id);
+//		DEBUG_MESSAGE(up_node_id<<"-"<<down_node_id);
 		if (getId() == 191887) {
 			DEBUG_MESSAGE(down_node_id);
 		}
@@ -265,6 +329,7 @@ bool patWay::readFromNodesIds(patNetworkElements* network,
 			const patArc* new_arc = up_node->getOutgoingArc(down_node_id);
 			if (new_arc == NULL) {
 				new_arc = network->addArc(up_node, down_node, this, err);
+				const_cast<patArc*>(new_arc)->setTags(m_tags);
 			}
 
 			if (new_arc != NULL) {
@@ -277,6 +342,7 @@ bool patWay::readFromNodesIds(patNetworkElements* network,
 			if (new_arc_reverse == NULL) {
 				new_arc_reverse = network->addArc(down_node, up_node, this,
 						err);
+				const_cast<patArc*>(new_arc_reverse)->setTags(m_tags);
 			}
 
 			if (new_arc_reverse != NULL) {
@@ -298,7 +364,6 @@ bool patWay::readFromNodesIds(patNetworkElements* network,
 	}
 }
 
-
-void patWay::setTags(map<string, string>& tags){
+void patWay::setTags(unordered_map<string, string>& tags) {
 	m_tags = tags;
 }

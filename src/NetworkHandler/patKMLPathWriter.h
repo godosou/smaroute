@@ -11,8 +11,10 @@
 #include <map>
 using namespace std;
 #include "patCreateKmlStyles.h"
+#include "patOd.h"
 #include "kml/dom.h"
 using kmldom::DocumentPtr;
+using kmldom::FolderPtr;
 class patKMLPathWriter:public patPathWriter {
 public:
 	patKMLPathWriter(string file_name);
@@ -22,6 +24,7 @@ public:
 protected:
 
 	DocumentPtr m_document;
+	map<patOd, FolderPtr> m_ods;
 };
 
 #endif /* PATKMLPATHWRITER_H_ */

@@ -133,7 +133,7 @@ void patGpsSequence::readFromFile(string file_name, patError*& err) {
 	unsigned long curr_trip_id = 1, last_trip_id = -1; //current trip id
 	unsigned long pointNumber = 0;
 
-	unsigned long currTime, currEndTime;
+	unsigned long currTime, currEndTime=0.0;
 	double currLat, currLon, currSpeed, currHeading, currAccuracyH,
 			currAccuracyV, currAccuracyS, currAccuracyHD;
 

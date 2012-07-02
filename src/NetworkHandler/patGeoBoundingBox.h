@@ -14,6 +14,11 @@ public:
 	patGeoBoundingBox(double tleft_top_lat, double tlat_top_lon,
 			double tright_buttom_lat,double tright_buttom_lon);
 	patString toString();
+
+	double getMinLat() const;
+	double getMaxLat() const;
+	double getMinLon() const;
+	double getMaxLon() const;
 	virtual ~patGeoBoundingBox();
 protected:
 	double left_top_lat;

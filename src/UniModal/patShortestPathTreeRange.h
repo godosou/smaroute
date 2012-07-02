@@ -13,7 +13,7 @@ class patGpsPoint;
 class patShortestPathTreeRange {
 
   friend class patShortestPathAlgoRange ;
-  friend class patOdJ;
+  friend class patOd;
 
 public:
   patShortestPathTreeRange( unsigned long nNodes) ;

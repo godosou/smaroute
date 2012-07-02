@@ -7,11 +7,11 @@
 
 #include "patCreateKmlStyles.h"
 #include "patTransportMode.h"
-#include "kml/dom.h"
+#include <kml/dom.h>
 #include<iostream>
 #include<sstream>
 #include<fstream>
-#include "patDisplay.h";
+#include "patDisplay.h"
 #include "kml/base/color32.h"
 
 using kmldom::DocumentPtr;

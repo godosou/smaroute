@@ -675,12 +675,12 @@ double patPathDevelop::lastStage(patSample* theSample,
 			patPathJ* thePath = const_cast<patPathJ*>(&(pathIter->first));
 			patError* err(NULL);
 
-			patOdJ tod = thePath->generateOd(baseNetwork, err);
+			patOd tod = thePath->generateOd(baseNetwork, err);
 			if (err != NULL) {
 				continue;
 			}
 			//DEBUG_MESSAGE(patNBParameters::the()->algoInSelection);
-			patOdJ* theOd = theSample->addOd(tod);
+			patOd* theOd = theSample->addOd(tod);
 
 			thePath->assignOd(theOd);
 			patPathJ* pathPointer = theOd->addPath(*thePath);

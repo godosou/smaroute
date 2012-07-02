@@ -82,7 +82,7 @@
 	</module>
 	<module name="MultimodalMapMatching">
 		<!-- ===========Params Folder===== -->
-		<param name="paramFolder" value="/Users/jchen/Documents/Project/newbioroute/src/params/" type="string"/>
+		<param name="paramFolder" value="../../src/params/" type="string"/>
         
         <!-- ===========Data type===== -->
 		<param name="enableBT" value="0" type="int"/>
@@ -142,11 +142,15 @@
     
 	<module name="MHPathSampling">
 		<param name="RANDOMSEED_ELEMENT" value="4213332" type="int"/>
-		<param name="MSGINTERVAL_ELEMENT" value="100" type="int"/> 
-		<param name="TOTALITERATIONS_ELEMENT" value="5000" type="int"/>
-		<param name="SAMPLEINTERVAL_ELEMENT" value="500" type="int"/>
+		<param name="MSGINTERVAL_ELEMENT" value="1000" type="int"/> 
+		<param name="TOTALITERATIONS_ELEMENT" value="100000" type="int"/>
+		<param name="SAMPLE_COUNT" value="50" type="int"/>
+		<param name="SAMPLEINTERVAL_ELEMENT" value="5000" type="int"/>
 		<param name="CUTOFFPROBABILITY_ELEMENT" value="0.000000001" type="float"/>
 		<param name="RELATIVECOSTSCALE_ELEMENT" value="1.15" type="float"/>
+        <param name="observationDirectory" value="/users/jchen/newbioroute/playground/result/unimodal_result/" type="string"/>
+
+        
 	</module>
     
 <!-- ====================Path Size============================== -->
@@ -186,12 +190,13 @@
         <param name="enableBikeNetwork" value="" type="int"/>
         
 		<param name="networkAccuracy" value="30.0" type="float"/>
-        <param name="boundingBoxLeftUpLongitude" value="6.66" type="float"/>
-        <param name="boundingBoxLeftUpLatitude" value="46.55" type="float"/>
-        <param name="boundingBoxRightBottumLongitude" value="6.48" type="float"/>
-        <param name="boundingBoxRightBottumLatitude" value="46.5" type="float"/>
+        <param name="boundingBoxLeftUpLongitude" value="6.48009428385" type="float"/>
+        <param name="boundingBoxLeftUpLatitude" value="46.559856996900002" type="float"/>
+        <param name="boundingBoxRightBottumLongitude" value="6.5900872475999997" type="float"/>
+        <param name="boundingBoxRightBottumLatitude" value="46.505016372300001" type="float"/>
         
         <!--
+        
         <param name="boundingBoxLeftUpLongitude" value="6.48" type="float"/>
         <param name="boundingBoxLeftUpLatitude" value="46.50" type="float"/>
         <param name="boundingBoxRightBottumLongitude" value="6.58" type="float"/>
@@ -200,7 +205,7 @@
 	</module>
 
 	<module name="global">
-		<param name="databaseHost" value="127.0.0.1" type="string"/>
+		<param name="databaseHost" value="host=127.0.0.1 port=5433 user=jchen password=mc01chjm  dbname=osm" type="string"/>
 		<param name="randomSeed" value="471221" type="int"/>
         <param name="discardGPSGap" value="10.0" type="float"/>
         <param name="usePreviousGPS" value="1" type="int"/>
@@ -263,7 +268,7 @@
 	</module>
 
         <module name="OSM">
-            <param name="OsmNetworkFileName" value="network/lausanne.osm" type="string"/>
+            <param name="OsmNetworkFileName" value="../../playground/network_data/lausanne.osm" type="string"/>
             <param name="osm_xpi_url" value="http://xapi.openstreetmap.org/api/0.6/" type="string"/>
         </module>
 	

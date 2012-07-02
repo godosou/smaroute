@@ -15,6 +15,7 @@
 #include "MHStateProcessor.h"
 #include <patRandomNumber.h>
 #include "patDisplay.h"
+#include <iostream>
 using namespace std;
 template<class S>
 class MHAlgorithm {
@@ -22,7 +23,7 @@ public:
 
 	// -------------------- CONSTRUCTION --------------------
 
-	MHAlgorithm(MHProposal<S>* proposal, MHWeight<S>* weight,
+	MHAlgorithm(MHProposal<S>* proposal, const MHWeight<S>* weight,
 			patRandomNumber* rnd) :
 			m_msgInterval(1), m_lastCompTime_ms(0.0), m_initialState(NULL), m_proposal(
 					proposal), m_weight(weight), m_rnd(rnd) {
@@ -80,7 +81,7 @@ public:
 		/*
 		 * initialize (iteration 0)
 		 */
-		DEBUG_MESSAGE("initiate");
+//		DEBUG_MESSAGE("initiate");
 		for (int p_iter = 0; p_iter < m_state_processors.size(); ++p_iter) {
 			m_state_processors[p_iter]->start();
 		}
@@ -88,21 +89,21 @@ public:
 		if (m_initialState != NULL) {
 			currentState = *m_initialState;
 		} else {
-			DEBUG_MESSAGE("new initiate");
+	//		DEBUG_MESSAGE("new initiate");
 			currentState = m_proposal->newInitialState();
-			DEBUG_MESSAGE("state initiated");
+//			DEBUG_MESSAGE("state initiated");
 		}
 		double currentLogWeight = m_weight->logWeight(currentState);
 
-		DEBUG_MESSAGE(
-				"start processors with current log weight"<<currentLogWeight);
+//		DEBUG_MESSAGE(
+//				"start processors with current log weight"<<currentLogWeight);
 		for (typename vector<MHStateProcessor<S>*>::iterator p_iter =
 				m_state_processors.begin(); p_iter != m_state_processors.end();
 				++p_iter) {
-			(*p_iter)->processState(currentState);
+			(*p_iter)->processState(currentState,m_weight->logWeightWithoutCorrection(currentState));
 		}
 
-		DEBUG_MESSAGE("start iterators");
+//		DEBUG_MESSAGE("start iterators");
 		/*
 		 * iterate (iterations 1, 2, ...)
 		 */
@@ -110,9 +111,9 @@ public:
 		for (int i = 1; i <= iterations; i++) {
 //			DEBUG_MESSAGE(i);
 			if (i % m_msgInterval == 0) {
-				DEBUG_MESSAGE("MH iteration "<< i<<" transtions:"<<accept_transition);
+				cout<<"MH iteration "<< i<<" transtions:"<<accept_transition<<endl;
 				//DEBUG_MESSAGE("  state  = " << currentState);
-				DEBUG_MESSAGE("\tlog  weight = " << currentLogWeight);
+//				DEBUG_MESSAGE("\tlog  weight = " << currentLogWeight);
 			}
 
 			MHTransition<S> proposalTransition = m_proposal->newTransition(
@@ -124,6 +125,7 @@ public:
 			double logAlpha = (proposalLogWeight - currentLogWeight)
 					+ (proposalTransition.getBwdLogProb()
 							- proposalTransition.getFwdLogProb());
+//            DEBUG_MESSAGE(proposalLogWeight <<","<<currentLogWeight<<","<<proposalTransition.getBwdLogProb()<<","<< proposalTransition.getFwdLogProb());
 			double r_number = m_rnd->nextDouble();
 //			double r_number = 0.0;
 //			DEBUG_MESSAGE(log(r_number)<<","<<logAlpha);
@@ -136,7 +138,7 @@ public:
 			for (typename vector<MHStateProcessor<S>*>::iterator p_iter =
 					m_state_processors.begin();
 					p_iter != m_state_processors.end(); ++p_iter) {
-				(*p_iter)->processState(currentState);
+				(*p_iter)->processState(currentState,m_weight->logWeightWithoutCorrection(currentState));
 			}
 
 			/*
@@ -161,7 +163,7 @@ public:
 protected:
 	MHProposal<S>* m_proposal;
 
-	MHWeight<S>* m_weight;
+	const MHWeight<S>* m_weight;
 
 	patRandomNumber* m_rnd;
 	S* m_initialState;

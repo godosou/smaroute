@@ -172,7 +172,7 @@ void patPathJ::addArcToBack(patArc* theArc, TransportMode t_m) {
  m_arcs.insert(m_arcs.end(),arcSequence.begin(),arcSequence.end());
  }
  */
-patOdJ patPathJ::generateOd(patNetwork* theNetwork, patError*& err) {
+patOd patPathJ::generateOd(patNetwork* theNetwork, patError*& err) {
 	patNode* originNode = theNetwork->getNodeFromUserId(
 			m_arcs.front()->upNodeId);
 	if (originNode == NULL) {
@@ -181,7 +181,7 @@ patOdJ patPathJ::generateOd(patNetwork* theNetwork, patError*& err) {
 				<< " does not exist";
 		err = new patErrMiscError(str.str());
 		WARNING(err->describe());
-		return patOdJ();
+		return patOd();
 	}
 	patNode* destinationNode = theNetwork->getNodeFromUserId(
 			m_arcs.back()->downNodeId);
@@ -191,20 +191,20 @@ patOdJ patPathJ::generateOd(patNetwork* theNetwork, patError*& err) {
 				<< " does not exist";
 		err = new patErrMiscError(str.str());
 		WARNING(err->describe());
-		return patOdJ();
+		return patOd();
 	}
-	patOdJ theOd(originNode, destinationNode);
+	patOd theOd(originNode, destinationNode);
 	return theOd;
 }
 
-patOdJ patPathJ::generateOd() {
+patOd patPathJ::generateOd() {
 	patNode* originNode = m_arcs.front()->getUpNode();
 	patNode* destinationNode = m_arcs.back()->getDownNode();
-	patOdJ theOd(originNode, destinationNode);
+	patOd theOd(originNode, destinationNode);
 	return theOd;
 }
 
-void patPathJ::assignOd(patOdJ* theOd) {
+void patPathJ::assignOd(patOd* theOd) {
 	m_od = theOd;
 }
 
@@ -224,7 +224,7 @@ void patPathJ::assignId(const unsigned long theId) {
 	m_id = theId;
 }
 
-patOdJ* patPathJ::getOd() {
+patOd* patPathJ::getOd() {
 	return m_od;
 }
 

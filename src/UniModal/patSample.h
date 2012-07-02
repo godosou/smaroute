@@ -7,7 +7,7 @@
 #include "patType.h"
 #include <map>
 class patTraveler;
-class patOdJ;
+class patOd;
 class patPathJ;
 class patObservation;
 class patSample{
@@ -19,36 +19,36 @@ class patSample{
 		*/
 		patSample() ;
 
-		void setMapBounds(double minLat, 
-			      double maxLat, 
-			      double minLon, 
-			      double maxLon) ;
+		void setMapBounds(patReal minLat, 
+			      patReal maxLat, 
+			      patReal minLon, 
+			      patReal maxLon) ;
 				  
 		patTraveler* addTraveler(patTraveler theTraveler);
-		patTraveler* addTraveler(const unsigned long& theTravelerId);
+		patTraveler* addTraveler(const patULong& theTravelerId);
 		
-		patTraveler* findTraveler(const unsigned long& theTravelerId);
+		patTraveler* findTraveler(const patULong& theTravelerId);
 		void assignPathIds();
 		
-		patOdJ*  addOd( patOdJ theOd);
-		patOdJ*  findOd( patOdJ theOd);
-		set<patOdJ>* getAllOds();
+		patOd*  addOd( patOd theOd);
+		patOd*  findOd( patOd theOd);
+		set<patOd>* getAllOds();
 		
 		set<patTraveler>* getAllTravelers();
 		patPathJ* findPath( patPathJ& thePath);
 		
-list<unsigned long>  getTripIds();
+list<patULong>  getTripIds();
 patString getTripIdsStr();
-		unsigned long getNumberOfObservations() ;
+		patULong getNumberOfObservations() ;
 		patString genDescription();
 		void writeKML(patString fileName);
 	protected:
 		patString name;
-	  	double minLatitude ;
- 	 	double maxLatitude ;
- 	 	double minLongitude ;
- 		double maxLongitude ;
+	  	patReal minLatitude ;
+ 	 	patReal maxLatitude ;
+ 	 	patReal minLongitude ;
+ 		patReal maxLongitude ;
 		set<patTraveler> travelerSet;
-		set<patOdJ> odSet;
+		set<patOd> odSet;
 };
 #endif

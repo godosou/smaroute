@@ -29,7 +29,7 @@ public:
 	 */
 	int getDirection(string direction_string);
 	bool findArcInForbidenList(list<map<const patArc*, const patNode*> >& arcs_to_stop,const patArc* arc);
-	map<patString, map< const patArc*, const patNode*> > findStopsIncomingLinks(map<const patNode*, int>& stops,
+	map<string, map< const patArc*, const patNode*> > findStopsIncomingLinks(map<const patNode*, int>& stops,
 																				map<const patNode*, list< const patArc*> >& outgoing_incidents,
 																				map<const patNode*, list< const patArc*> >& incoming_incidents,
 																				set<const patArc*>& forward_arcs,
@@ -52,17 +52,17 @@ public:
 	void getRoute(patNetworkElements* network_elements,
 			vector<pair<unsigned long, string> >& way_ids
 			, vector<pair<unsigned long, string> >& node_ids,
-			map<patString, patString>& tags);
+			unordered_map<string, string>& tags);
 	void getRoutes(patNetworkElements* network, string table_name,
 			patGeoBoundingBox bounding_box);
 	virtual void getFromNetwork(patNetworkElements* network,
 			patGeoBoundingBox bounding_box)=0;
 
-	int findDirection(map<patString, map<patString, int> >& stop_direction
-			, patString up_stop , patString down_stop);
+	int findDirection(map<string, map<string, int> >& stop_direction
+			, string up_stop , string down_stop);
 
-	map<patString, map<patString, int> > buildDirection(
-			map<pair<patString, patString> , map<int, patPublicTransportSegment> >& pt_incidents);
+	map<string, map<string, int> > buildDirection(
+			map<pair<string, string> , map<int, patPublicTransportSegment> >& pt_incidents);
 	void getSegFromNode(
 			patNetworkElements* network_elements,
 			map<const patNode*, list<const patArc*> >& incidents
@@ -72,11 +72,11 @@ public:
 			const patArc* incoming_arc,
 			patPublicTransportSegment& seg
 			,
-			map<patString, map< const patArc*, const patNode*> >& stops
+			map<string, map< const patArc*, const patNode*> >& stops
 			,
 			list<map<const patArc*, const patNode*> >& arcs_to_stop,
-			list<patString>& stop_names,
-			map<pair<patString, patString> , set< patPublicTransportSegment> >& pt_incidents) ;
+			list<string>& stop_names,
+			map<pair<string, string> , set< patPublicTransportSegment> >& pt_incidents) ;
 	/**
 	 * Summarize the membership for
 	 */

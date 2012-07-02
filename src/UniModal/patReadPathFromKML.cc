@@ -17,13 +17,13 @@
 
 using namespace boost::xpressive;
 
-patReadPathFromKML::patReadPathFromKML(patString a_file_name, patNetwork* a_network) :
+patReadObservationFromKML::patReadObservationFromKML(patString a_file_name, patNetwork* a_network) :
 file_name(a_file_name),
 network(a_network) {
 
 }
 
-bool patReadPathFromKML::parseFile(patError*& err) {
+bool patReadObservationFromKML::parseFile(patError*& err) {
     xml::tree_parser parser(file_name.c_str());
 
     if (!parser) {
@@ -164,8 +164,8 @@ bool patReadPathFromKML::parseFile(patError*& err) {
 
 }
 
-patReadPathFromKML::patReadPathFromKML(const patReadPathFromKML & orig) {
+patReadObservationFromKML::patReadObservationFromKML(const patReadObservationFromKML & orig) {
 }
 
-patReadPathFromKML::~patReadPathFromKML() {
+patReadObservationFromKML::~patReadObservationFromKML() {
 }

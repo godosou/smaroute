@@ -10,14 +10,15 @@
 #include "patGeoCoordinates.h"
 #include "patType.h"
 #include <list>
-#include <map>
+#include <tr1/unordered_map>
+using namespace std::tr1;
 using namespace std;
 class patPostGISDataType {
 public:
 	patPostGISDataType();
-	static pair<double,double> PointToLonLat(patString lat_lon_string);
-	static list<unsigned long> IntArrayToULongList(patString str);
-	static map<patString,patString> hstoreToMap(patString str);
+	static pair<double,double> PointToLonLat(string lat_lon_string);
+	static list<unsigned long> IntArrayToULongList(string str);
+	static unordered_map<string,string> hstoreToMap(string str);
 	virtual ~patPostGISDataType();
 };
 

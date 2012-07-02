@@ -14,6 +14,10 @@
 class patNetworkBike  : public patNetworkUnimodal {
 public:
 	patNetworkBike();
+	virtual patNetworkBase* clone() const {
+		return new patNetworkBike(*this);
+	}
+	;
 	void getFromNetwork(patNetworkElements* network, patGeoBoundingBox bb);
 	virtual ~patNetworkBike();
 	 double getMinSpeed() const;

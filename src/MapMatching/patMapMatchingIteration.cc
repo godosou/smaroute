@@ -201,7 +201,7 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 		DEBUG_MESSAGE("	not enough distance from last GPS point, skip.");
 		return false;
 	}
-	int too_long_count;
+	int too_long_count=0;
 	map<TransportMode, set<const patArc*> > inter_sec_arcs =
 			m_gps->getDDR()->detInherentDDR(prevNormalGps->getDDR());
 	double travel_time = m_current_measurments->back()->getTimeStamp()
@@ -329,16 +329,12 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 						ddr_arcs.begin(); arc_iter != ddr_arcs.end();
 						++arc_iter) {
 					//DEBUG_MESSAGE("road size"<<arc_iter->second->size());
-					list<const patRoadBase*> shortest_path_roads =
-							shortest_path_tree->getShortestPathTo(
+					list<const patRoadBase*> shortest_path_roads;
+                    
+							shortest_path_tree->getShortestPathTo(shortest_path_roads,
 									arc_iter->second->getUpNode());
 					bool create_path_success = true;
-					patMultiModalPath shortest_path(shortest_path_roads,
-							create_path_success);
-					if (create_path_success == false) {
-						DEBUG_MESSAGE("invalid path");
-						continue;
-					}
+					patMultiModalPath shortest_path(shortest_path_roads);
 					if (shortest_path.addRoadTravelToBack(arc_iter->second)
 							== false) {
 						DEBUG_MESSAGE("invalid path");
@@ -712,7 +708,7 @@ set<int> patMapMatchingIteration::selectPathsByDDR(
 					{
 						modes = curr_modes;
 					}
-					least_path_length = least_path_length;
+					least_path_length = current_path_length;
 					least_length_path = i;
 				}
 				 if (curr_change == change && curr_modes == modes) {

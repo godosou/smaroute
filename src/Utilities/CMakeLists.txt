@@ -1,5 +1,6 @@
 
 add_library(Utilities
+                patTimeFunctions.cc
                 patGeoCoordinates.cc
                 patDisplay.cc
                 patTransportMode.cc

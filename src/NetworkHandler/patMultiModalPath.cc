@@ -39,33 +39,44 @@ patMultiModalPath::patMultiModalPath(
 	}
 
 }
+
+patMultiModalPath::patMultiModalPath(const patMultiModalPath& anotherPath) :
+		patArcSequence::patArcSequence(anotherPath),
+		m_roads(anotherPath.m_roads), m_unique_modes(
+				anotherPath.m_unique_modes), m_od(anotherPath.m_od), m_name(
+				anotherPath.m_name), m_id(anotherPath.m_id), m_attributes(
+				anotherPath.m_attributes), m_distance_to_stop(
+				anotherPath.m_distance_to_stop)
+
+				{
+
+}
+
 patMultiModalPath::patMultiModalPath() :
 		m_name(patString("No name")), m_id(-1) {
 	m_length = 0.0;
 }
 
-patMultiModalPath::patMultiModalPath(list<const patArc*> arc_list,
-		bool& success) :
+patMultiModalPath::patMultiModalPath(list<const patArc*> arc_list) :
 		m_name(patString("No name")), m_id(-1) {
 	m_length = 0.0;
 	for (list<const patArc*>::const_iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
 		if (addRoadTravelToBack(*arc_iter, TransportMode(NONE), 0.0)) {
-			success = false;
+			throw RuntimeException("wrong path");
 			break;
 		}
 	}
 }
 
-patMultiModalPath::patMultiModalPath(list<const patRoadBase*> arc_list,
-		bool& success) :
+patMultiModalPath::patMultiModalPath(list<const patRoadBase*> arc_list) :
 		m_name(patString("No name")), m_id(-1) {
 	m_length = 0.0;
 	for (list<const patRoadBase*>::const_iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
 
 		if (addRoadTravelToBack(*arc_iter, TransportMode(NONE), 0.0) == false) {
-			success = false;
+			throw RuntimeException("wrong path");
 			break;
 		}
 	}
@@ -146,25 +157,32 @@ bool operator!=(const patMultiModalPath& aPath,
 
 bool operator<(const patMultiModalPath& aPath, const patMultiModalPath& bPath) {
 
-	//DEBUG_MESSAGE(aPath.getLength()<<" "<<bPathPath.getLength());
-	if (aPath.getLength() < bPath.getLength()) {
+	const double a_length = aPath.getLength();
+	const double b_length = bPath.getLength();
+//	cout<<a_length<<" "<<b_length;
+	if (a_length < b_length) {
 		return true;
 	}
 
-	if (aPath.getLength() > bPath.getLength()) {
-		return false;
-	}
-	if (aPath.m_arcs.size() < bPath.m_arcs.size()) {
-		return true;
-	}
-	if (aPath.m_arcs.size() > bPath.m_arcs.size()) {
+	if (a_length > b_length) {
 		return false;
 	}
 
-	if (aPath.m_roads.size() < bPath.m_roads.size()) {
+	const unsigned a_size = aPath.m_arcs.size();
+	const unsigned b_size = bPath.m_arcs.size();
+	if (a_size < b_size) {
 		return true;
 	}
-	if (aPath.m_roads.size() > bPath.m_roads.size()) {
+	if (a_size > b_size) {
+		return false;
+	}
+
+	const unsigned a_road_size = aPath.m_roads.size();
+	const unsigned b_road_size = bPath.m_roads.size();
+	if (a_road_size < b_road_size) {
+		return true;
+	}
+	if (a_road_size > b_road_size) {
 		return false;
 	}
 	list<RoadTravel>::const_iterator aIter = aPath.m_roads.begin();
@@ -184,7 +202,12 @@ bool operator<(const patMultiModalPath& aPath, const patMultiModalPath& bPath) {
 
 	return false;
 }
+void patMultiModalPath::removeRoadTravelToBack() {
+	const patRoadBase* end_road = m_roads.back().road;
+	m_roads.pop_back();
+	pop_back(end_road->size());
 
+}
 bool patMultiModalPath::addRoadTravelToBack(const patRoadBase* road,
 		TransportMode t_m, double stop_time) {
 
@@ -229,14 +252,17 @@ bool patMultiModalPath::addRoadTravelToFront(const patRoadBase* road,
  m_arcs.insert(m_arcs.end(),arcSequence.begin(),arcSequence.end());
  }
  */
-patOdJ patMultiModalPath::generateOd() {
+patOd patMultiModalPath::generateOd() {
+	if (m_arcs.empty()) {
+		throw RuntimeException("invalid path");
+	}
 	const patNode* originNode = m_arcs.front()->getUpNode();
 	const patNode* destinationNode = m_arcs.back()->getDownNode();
-	patOdJ theOd(originNode, destinationNode);
+	patOd theOd(originNode, destinationNode);
 	return theOd;
 }
 
-void patMultiModalPath::assignOd(patOdJ* theOd) {
+void patMultiModalPath::assignOd(patOd* theOd) {
 	m_od = theOd;
 }
 
@@ -256,7 +282,7 @@ void patMultiModalPath::assignId(const unsigned long theId) {
 	m_id = theId;
 }
 
-patOdJ* patMultiModalPath::getOd() const {
+patOd* patMultiModalPath::getOd() const {
 	return m_od;
 }
 
@@ -264,10 +290,10 @@ int patMultiModalPath::nbrOfArcs() const {
 	return m_arcs.size();
 }
 int patMultiModalPath::nbrOfNodes() const {
-	if(m_arcs.empty()){
+	if (m_arcs.empty()) {
 		return 0;
 	}
-	return m_arcs.size()+1;
+	return m_arcs.size() + 1;
 }
 list<TransportMode> patMultiModalPath::getModeList() const {
 	list<TransportMode> mode_list;
@@ -355,12 +381,13 @@ short patMultiModalPath::getTrafficSignals() const {
 }
 
 bool patMultiModalPath::append(const list<const patArc*>& arc_list) {
-	bool success = true;
-	const patMultiModalPath path(arc_list, success);
-	if (success = false) {
-		return false;
+	for (list<const patArc*>::const_iterator arc_iter = arc_list.begin();
+			arc_iter != arc_list.end(); ++arc_iter) {
+		if (addRoadTravelToBack(*arc_iter, TransportMode(NONE), 0.0)) {
+			throw RuntimeException("wrong path");
+			return false;
+		}
 	}
-	return append(path);
 }
 
 bool patMultiModalPath::append(const patMultiModalPath& newSeg) {
@@ -551,21 +578,23 @@ double patMultiModalPath::getPerMotorwayRd() const {
 
 }
 
-patMultiModalPath patMultiModalPath::getSubPathWithNodesIndecis(int start, int end){
+patMultiModalPath patMultiModalPath::getSubPathWithNodesIndecis(int start,
+		int end) {
 	patMultiModalPath new_path;
-	if (start >  nbrOfNodes()|| end > nbrOfNodes() || start > end){//TODO start >=end?
+	if (start > nbrOfNodes() || end > nbrOfNodes() || start > end) { //TODO start >=end?
 		throw IllegalArgumentException("wrong indecis");
 		new_path;
 	}
 	vector<const patArc*>::const_iterator arc_iter = m_arcs.begin();
 
-	int i=0;
-	while(start > i){
+	int i = 0;
+	while (start > i) {
 		++arc_iter;
 		++i;
 	}
-	while(i<end){
-		if(!new_path.addRoadTravelToBack(*arc_iter, TransportMode(NONE), 0.0)){
+	while (i < end) {
+		if (!new_path.addRoadTravelToBack(*arc_iter, TransportMode(NONE),
+				0.0)) {
 			throw RuntimeException("arcs not consistent");
 		}
 		++arc_iter;
@@ -675,8 +704,7 @@ bool patMultiModalPath::readShpFile(string file_path,
 	vector<int> tmp_nodes;
 	list<pair<int, int> > tmp_st;
 	DEBUG_MESSAGE(
-			"edge" << edge_id_index << "path" << path_id_index << "mode"
-					<< mode_index);
+			"edge" << edge_id_index << "path" << path_id_index << "mode" << mode_index);
 	for (int i = 0; i < line_counts; ++i) {
 		TransportMode t_m;
 		int osm_id = DBFReadIntegerAttribute(file_handler, i, edge_id_index);
@@ -954,7 +982,7 @@ bool patMultiModalPath::isReasonableModeChange() const {
 	if (m_roads.size() <= 2) {
 		return true;
 	}
-	double current_length;
+	double current_length = 0.0;
 	list<RoadTravel>::const_iterator road_iter = m_roads.end();
 	--road_iter;
 	TransportMode current_mode = (*road_iter).mode;
@@ -970,8 +998,7 @@ bool patMultiModalPath::isReasonableModeChange() const {
 							&& access_node->getName()
 									== (*road_iter).road->getDownNode()->getName()) {
 						DEBUG_MESSAGE(
-								"unreasonable change with the same stop"
-										<< access_node->getName());
+								"unreasonable change with the same stop" << access_node->getName());
 						return false;
 					}
 				}
@@ -980,9 +1007,7 @@ bool patMultiModalPath::isReasonableModeChange() const {
 					if (current_length
 							< patNBParameters::the()->minChangeLengthBackToTheSame) {
 						DEBUG_MESSAGE(
-								"unreasonable change "
-										<< getTransportMode(current_mode)
-										<< current_length);
+								"unreasonable change " << getTransportMode(current_mode) << current_length);
 						return false;
 					}
 				}
@@ -1024,72 +1049,73 @@ bool patMultiModalPath::containsRoad(const patArc* arc,
 	return false;
 }
 
-void patMultiModalPath::detDistanceToStop(patNetworkEnvironment* network_environment){
+void patMultiModalPath::detDistanceToStop(
+		patNetworkEnvironment* network_environment) {
 	list<pair<const patArc*, TransportMode> > arcs = getArcsWithMode();
 
-
-	list<pair<const patArc*, TransportMode> >::const_iterator arc_iter_back = arcs.end();
+	list<pair<const patArc*, TransportMode> >::const_iterator arc_iter_back =
+			arcs.end();
 	--arc_iter_back;
 	m_distance_to_stop.push_front(0.0);
 	TransportMode down_mode = arc_iter_back->second;
-	double distance=arc_iter_back->first->getLength();
-	while(arc_iter_back!=arcs.begin()){
+	double distance = arc_iter_back->first->getLength();
+	while (arc_iter_back != arcs.begin()) {
 		--arc_iter_back;
 		double arc_length = arc_iter_back->first->getLength();
-		if(down_mode!=arc_iter_back->second ||arc_iter_back->first->getDownNode()->hasTrafficSignal()){
+		if (down_mode != arc_iter_back->second
+				|| arc_iter_back->first->getDownNode()->hasTrafficSignal()) {
 			m_distance_to_stop.push_front(0.0);
-			distance=arc_length;
-		}
-		else{
+			distance = arc_length;
+		} else {
 			m_distance_to_stop.push_front(distance);
-			distance+=arc_length;
+			distance += arc_length;
 		}
 	}
 
 }
 
-void patMultiModalPath::setDistanceToStop(double d){
-	for(short i = 0; i<m_arcs.size()-1;++i){
+void patMultiModalPath::setDistanceToStop(double d) {
+	for (short i = 0; i < m_arcs.size() - 1; ++i) {
 
 		m_distance_to_stop.push_back(0.0);
 	}
 	m_distance_to_stop.push_back(d);
 }
-const list<double>* patMultiModalPath::getDistanceToStop() const{
+const list<double>* patMultiModalPath::getDistanceToStop() const {
 	return &m_distance_to_stop;
 }
 
 /*
-bool patMultiModalPath::equalsSubPath(patMultiModalPath& b_path, int start, int end){
-	list<pair<const patArc*, TransportMode> > b_arcs =b_path.getArcsWithMode();
-	list<pair<const patArc*, TransportMode> > a_arcs =getArcsWithMode();
+ bool patMultiModalPath::equalsSubPath(patMultiModalPath& b_path, int start, int end){
+ list<pair<const patArc*, TransportMode> > b_arcs =b_path.getArcsWithMode();
+ list<pair<const patArc*, TransportMode> > a_arcs =getArcsWithMode();
 
-	int b_size =b_arcs.size();
-	int a_size = a_arcs.size() - end + start;
-	if (b_size!=a_size){
-		DEBUG_MESSAGE("size different"<<a_size<<","<<b_size);
-		return false;
-	}
-	list<pair<const patArc*, TransportMode> >::const_iterator b_arc_iter = b_arcs.begin();
-	list<pair<const patArc*, TransportMode> >::const_iterator a_arc_iter = a_arcs.begin();
-	for(int i=0;i<start;++i){
-		++a_arc_iter;
-	}
-	for(int i=0;i<end-start-1;++i){
-		if(*a_arc_iter!=*b_arc_iter){
-			return false;
-		}
-		++a_arc_iter;
-		++b_arc_iter;
-	}
-	return true;
-}
-*/
-void patMultiModalPath::clear(){
+ int b_size =b_arcs.size();
+ int a_size = a_arcs.size() - end + start;
+ if (b_size!=a_size){
+ DEBUG_MESSAGE("size different"<<a_size<<","<<b_size);
+ return false;
+ }
+ list<pair<const patArc*, TransportMode> >::const_iterator b_arc_iter = b_arcs.begin();
+ list<pair<const patArc*, TransportMode> >::const_iterator a_arc_iter = a_arcs.begin();
+ for(int i=0;i<start;++i){
+ ++a_arc_iter;
+ }
+ for(int i=0;i<end-start-1;++i){
+ if(*a_arc_iter!=*b_arc_iter){
+ return false;
+ }
+ ++a_arc_iter;
+ ++b_arc_iter;
+ }
+ return true;
+ }
+ */
+void patMultiModalPath::clear() {
 	m_arcs.clear();
 	m_length = 0.0;
 	m_roads.clear();
 	m_unique_modes.clear();
-	m_od=NULL;
+	m_od = NULL;
 	m_distance_to_stop.clear();
 }

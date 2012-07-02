@@ -34,6 +34,7 @@ void patNetworkCar::getFromNetwork(patNetworkElements* network, patGeoBoundingBo
 			++not_car_way_count;
 			//DEBUG_MESSAGE("Not a car way;");
 		} else if (car_way_indicator == -1) {
+
 			++car_reverse_way_count;
 			addWay(&(way_iter->second), true);
 		} else if (car_way_indicator == 0) {
@@ -42,7 +43,7 @@ void patNetworkCar::getFromNetwork(patNetworkElements* network, patGeoBoundingBo
 			addWay(&(way_iter->second), true);
 		} else if (car_way_indicator == 1) {
 			++car_oneway_count;
-			addWay(&(way_iter->second), true);
+			addWay(&(way_iter->second), false);
 
 		}
 
@@ -50,10 +51,10 @@ void patNetworkCar::getFromNetwork(patNetworkElements* network, patGeoBoundingBo
 	DEBUG_MESSAGE("car double way: " << car_doubleway_count);
 	DEBUG_MESSAGE("car one way: " << car_oneway_count);
 	DEBUG_MESSAGE("car reverse way: " << car_reverse_way_count);
-	DEBUG_MESSAGE(
-			"car way count: "
-					<< car_doubleway_count * 2 + car_oneway_count
-							+ car_reverse_way_count);
+//	DEBUG_MESSAGE(
+//			"car way count: "
+//					<< car_doubleway_count * 2 + car_oneway_count
+//							+ car_reverse_way_count);
 	DEBUG_MESSAGE("not car way: " << not_car_way_count);
 	return;
 }

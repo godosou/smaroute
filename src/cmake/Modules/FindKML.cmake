@@ -17,7 +17,7 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
       ${CMAKE_INSTALL_PREFIX}/lib
       /usr/local/lib
       /usr/lib
-      /users/jchen/libs/lib
+      /home/jchen/libs/lib
       ${_KML_DIR}
       ${CMAKE_INSTALL_PREFIX}/bin
     NO_DEFAULT_PATH
@@ -29,7 +29,7 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
       ${_KML_DIR}/lib
       ${CMAKE_INSTALL_PREFIX}/lib
       /usr/local/lib
-      /users/jchen/libs/lib
+      /home/jchen/libs/lib
       /usr/lib
       ${_KML_DIR}
       ${CMAKE_INSTALL_PREFIX}/bin
@@ -40,7 +40,8 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
     NAMES kml/dom.h kml/engine.h
     PATHS
       ${_KML_DIR}
-      /users/jchen/libs/include
+      /home/jchen/libs/include/kml
+      /home/jchen/libs/include
       ${_KML_DIR}/include
       ${CMAKE_INSTALL_PREFIX}/include
       /usr/local/include
@@ -56,6 +57,7 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
   else ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES )
     set( KML_FOUND 1 )
     message("libkml found")
+    message(${KML_INCLUDE_DIRECTORIES})
     mark_as_advanced( KML_FOUND )
   endif ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES )
 

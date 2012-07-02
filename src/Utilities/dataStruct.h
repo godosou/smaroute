@@ -10,18 +10,19 @@
 #define dataStruct_h
 #include <vector>
 #include "patTransportMode.h"
-#include "patType.h";
+#include "patType.h"
 #include <list>
-
-struct MeasurementModelParam{
+#include <time.h>
+#include <sys/time.h>
+#include "patException.h"
+struct MeasurementModelParam {
 	double distance_to_arc;
 	double foot_on_arc;
 	double length_of_arc;
 	double std_measurement;
 	TransportMode mode;
 };
-
-struct ArcTranParam{
+struct ArcTranParam {
 	double time_prev;
 	double time_curr;
 	double time_diff;
@@ -39,7 +40,7 @@ struct ArcTranParam{
 	double change_penalty;
 };
 
-struct gps_params{
+struct gps_params {
 	double time_diff;
 
 	double time_prev;
@@ -50,7 +51,6 @@ struct gps_params{
 
 	double mu_v_prev;
 	double std_v_prev;
-
 
 	double mu_v_inter;
 	double std_v_inter;
@@ -63,7 +63,7 @@ struct link_ddr_range {
 	double lower_bound;
 	double upper_bound;
 };
-struct network_params{
+struct network_params {
 	double l_curr;
 	double d_curr;
 	double e_d_curr;
@@ -73,7 +73,7 @@ struct network_params{
 	double l_prev;
 	double d_prev;
 	double e_d_prev;
-	double inter_stop_time;//intermediate stop time;
+	double inter_stop_time; //intermediate stop time;
 	double prev_ddr;
 	unsigned long a_total;
 	vector<double> intermediate_lengths;
@@ -82,18 +82,36 @@ struct network_params{
 	vector<double> t_w;
 };
 
-
-struct TrafficModelParam{
+struct TrafficModelParam {
 	double w;
 	double lambda;
 	double sigma;
 	double mu;
 	TransportMode mode;
 };
-struct AccelModelParam{
+struct AccelModelParam {
 	int components;
 	vector<double> w;
 	vector<double> mu;
 	vector<double> sigma;
 };
+
+enum ARC_ATTRIBUTES_TYPES {
+	ENUM_LENGTH, ENUM_SPEED_BUMP, ENUM_TRAFFIC_SIGNAL
+};
+
+//string getArcAttributeTypeString(ARC_ATTRIBUTES_TYPES A_TYPE) {
+//	swtich(A_TYPE)
+//	{
+//		case ENUM_LENGTH:
+//		return "length";
+//		case ENUM_SPEED_BUMP:
+//		return "speed_bump";
+//		case ENUM_TRAFFIC_SIGNAL:
+//		return "traffic_signal";
+//		default:
+//		throw RuntimeException("invalid arc attribute type");
+//	}
+//}
+//
 #endif

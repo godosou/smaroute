@@ -37,7 +37,7 @@ public:
 				err);
 		patNBParameters::the()->init(err);
 		TS_ASSERT_EQUALS(err, (void*)0);
-		MHLinkAndPathCost::configure();
+
 		patGeoBoundingBox bb = patGeoBoundingBox(6.49409428385,
 				46.544856996900002, 6.5770872475999997, 46.510016372300001);
 		patNetworkEnvironment network_environment(bb, err);
@@ -50,6 +50,8 @@ public:
 		TS_ASSERT_EQUALS(err, (void*)0);
 
 		MHLinkAndPathCost linkAndPathCost;
+		linkAndPathCost.configure(
+						patNBParameters::the()->paramFolder + "rcs/utility_function.txt");
 		//linkAndPathCost.configure();
 		DEBUG_MESSAGE("cost setting configured");
 		linkAndPathCost.setNodeLoopScale(0.0);
@@ -64,11 +66,13 @@ public:
 		DEBUG_MESSAGE("node read");
 		patKMLPathWriter path_writer("paths.kml");
 
-		double linkCostSP =
-				router.fwdCost(origin_node, destination_node).getLabel(
+		patShortestPathTreeGeneral sp_fwd(FWD);
+		patShortestPathTreeGeneral sp_bwd(BWD);
+		router.fwdCost(sp_fwd,origin_node, destination_node);
+		router.bwdCost(sp_bwd,origin_node, destination_node);
+		double linkCostSP =sp_fwd.getLabel(
 						destination_node);
-		double linkCostSP_b =
-				router.bwdCost(origin_node, destination_node).getLabel(
+		double linkCostSP_b =sp_bwd.getLabel(
 						origin_node);
 		TS_ASSERT_DELTA(linkCostSP, linkCostSP_b,1.0e-4);
 

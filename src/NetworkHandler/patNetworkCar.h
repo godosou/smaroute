@@ -14,10 +14,15 @@
 #include "patGeoBoundingBox.h"
 class patNetworkCar: public patNetworkUnimodal {
 public:
-	 patNetworkCar();
+	patNetworkCar();
+
+	virtual patNetworkBase* clone() const {
+		return new patNetworkCar(*this);
+	}
+	;
 	void getFromNetwork(patNetworkElements* network, patGeoBoundingBox bb);
-	 double getMinSpeed() const;
-	 double getMaxSpeed() const;
+	double getMinSpeed() const;
+	double getMaxSpeed() const;
 	virtual ~patNetworkCar();
 };
 

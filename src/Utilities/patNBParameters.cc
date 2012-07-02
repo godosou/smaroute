@@ -38,7 +38,7 @@ bool patNBParameters::readFile(patString fileName, patError*& err) {
 
 	xml::node theRoot = doc.get_root_node();
 
-	xml::node::node_type theType = theRoot.get_type();
+//	xml::node::node_type theType = theRoot.get_type();
 
 	xml::nodes_view modules(theRoot.elements("module"));
 	for (xml::nodes_view::iterator mIter = modules.begin();
@@ -221,6 +221,7 @@ void patNBParameters::init(patError*& err) {
 	realParams["modeChangePenalty"] = &modeChangePenalty;
 	realParams["proposeStopTime"] = &proposeStopTime;
 	realParams["discardGPSGap"] = &discardGPSGap;
+	realParams["errorInSimulatedObservations"] = &errorInSimulatedObservations;
 
 
 
@@ -253,6 +254,7 @@ void patNBParameters::init(patError*& err) {
 	intParams["selectWorstPaths"] = &selectWorstPaths;
 	intParams["selectShortestPaths"] = &selectShortestPaths;
 	intParams["selectImportantDDRNumber"] = &selectImportantDDRNumber;
+	intParams["SAMPLE_COUNT"] = &SAMPLE_COUNT;
 
 
 	intParams["sampleByDDRWithoutConstraint"] = &sampleByDDRWithoutConstraint;
@@ -292,6 +294,10 @@ void patNBParameters::init(patError*& err) {
 	intParams["allowGetOffAnywhere"] = &allowGetOffAnywhere;
 
 	intParams["speedCapacityCheckPrevious"] = &speedCapacityCheckPrevious;
+	intParams["nbrOfThreads"] = &nbrOfThreads;
+	intParams["nbrOfSimulatedErrorPaths"] = &nbrOfSimulatedErrorPaths;
+	intParams["overwriteSampleFile"] = &overwriteSampleFile;
+	intParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
 
 
 	strParams["gpsIcon"] = &gpsIcon;
@@ -309,6 +315,8 @@ void patNBParameters::init(patError*& err) {
 	strParams["integrationMethod"] = &integrationMethod;
 	strParams["lowSpeedAlgo"] = &lowSpeedAlgo;
 	strParams["dataDirectory"] = &dataDirectory;
+	strParams["observationDirectory"] = &observationDirectory;
+
 	strParams["paramFolder"] = &paramFolder;
 
 	strParams["osm_xpi_url"] = &osm_xpi_url;
@@ -323,14 +331,43 @@ void patNBParameters::init(patError*& err) {
 
 	strParams["databaseHost"] = &databaseHost;
 
+	strParams["choiceSetFolder"] = &choiceSetFolder;
 
 
+	strParams["coordinatesSystem"] = &coordinatesSystem;
+	strParams["pathSampleAlgorithm"] = &pathSampleAlgorithm;
+
+	intParams["samplingWithObs"] = &samplingWithObs;
 	intParams["RANDOMSEED_ELEMENT"] = &RANDOMSEED_ELEMENT;
 	intParams["MSGINTERVAL_ELEMENT"] = &MSGINTERVAL_ELEMENT;
 	intParams["TOTALITERATIONS_ELEMENT"] = &TOTALITERATIONS_ELEMENT;
 	intParams["SAMPLEINTERVAL_ELEMENT"] = &SAMPLEINTERVAL_ELEMENT;
 	realParams["CUTOFFPROBABILITY_ELEMENT"] = &CUTOFFPROBABILITY_ELEMENT;
 	realParams["RELATIVECOSTSCALE_ELEMENT"] = &RELATIVECOSTSCALE_ELEMENT;
+
+
+
+
+
+	realParams["router_cost_link_scale"] = &router_cost_link_scale;
+	realParams["router_cost_length_coef"] = &router_cost_length_coef;
+	realParams["router_cost_sb_coef"] = &router_cost_sb_coef;
+
+
+	realParams["utility_link_scale"] = &utility_link_scale;
+	realParams["utility_length_coef"] = &utility_length_coef;
+	realParams["utility_ps_coef"] = &utility_ps_coef;
+	realParams["utility_sb_coef"] = &utility_sb_coef;
+
+
+	realParams["mh_obs_scale"] = &mh_obs_scale;
+	realParams["mh_link_scale"] = &mh_link_scale;
+	realParams["mh_length_coef"] = &mh_length_coef;
+	realParams["mh_sb_coef"] = &mh_sb_coef;
+	realParams["mh_ps_coef"] = &mh_ps_coef;
+
+	intParams["writeBiogemeModelFile"] =&writeBiogemeModelFile;
+
 	for (map<patString, double*>::iterator realIter = realParams.begin();
 			realIter != realParams.end(); ++realIter) {
 		patString name = realIter->first;

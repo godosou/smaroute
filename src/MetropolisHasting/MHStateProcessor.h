@@ -13,7 +13,7 @@ class MHStateProcessor {
 public:
 	virtual void start() =0;
 
-	virtual void processState(const S &state) =0;
+	virtual void processState(const S &state, const double log_weight) =0;
 
 	virtual void end() =0;
 

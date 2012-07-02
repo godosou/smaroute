@@ -19,6 +19,9 @@ public:
 	virtual void writePath(const patMultiModalPath& path,
 			const map<string, string>& attr)=0;
 	virtual void close()=0;
+	string getFileName() const{
+		return m_file_name;
+	}
 
 protected:
 	string m_file_name;

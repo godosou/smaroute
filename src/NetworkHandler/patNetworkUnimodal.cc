@@ -23,9 +23,10 @@ bool patNetworkUnimodal::addWay(const patWay* the_way, bool reverse) {
 			!reverse);
 	for (vector<const patArc*>::const_iterator arc_iter = list_of_arcs->begin();
 			arc_iter != list_of_arcs->end(); ++arc_iter) {
+//		DEBUG_MESSAGE((*arc_iter)->getUpNode()->getUserId()<<"-"<<(*arc_iter)->getDownNode()->getUserId());
 		const patArc* the_arc = (*arc_iter);
 		const patNode* up_node = the_arc->getUpNode();
-		map<const patNode*, set<const patRoadBase*> >::iterator find_up_node =
+		unordered_map<const patNode*, set<const patRoadBase*> >::iterator find_up_node =
 				m_outgoing_incidents.find(up_node);
 		if (find_up_node == m_outgoing_incidents.end()) {
 			set<const patRoadBase*> outgoing_arcs_set;
@@ -47,7 +48,7 @@ patNetworkUnimodal::~patNetworkUnimodal() {
 
 const patRoadBase* patNetworkUnimodal::findArc(
 		const patArc* const an_arc) const {
-	map<const patNode*, set<const patRoadBase*> >::const_iterator find_up_node =
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_up_node =
 			m_outgoing_incidents.find(an_arc->getUpNode());
 	if (find_up_node != m_outgoing_incidents.end()) {
 		for (set<const patRoadBase*>::const_iterator road_iter =
@@ -64,7 +65,7 @@ const patRoadBase* patNetworkUnimodal::findArc(
 set<const patRoadBase*> patNetworkUnimodal::getRoadsContainArc(
 		const patRoadBase* arc) const {
 	set<const patRoadBase*> roads;
-	map<const patNode*, set<const patRoadBase*> >::const_iterator find_up_node =
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_up_node =
 			m_outgoing_incidents.find(arc->getUpNode());
 
 	if (find_up_node == m_outgoing_incidents.end()) {

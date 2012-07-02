@@ -8,23 +8,23 @@
 class patObservation;
 class patTraveler{
  public:
-	patTraveler(const unsigned long& theId);
-	patTraveler(const unsigned long& theId,
+	patTraveler(const patULong& theId);
+	patTraveler(const patULong& theId,
 				const patString& theName);
 				
-	friend bool operator==(const patTraveler& aTraveler, const patTraveler& bTraveler) ;
-friend bool operator<(const patTraveler& aTraveler, const patTraveler& bTraveler) ;
+	friend patBoolean operator==(const patTraveler& aTraveler, const patTraveler& bTraveler) ;
+friend patBoolean operator<(const patTraveler& aTraveler, const patTraveler& bTraveler) ;
 
-	void setAttributes(const patString& key, const double& value);
-	double getAttributes(const patString& key);
+	void setAttributes(const patString& key, const patReal& value);
+	patReal getAttributes(const patString& key);
 	patObservation* addObservation(patObservation& theObservation);
-	unsigned long getNumberOfObservations();
-	unsigned long getId();
+	patULong getNumberOfObservations();
+	patULong getId();
 	set<patObservation>* getAllObservations();
 	protected:
-	unsigned long id;
+	patULong id;
 	patString name;
-	map<patString, double> attributes;
+	map<patString, patReal> attributes;
 	set<patObservation> observationSet;
 };
 #endif

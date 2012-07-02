@@ -9,6 +9,7 @@ include_directories("${NewBioroute_SOURCE_DIR}/Math")
 include_directories("${NewBioroute_SOURCE_DIR}/PathGeneration")
 include_directories("${NewBioroute_SOURCE_DIR}/PathGeneration/MetropolishHastings")
 include_directories("${NewBioroute_SOURCE_DIR}/MetropolisHasting")
+include_directories("${NewBioroute_SOURCE_DIR}/RouteChoice")
 ENABLE_TESTING()
 CXXTEST_ADD_TEST(testAccelDistribution testAccelDistribution.cc ${CMAKE_CURRENT_SOURCE_DIR}/testAccelDistribution.h)
 target_link_libraries (testAccelDistribution MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
@@ -21,3 +22,6 @@ target_link_libraries (testRandomNumber MapMatching NetworkHandler ShortestPath 
 
 CXXTEST_ADD_TEST(testMHPath testMHPath.cc ${CMAKE_CURRENT_SOURCE_DIR}/testMHPath.h)
 target_link_libraries (testMHPath  MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+
+CXXTEST_ADD_TEST(testReadChoiceSet testReadChoiceSet.cc ${CMAKE_CURRENT_SOURCE_DIR}/testReadChoiceSet.h)
+target_link_libraries (testReadChoiceSet RouteChoice  MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})

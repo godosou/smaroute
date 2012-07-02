@@ -27,6 +27,7 @@ public:
 
 	double networkAccuracy;
 
+	patString observationDirectory;
 	patString dataDirectory;
 	//patPathJ
 	unsigned long allowGetOffAnywhere;
@@ -217,6 +218,8 @@ unsigned long speedCapacityCheckPrevious;
 
 	double modeChangePenalty;
 
+	string coordinatesSystem;
+
 double discardGPSGap;
 	string databaseHost;
 
@@ -231,8 +234,41 @@ double discardGPSGap;
 	unsigned long MSGINTERVAL_ELEMENT;
 	unsigned long TOTALITERATIONS_ELEMENT;
 	unsigned long SAMPLEINTERVAL_ELEMENT;
+	unsigned long SAMPLE_COUNT;
 	double CUTOFFPROBABILITY_ELEMENT;
 	double RELATIVECOSTSCALE_ELEMENT;
+
+	unsigned long samplingWithObs;
+	string choiceSetFolder;
+
+
+
+	double router_cost_link_scale;
+	double router_cost_length_coef;
+	double router_cost_sb_coef;
+
+	double utility_link_scale;
+	double utility_length_coef;
+	double utility_ps_coef;
+	double utility_sb_coef;
+
+	double mh_obs_scale;
+	double mh_link_scale;
+	double mh_length_coef;
+	double mh_sb_coef;
+	double mh_ps_coef;
+
+	unsigned long nbrOfThreads;
+
+	unsigned long writeBiogemeModelFile;
+
+	unsigned long nbrOfSimulatedErrorPaths;
+	unsigned long overwriteSampleFile;
+	double errorInSimulatedObservations;
+
+	unsigned long choiceSetInBiogemeData;
+
+	string pathSampleAlgorithm;
 private:
 
 	map<patString, pair<patString, patString> > params;

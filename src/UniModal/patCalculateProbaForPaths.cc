@@ -54,7 +54,7 @@ vector<patString> patCalculateProbaForPaths::fromDirectory(patString directory_n
 }
 
 void patCalculateProbaForPaths::fromFile(patString file_name, patError*& err) {
-    patReadPathFromKML* read_paths = new patReadPathFromKML(file_name, network);
+    patReadObservationFromKML* read_paths = new patReadObservationFromKML(file_name, network);
     if (read_paths->parseFile(err) != true) {
         path_set = read_paths->path_set;
     }

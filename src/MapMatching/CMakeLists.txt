@@ -1,7 +1,7 @@
 
 include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
 include_directories("${NewBioroute_SOURCE_DIR}/NetworkHandler")
-include_directories("${NewBioroute_SOURCE_DIR}/ShortestPath")
+include_directories("${NewBioroute_SOURCE_DIR}/Router")
 include_directories("${NewBioroute_SOURCE_DIR}/Math")
 add_library(MapMatching
                     patSpeedDistributions.cc

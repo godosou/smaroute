@@ -7,7 +7,8 @@
 
 #ifndef PATNETWORKBASE_H_
 #define PATNETWORKBASE_H_
-#include <map>
+#include <tr1/unordered_map>
+//#include <unordered_map>
 #include <set>
 #include "patNode.h"
 #include "patRoadBase.h"
@@ -15,9 +16,12 @@
 #include "patTransportMode.h"
 #include "patGeoBoundingBox.h"
 #include "patNetworkElements.h"
+using namespace std::tr1;
 class patNetworkBase {
 public:
 	patNetworkBase();
+	patNetworkBase(const patNetworkBase& other);
+	virtual patNetworkBase* clone() const=0;
 	virtual ~patNetworkBase();
 	virtual void walkFromToStops(
 			patNetworkElements* network_elements, patNetworkBase* walk_network)=0;
@@ -27,8 +31,9 @@ public:
 	/**
 	 * Get the pointer to the outgoing incidents.
 	 */
-	const map<const patNode*, set<const patRoadBase*> >* getOutgoingIncidents() const;
-	const map<const patNode*, set<const patRoadBase*> >* getIncomingIncidents() const;
+	const unordered_map<const patNode*, set<const patRoadBase*> >* getOutgoingIncidents() const;
+	const set<const patRoadBase*> getOutgoingRoads(const patNode* node) const;
+	const unordered_map<const patNode*, set<const patRoadBase*> >* getIncomingIncidents() const;
 	virtual bool isStop(const patNode* node) const = 0;
 
 	bool isPT() const;
@@ -67,6 +72,7 @@ public:
 			const patRoadBase* arc) const = 0;
 	bool exportShpFiles(const string file_path) const;
 
+	void exportCadytsOSM(const string file_path) const;
 	virtual double getMinSpeed() const = 0;
 	virtual double getMaxSpeed() const = 0;
 
@@ -79,8 +85,9 @@ public:
 	void removeNode(const patNode* node);
 protected:
 
-	map<const patNode*, set<const patRoadBase*> > m_outgoing_incidents;
-	map<const patNode*, set<const patRoadBase*> > m_incoming_incidents;
+	unordered_map<const patNode*, set<const patRoadBase*> > m_outgoing_incidents;
+	unordered_map<const patNode*, set<const patRoadBase*> > m_incoming_incidents;
+	set<const patNode*> m_nodes;
 	double m_minimum_label;
 	string m_network_type;
 	TransportMode m_transport_mode;

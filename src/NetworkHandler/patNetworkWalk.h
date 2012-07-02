@@ -13,6 +13,10 @@
 class patNetworkWalk : public patNetworkUnimodal {
 public:
 	patNetworkWalk();
+	virtual patNetworkBase* clone() const {
+		return new patNetworkWalk(*this);
+	}
+	;
 	void getFromNetwork(patNetworkElements* network, patGeoBoundingBox bb);
 	virtual ~patNetworkWalk();
 	 double getMinSpeed() const;

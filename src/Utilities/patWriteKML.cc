@@ -66,6 +66,6 @@ for (list<patArc*>::iterator aIter= listOfArcs->begin();
  return kml.str();
 }
 
-patString patWriteKML::writeODSample(patOdJ* od){
+patString patWriteKML::writeODSample(patOd* od){
 	
 }

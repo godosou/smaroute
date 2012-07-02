@@ -364,7 +364,7 @@ DEBUG_MESSAGE("Create " << fileName) ;
 					sampleFile<<'\t'<<(*ddrsNormalized)[pathIter->first][1];
 						sampleFile<<'\t'<<pathIter->second[2];//AggWeight raw
 					sampleFile<<'\t'<<(*ddrsNormalized)[pathIter->first][2];
-						patOdJ* od = pathIter->first->getOd();
+						patOd* od = pathIter->first->getOd();
 						patPathSampling* thePathSampling=const_cast<patObservation*>(&(*obsIter))->getPathSampling(pathIter->first);
 						
 						set<patPathJ*>* choiceSet = thePathSampling->getChoiceSet();

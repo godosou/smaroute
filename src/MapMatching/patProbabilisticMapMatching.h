@@ -13,7 +13,7 @@
 #include "patError.h"
 #include "patMultiModalPathMatching.h"
 #include "patNetworkEnvironment.h"
-#include "patOdJ.h"
+
 #include <map>
 #include <set>
 #include <vector>
@@ -48,7 +48,7 @@ protected:
 	vector<patMeasurement*> m_running_measurement_sequence;//The sequence up to the GPS that is being processed
 
 	map<patMultiModalPathMatching, double> m_paths;//The map matched paths
-	set<patOdJ> m_od_set;//The generated od set.
+	set<patOd> m_od_set;//The generated od set.
 	const patNetworkEnvironment* m_environment;
 };
 

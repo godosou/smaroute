@@ -250,12 +250,12 @@ void patTripParser::doMapMatching(
 	}
 	DEBUG_MESSAGE(thePath);
 
-	patOdJ tod = thePath.generateOd(theNetwork, err);
+	patOd tod = thePath.generateOd(theNetwork, err);
 	if (err != NULL) {
 		WARNING("no od is associated with path" << thePath);
 		return;
 	}
-	patOdJ* theOd = theSample->addOd(tod);
+	patOd* theOd = theSample->addOd(tod);
 	thePath.assignOd(theOd);
 	patPathJ* pathPointer = theOd->addPath(thePath);
 	generatedObservation.pathDDRsReal[pathPointer] = vector<double>();
@@ -446,7 +446,7 @@ void patTripParser::doSensitivityAnalysis() {
 	}
 	DEBUG_MESSAGE("read file" << kmlFileName);
 	set<patPathJ> pathSet;
-	patReadPathFromKML* read_paths = new patReadPathFromKML(kmlFileName,
+	patReadObservationFromKML* read_paths = new patReadObservationFromKML(kmlFileName,
 			theNetwork);
 	if (read_paths->parseFile(err) == true) {
 		pathSet = read_paths->path_set;
@@ -609,7 +609,7 @@ void patTripParser::setGpsSpeedType() {
 	}
 }
 
-void patTripParser::setOd(patOdJ* theOd) {
+void patTripParser::setOd(patOd* theOd) {
 	od = theOd;
 }
 
@@ -630,11 +630,11 @@ void patTripParser::writeToKML(patString fileName) {
 	kml << "<Folder>";
 	kml << "            <name>paths</name>" << endl;
 
-	map<patOdJ*, map<patPathJ*, vector<double> > > pathDDRsOrderByOd =
+	map<patOd*, map<patPathJ*, vector<double> > > pathDDRsOrderByOd =
 			generatedObservation.getPathDDRsOrderByOd_Real();
 
 	vector<double> ddrSum = generatedObservation.calDDRAll();
-	for (map<patOdJ*, map<patPathJ*, vector<double> > >::iterator odIter =
+	for (map<patOd*, map<patPathJ*, vector<double> > >::iterator odIter =
 			pathDDRsOrderByOd.begin(); odIter != pathDDRsOrderByOd.end();
 			++odIter) {
 		kml << "<Folder>";
@@ -893,7 +893,7 @@ void patTripParser::genOdDDR() {
 	for (map<patPathJ*, patPathDDR>::iterator pathDDRIter = pathDDRs->begin();
 			pathDDRIter != pathDDRs->end(); ++pathDDRIter) {
 
-		patOdJ* odFound = generatedObservation.odDDRs.find(
+		patOd* odFound = generatedObservation.odDDRs.find(
 				pathDDRIter->first->getOd())->first;
 		if (odFound == NULL) {
 			generatedObservation.odDDRs[odFound] =

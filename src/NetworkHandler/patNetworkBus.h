@@ -14,6 +14,10 @@ class patNetworkBus: public patNetworkPublicTransport {
 public:
 	patNetworkBus();
 
+	virtual patNetworkBase* clone() const {
+		return new patNetworkBus(*this);
+	}
+	;
 	void getFromNetwork(patNetworkElements* network,patGeoBoundingBox bounding_box);
 	virtual ~patNetworkBus();
 	 double getMinSpeed() const;

@@ -20,8 +20,9 @@ using kmldom::KmlFactory;
 using kmldom::LineStringPtr;
 using kmldom::PlacemarkPtr;
 
-patArc::patArc(unsigned long theId, const patNode* theUpNode, const patNode* theDownNode,
-		patString theName, struct arc_attributes theAttr, patError*& err) :
+patArc::patArc(unsigned long theId, const patNode* theUpNode,
+		const patNode* theDownNode, string theName,
+		struct arc_attributes theAttr, patError*& err) :
 		m_user_id(theId), m_internal_id(patBadId), m_name(theName), m_attributes(
 				theAttr), m_up_node(theUpNode), m_down_node(theDownNode), generalizedCost(
 				0.0) {
@@ -39,14 +40,15 @@ patArc::patArc(unsigned long theId, const patNode* theUpNode, const patNode* the
 double patArc::computeLength() {
 	m_length = m_up_node->getGeoCoord().distanceTo(m_down_node->geoCoord);
 }
-patArc::patArc(unsigned long theId, const patNode* theUpNode, const patNode* theDownNode) :
+patArc::patArc(unsigned long theId, const patNode* theUpNode,
+		const patNode* theDownNode) :
 		m_user_id(theId), m_up_node(theUpNode), m_down_node(theDownNode), generalizedCost(
 				0.0) {
 	computeLength();
 	calHeading();
 }
-patArc::patArc(unsigned long theId, const patNode* theUpNode,const patNode* theDownNode,
-		patString theName, patError*& err) :
+patArc::patArc(unsigned long theId, const patNode* theUpNode,
+		const patNode* theDownNode, string theName, patError*& err) :
 		m_user_id(theId), m_internal_id(patBadId), m_name(theName), m_up_node(
 				theUpNode), m_down_node(theDownNode) {
 	if ((theUpNode == NULL) || (theDownNode == NULL)) {
@@ -133,10 +135,6 @@ double patArc::calHeading() {
 	return theArcHeading;
 }
 
-double patArc::getLength() const {
-	return m_length;
-}
-
 ostream& operator<<(ostream& str, const patArc& x) {
 	str << "Arc " << x.m_user_id << " [" << x.m_name << "]("
 			<< x.getUpNode()->getUserId() << "->"
@@ -164,7 +162,7 @@ unsigned long patArc::getUserId() const {
 double patArc::getHeading() const {
 	return m_attributes.heading;
 }
-patString patArc::getName() const {
+string patArc::getName() const {
 	return m_name;
 }
 int patArc::size() const {
@@ -178,17 +176,19 @@ PlacemarkPtr patArc::getArcKML(string mode) const {
 
 	stringstream ss;
 	CoordinatesPtr coordinates = factory->CreateCoordinates();
-	coordinates->add_latlng(getUpNode()->getLatitude(), getUpNode()->getLongitude());
-	coordinates->add_latlng(getDownNode()->getLatitude(), getDownNode()->getLongitude());
+	coordinates->add_latlng(getUpNode()->getLatitude(),
+			getUpNode()->getLongitude());
+	coordinates->add_latlng(getDownNode()->getLatitude(),
+			getDownNode()->getLongitude());
 
 	LineStringPtr line_string = factory->CreateLineString();
 	line_string->set_coordinates(coordinates); // point takes ownership
 
 	PlacemarkPtr placemark = factory->CreatePlacemark();
 	placemark->set_name(getName());
-	ss<<*this;
+	ss << *this;
 	placemark->set_description(ss.str());
-	placemark->set_styleurl("#"+mode);
+	placemark->set_styleurl("#" + mode);
 	placemark->set_geometry(line_string); // placemark takes ownership
 	return placemark;
 
@@ -198,16 +198,12 @@ map<string, double> patArc::distanceTo(const patNode* a_node) const {
 
 	map<string, double> distance;
 
-
 	patGeoCoordinates up_geo = getUpNode()->getGeoCoord();
 	patGeoCoordinates down_geo = getDownNode()->getGeoCoord();
 	patGeoCoordinates a_node_geo = a_node->getGeoCoord();
-	distance["up"] = a_node_geo.distanceTo(
-			up_geo);
-	distance["down"] = a_node_geo.distanceTo(
-			down_geo);
-	distance["length"] =up_geo.distanceTo(
-					down_geo);
+	distance["up"] = a_node_geo.distanceTo(up_geo);
+	distance["down"] = a_node_geo.distanceTo(down_geo);
+	distance["length"] = up_geo.distanceTo(down_geo);
 
 	double cosUpNode = (distance["up"] * distance["up"]
 			+ distance["length"] * distance["length"]
@@ -252,25 +248,24 @@ map<string, double> patArc::distanceTo(const patNode* a_node) const {
 		distance["position"] = 0;
 	}
 
-	double  arc_heading = getHeading();
-	double  up_heading = getUpNode()->calHeading(a_node);
-	if( arc_heading<=180.0){
-		if(up_heading-arc_heading>=0 and up_heading-arc_heading<=180.0){
+	double arc_heading = getHeading();
+	double up_heading = getUpNode()->calHeading(a_node);
+	if (arc_heading <= 180.0) {
+		if (up_heading - arc_heading >= 0
+				and up_heading - arc_heading <= 180.0) {
 
 			distance["right"] = 1;
-		}
-		else{
+		} else {
 
 			distance["right"] = 0;
 		}
-	}
-	else{
+	} else {
 
-		if(up_heading-arc_heading>=0 or up_heading+arc_heading<=360.0){
+		if (up_heading - arc_heading >= 0
+				or up_heading + arc_heading <= 360.0) {
 
 			distance["right"] = 1;
-		}
-		else{
+		} else {
 
 			distance["right"] = 0;
 		}
@@ -279,22 +274,54 @@ map<string, double> patArc::distanceTo(const patNode* a_node) const {
 	return distance;
 }
 
- double patArc::getAttribute(string attribute) const {
-	 if(attribute=="length"){
-		 return getLength();
-	 }
-	 if(attribute=="traffic_signal"){
-		 if(getDownNode()->hasTrafficSignal()){
-			 return 1.0;
-		 }
-		 else{
-			 return 0.0;
-		 }
-	 }
-	 else{
-		 WARNING("invalide attribute"<<attribute);
-		 throw IllegalArgumentException("in valide attribute");
-		 return 0.0;
-	 }
+double patArc::getAttribute(ARC_ATTRIBUTES_TYPES attribute_name) const {
+    switch (attribute_name) {
+        case ENUM_LENGTH:
+            return m_length;
+            break;
+        case ENUM_SPEED_BUMP:
+        {
+            unordered_map<string, string>::const_iterator find_sb = m_tags.find("speed_bump");
+            if (find_sb != m_tags.end() && find_sb->second == "yes") {
+                return 1.0;
+            } else {
+                return 0.0;
+            }
+        }   break;
+
+        case ENUM_TRAFFIC_SIGNAL:
+        {
+            if (getDownNode()->hasTrafficSignal()) {
+                return 1.0;
+            } else {
+                return 0.0;
+            }
+        }   break;
+        default:
+            throw RuntimeException("Non valid attribute");
+            return 0.0;
+    }
+
+}
+
+void patArc::setTags(const unordered_map<string, string>& tags) {
+	m_tags = tags;
+}
+string patArc::getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name){
+    switch (type_name) {
+        case ENUM_LENGTH:
+            return "length";
+            break;
+        case ENUM_SPEED_BUMP:
+return "speed_bump";
+            break;
+
+        case ENUM_TRAFFIC_SIGNAL:
+return "traffic_signal";
+            break;
+        default:
+            throw RuntimeException("Non valid attribute");
+    }
+
 
 }

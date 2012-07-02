@@ -13,19 +13,21 @@
 #include "patGeoCoordinates.h"
 #include "patError.h"
 #include "patType.h"
-#include "patString.h"
 #include "patNode.h"
+#include "dataStruct.h"
 #include "patRoadBase.h"
 #include "kml/dom.h"
+#include <tr1/unordered_map>
+using namespace std::tr1;
 using kmldom::PlacemarkPtr;
 //#include "patMultiModalPath.h"
 struct arc_attributes {
-	patString type;
+	string type;
 	double heading;
 	unsigned long priority;
 };
 class patMultiModalPath;
-class patOdJ;
+class patOd;
 class patArc: public patRoadBase {
 	friend class patPathSampling; //add by Jingmin
 
@@ -36,7 +38,7 @@ class patArc: public patRoadBase {
 
 	friend class patShortestPathAlgoRange; //add by Jingmin
 	friend class patShortestPathTreeRange; //add by Jingmin
-	friend class patOdJ; //add by Jingmin
+	friend class patOd; //add by Jingmin
 	friend class patMultiModalPath; //add by Jingmin
 	friend class patPathDDR; //add by Jingmin
 	friend class patReadSample; //add by Jingmin
@@ -55,7 +57,7 @@ class patArc: public patRoadBase {
 	friend class patMapMatchingV2; //added by Jingmin
 	friend class patMapMatchingRoute; //added by Jingmin
 	friend class patStreetSegment; //added by Jingmin
-	friend class patReadPathFromKML; //added by Jingmin
+	friend class patReadObservationFromKML; //added by Jingmin
 	friend class patNetworkElements; //add by Jingmin
 	friend bool operator<(const patMultiModalPath& aPath,
 			const patMultiModalPath& bPath); //add by Jingmin
@@ -73,15 +75,15 @@ public:
 			const patNode* theDownNode);
 
 	patArc(unsigned long theId, const patNode* theUpNode,
-			const patNode* theDownNode, patString theName, patError*& err);
+			const patNode* theDownNode, string theName, patError*& err);
 	patArc(unsigned long theId, const patNode* theUpNode,
-			const patNode* theDownNode, patString theName,
+			const patNode* theDownNode, string theName,
 			struct arc_attributes theAttr, patError*& err);
 
 	/**
 	 @return length of the arc in meters
 	 */
-	double getLength() const;
+//	double getLength() const;
 
 	double computeLength();
 	/**
@@ -98,22 +100,25 @@ public:
 	vector<const patArc*> getArcList() const;
 	unsigned long getUserId() const;
 	double getHeading() const;
-	patString getName() const;
+	string getName() const;
 	int size() const;
 	bool isValid() const;
 	PlacemarkPtr getArcKML(string mode) const;
 
 	map<string, double> distanceTo(const patNode* a_node) const;
-	virtual double getAttribute(string attribute) const;
+	virtual double getAttribute(ARC_ATTRIBUTES_TYPES attribute_name) const;
+    static string getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name);
+	void setTags(const unordered_map<string, string>& tags );
 protected:
 	double frozenGeneralizedCost;
+	unordered_map<string, string> m_tags;
 	unsigned long m_user_id;
 	unsigned long m_internal_id;
 	unsigned long m_up_node_id;
 	unsigned long m_down_node_id;
 	const patNode* m_up_node;
 	const patNode* m_down_node;
-	patString m_name;
+	string m_name;
 	unsigned long m_way_id;
 	struct arc_attributes m_attributes;
 	list<patGeoCoordinates> m_polyline;

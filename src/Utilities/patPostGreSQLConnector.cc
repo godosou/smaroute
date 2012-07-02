@@ -27,7 +27,7 @@ patPostGreSQLConnector::patPostGreSQLConnector() {
 
 
 result patPostGreSQLConnector::makeSelectQuery(patString query_string){
-	patString conn_string = "host="+patNBParameters::the()->databaseHost+" port=5433 dbname=osm user=jchen password=xXxXxXxXxXx";
+	patString conn_string = patNBParameters::the()->databaseHost;
 	try{
 		connection Conn(conn_string);
 		DEBUG_MESSAGE("connected to "<<Conn.dbname()<<endl);

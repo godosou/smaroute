@@ -20,10 +20,12 @@ patNode::patNode(unsigned long theId, patString theName, double lat, double lon,
 		struct node_attributes theAttr) :
 		userId(theId), internalId(patBadId), name(theName), geoCoord(lat, lon), attributes(
 				theAttr), isCentroid(false) {
+	attributes.traffic_signal=false;
 }
 patNode::patNode(unsigned long theId, double lat, double lon) :
 		userId(theId), internalId(patBadId), geoCoord(lat, lon), isCentroid(
 				false) {
+	attributes.traffic_signal=false;
 
 }
 
@@ -37,7 +39,7 @@ void patNode::addPredecessor(unsigned long aPred) {
 
 string patNode::getTagString() const {
 	string str;
-	for (map<string, string>::const_iterator tag_iter = m_tags.begin();
+	for (unordered_map<string, string>::const_iterator tag_iter = m_tags.begin();
 			tag_iter != m_tags.end(); ++tag_iter) {
 		str += tag_iter->first + ": " + tag_iter->second + ",";
 	}
@@ -118,8 +120,14 @@ double patNode::getLongitude() const {
 	return getGeoCoord().longitudeInDegrees;
 }
 
-void patNode::setTags(map<string, string>& tags) {
+void patNode::setTags(unordered_map<string, string>& tags) {
 	m_tags = tags;
+	attributes.traffic_signal = false;
+	unordered_map<string, string>::const_iterator find_signal = m_tags.find("highway");
+	if (find_signal != m_tags.end()
+			&& find_signal->second == "traffic_signals") {
+		attributes.traffic_signal=true;
+	}
 }
 
 PlacemarkPtr patNode::getKML() const {
@@ -146,19 +154,23 @@ PlacemarkPtr patNode::getKML() const {
 }
 
 string patNode::getTag(string tag_key) const {
-	map<string, string>::const_iterator find_tag_key = m_tags.find(tag_key);
+	unordered_map<string, string>::const_iterator find_tag_key = m_tags.find(tag_key);
 	if (find_tag_key == m_tags.end()) {
 		return "";
 	} else {
 		return find_tag_key->second;
 	}
 }
-map<string, string> patNode::getTags() const {
+unordered_map<string, string> patNode::getTags() const {
 	return m_tags;
 }
 
 void patNode::setTag(string key, string value) {
 	m_tags[key] = value;
+	if (key=="highway"
+			&& value == "traffic_signals") {
+		attributes.traffic_signal=true;
+	}
 }
 
 double patNode::calHeading(const patNode* b_node) const {
@@ -191,11 +203,5 @@ double patNode::calHeading(const patNode* b_node) const {
 }
 
 bool patNode::hasTrafficSignal() const {
-	map<string, string>::const_iterator find_signal = m_tags.find("highway");
-	if (find_signal != m_tags.end()
-			&& find_signal->second == "traffic_signals") {
-		return true;
-	} else {
-		return false;
-	}
+	return 	attributes.traffic_signal;
 }

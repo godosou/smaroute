@@ -14,68 +14,68 @@ class patObservation{
  public:
 	friend class patTripParser;
 	friend class patPathDevelop;
- 	friend bool operator==(const patObservation& observation1, 
+ 	friend patBoolean operator==(const patObservation& observation1, 
 				const patObservation& observation2);
-	friend bool operator<(const patObservation& observation1, 
+	friend patBoolean operator<(const patObservation& observation1, 
 				const patObservation& observation2);
 	patObservation();
-	patObservation( patTraveler* theTraveler, unsigned long& theTipId);
+	patObservation( patTraveler* theTraveler, patULong& theTipId);
 	
-	void setStartTime(const unsigned long& theStartTime);
+	void setStartTime(const patULong& theStartTime);
 	
-	void setEndTime(const unsigned long& theEndTime);
+	void setEndTime(const patULong& theEndTime);
 	
-	void setMapBounds(double minLat, 
-			      double maxLat, 
-			      double minLon, 
-			      double maxLon);
+	void setMapBounds(patReal minLat, 
+			      patReal maxLat, 
+			      patReal minLon, 
+			      patReal maxLon);
 				  
 				  
 	void setPathDDRs(const map<patPathJ*,patPathDDR>& thePathDDRs);
 	
 	map<patPathJ*,patPathDDR>* getPathDDRs() ;
 	
-	void setOdDDRs(const map<patOdJ*,double>& theOdDDRs);
+	void setOdDDRs(const map<patOd*,patReal>& theOdDDRs);
 	
-	map<patOdJ*,double>* getOdDDRs();
+	map<patOd*,patReal>* getOdDDRs();
 	
 	 patTraveler* getTraveler() ;
 	
-	 unsigned long getId() ;
-	vector<double> calDDRAll();
-	double getDDRAll();
-double getDDRRawAll();
-	map<patPathJ*,vector<double> >* getPathDDRsRealNormalized();
+	 patULong getId() ;
+	vector<patReal> calDDRAll();
+	patReal getDDRAll();
+patReal getDDRRawAll();
+	map<patPathJ*,vector<patReal> >* getPathDDRsRealNormalized();
 
-	map<patOdJ*,map<patPathJ*,patPathDDR> > getPathDDRsOrderByOd_Object();
-map<patOdJ*,map<patPathJ*,vector<double> > >  getPathDDRsOrderByOd_Real();
-map<patPathJ*,vector<double> >* getPathDDRsReal();
-	map<patPathJ*,double>* getPathDDRsRealRaw();
+	map<patOd*,map<patPathJ*,patPathDDR> > getPathDDRsOrderByOd_Object();
+map<patOd*,map<patPathJ*,vector<patReal> > >  getPathDDRsOrderByOd_Real();
+map<patPathJ*,vector<patReal> >* getPathDDRsReal();
+	map<patPathJ*,patReal>* getPathDDRsRealRaw();
 void setOdPathSetByDDRs();
 void normalizeDDRs();
 map<patPathJ*, patPathSampling>* getChoiceSet();
-void sampleChoiceSet(patNetwork* theNetwork,vector< list < pair<patArc*, unsigned long> > >* adjList,patError*& err);
+void sampleChoiceSet(patNetwork* theNetwork,vector< list < pair<patArc*, patULong> > >* adjList,patError*& err);
 patPathSampling* getPathSampling(patPathJ* aPath);
  protected:
-	unsigned long id;
+	patULong id;
 	patTraveler* traveler;
-	unsigned long startTime;
-	unsigned long endTime;
-	double minLatitude ;
-	double maxLatitude ;
-	double minLongitude ;
-	double maxLongitude ;
+	patULong startTime;
+	patULong endTime;
+	patReal minLatitude ;
+	patReal maxLatitude ;
+	patReal minLongitude ;
+	patReal maxLongitude ;
 
 	map<patPathJ*,patPathDDR> pathDDRs;
-	map<patPathJ*,vector<double> > pathDDRsReal;
-	map<patPathJ*,vector<double> > pathDDRsRealNormalized;
-	map<patPathJ*,double> pathDDRsRealSimple;
-	map<patPathJ*,double> pathDDRsRealRaw;
-	double ddrAll;
-	double ddrSimpleAll;
-	double ddrRawAll;
-	double ddrMMAll;
-	map<patOdJ*, double> odDDRs;
+	map<patPathJ*,vector<patReal> > pathDDRsReal;
+	map<patPathJ*,vector<patReal> > pathDDRsRealNormalized;
+	map<patPathJ*,patReal> pathDDRsRealSimple;
+	map<patPathJ*,patReal> pathDDRsRealRaw;
+	patReal ddrAll;
+	patReal ddrSimpleAll;
+	patReal ddrRawAll;
+	patReal ddrMMAll;
+	map<patOd*, patReal> odDDRs;
 	map<patPathJ*, patPathSampling> ChoiceSet;
 }
 ;

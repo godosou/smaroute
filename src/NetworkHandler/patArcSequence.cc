@@ -10,11 +10,19 @@
 #include "patException.h"
 using kmldom::KmlFactory;
 using kmldom::FolderPtr;
-
+#include <tr1/unordered_set>
+using namespace std::tr1;
+#include <sstream>
 patArcSequence::patArcSequence() {
 
 	m_length = 0.0;
 }
+patArcSequence::patArcSequence(const patArcSequence& another) :
+		patRoadBase::patRoadBase(another), m_arcs(another.m_arcs), m_last_added_arcs(
+				another.m_last_added_arcs) {
+
+}
+
 bool operator==(const patArcSequence& seq_a, const patArcSequence& seq_b) {
 	vector<const patArc*> arc_list_a = seq_a.getArcList();
 	vector<const patArc*> arc_list_b = seq_b.getArcList();
@@ -34,7 +42,7 @@ bool operator==(const patArcSequence& seq_a, const patArcSequence& seq_b) {
 
 }
 const patNode* patArcSequence::containLoop() const {
-	set<const patNode*> nodeSet;
+	unordered_set<const patNode*> nodeSet;
 	for (vector<const patArc*>::const_iterator arcIter = m_arcs.begin();
 			arcIter != m_arcs.end(); ++arcIter) {
 		if (nodeSet.find((*arcIter)->getUpNode()) == nodeSet.end()) {
@@ -51,13 +59,13 @@ const patNode* patArcSequence::containLoop() const {
 }
 
 double patArcSequence::getNodeLoopCount() const {
-	set<const patNode*> nodeSet;
+	unordered_set<const patNode*> nodeSet;
 	for (vector<const patArc*>::const_iterator arcIter = m_arcs.begin();
 			arcIter != m_arcs.end(); ++arcIter) {
 		nodeSet.insert((*arcIter)->getUpNode());
 		nodeSet.insert((*arcIter)->getDownNode());
 	}
-	return m_arcs.size() + 1 - nodeSet.size();//FIXME
+	return m_arcs.size() + 1 - nodeSet.size(); //FIXME
 }
 double patArcSequence::computeLength() {
 	m_length = 0.0;
@@ -69,10 +77,11 @@ double patArcSequence::computeLength() {
 
 	return m_length;
 }
-
-double patArcSequence::getLength() const {
-	return m_length;
-}
+//
+//double patArcSequence::getLength() const {
+////	cout<<"OK";
+//	return m_length;
+//}
 
 /**
  * return the pointer to the up node
@@ -101,7 +110,7 @@ vector<const patArc*> patArcSequence::getArcList() const {
 	return m_arcs;
 }
 bool patArcSequence::isValid() const {
-	if(m_arcs.empty()){
+	if (m_arcs.empty()) {
 		return true;
 	}
 	vector<const patArc*>::const_iterator arc_iter = m_arcs.begin();
@@ -220,6 +229,7 @@ bool patArcSequence::addArcToFront(const patArc* arc) {
 		return false;
 	} else {
 		m_arcs.insert(m_arcs.begin(), arc);
+		m_last_added_arcs == 1;
 		m_length += arc->getLength();
 		return true;
 	}
@@ -231,12 +241,13 @@ bool patArcSequence::addArcToBack(const patArc* arc) {
 	}
 
 	if (!m_arcs.empty() && getDownNode() != arc->getUpNode()) {
-		WARNING("arcs not consistent: "<<m_arcs.size());
+		WARNING("arcs not consistent: " << m_arcs.size());
 		WARNING(getDownNode()->getUserId());
-		WARNING( arc->getUpNode()->getUserId());
+		WARNING(arc->getUpNode()->getUserId());
 		return false;
 	} else {
 		m_arcs.push_back(arc);
+		m_last_added_arcs == 1;
 		m_length += arc->getLength();
 		return true;
 	}
@@ -244,16 +255,22 @@ bool patArcSequence::addArcToBack(const patArc* arc) {
 }
 
 bool patArcSequence::addArcsToBack(const vector<const patArc*>* arc_list) {
+	int added_arcs = 0;
 	for (vector<const patArc*>::const_iterator arc_iter = arc_list->begin();
 			arc_iter != arc_list->end(); ++arc_iter) {
-		if (addArcToBack(*arc_iter)==false) {
+		if (addArcToBack(*arc_iter) == false) {
+			pop_back(added_arcs);
 			return false;
 		}
+		added_arcs++;
 	}
+
+	m_last_added_arcs = added_arcs;
 	return true;
 }
 bool patArcSequence::addArcsToBack(const patRoadBase* road) {
 
+	int added_arcs = 0;
 	if (road->isValid() == false) {
 		return false;
 	}
@@ -262,13 +279,17 @@ bool patArcSequence::addArcsToBack(const patRoadBase* road) {
 	for (vector<const patArc*>::const_iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
 		if (addArcToBack(*arc_iter) == false) {
+			pop_back(added_arcs);
 			return false;
 		}
+		added_arcs++;
 	}
+	m_last_added_arcs = added_arcs;
 	return true;
 }
 
 bool patArcSequence::addArcsToFront(const patRoadBase* road) {
+	int added_arcs = 0;
 	if (road->isValid() == false) {
 		return false;
 	}
@@ -277,9 +298,12 @@ bool patArcSequence::addArcsToFront(const patRoadBase* road) {
 	while (arc_iter != arc_list.begin()) {
 		++arc_iter;
 		if (addArcToFront(*arc_iter) == false) {
+			pop_front(added_arcs);
 			return false;
 		}
+		added_arcs++;
 	}
+	m_last_added_arcs = added_arcs;
 	return true;
 }
 
@@ -308,9 +332,13 @@ FolderPtr patArcSequence::getKML() const {
 
 }
 
+void patArcSequence::putExcludedNodes(unordered_set<const patNode*>& excluded,
+		int start, int end) const {
+
+}
 const patNode* patArcSequence::getNode(int index) const {
 	if (index > m_arcs.size()) {
-		WARNING("index greater than size"<<index<<">"<<m_arcs.size());
+		WARNING("index greater than size" << index << ">" << m_arcs.size());
 		throw RuntimeException("index greater than size");
 		return NULL;
 	} else if (index == m_arcs.size()) {
@@ -320,4 +348,115 @@ const patNode* patArcSequence::getNode(int index) const {
 	}
 
 }
+double patArcSequence::getAttribute(ARC_ATTRIBUTES_TYPES attribute_name) const {
+	vector<const patArc*> arc_list = getArcList();
+	double attr = 0.0;
+	for (vector<const patArc*>::const_iterator arc_iter = arc_list.begin();
+			arc_iter != arc_list.end(); ++arc_iter) {
+		attr += (*arc_iter)->getAttribute(attribute_name);
+	}
+	return attr;
+}
 
+string patArcSequence::getArcsString() const {
+	stringstream arcs_string;
+	for (vector<const patArc*>::const_iterator arcIter = m_arcs.begin();
+			arcIter != m_arcs.end(); ++arcIter) {
+		arcs_string << (*arcIter)->getUpNode()->getUserId() << "_"
+				<< (*arcIter)->getDownNode()->getUserId() << " ";
+	}
+	return arcs_string.str();
+}
+
+void patArcSequence::pop_back(int k) {
+	for (int i = 0; i < k; ++i) {
+		m_length -= m_arcs.back()->getLength();
+		m_arcs.pop_back();
+	}
+}
+
+void patArcSequence::pop_front(int k) {
+	for (int i = 0; i < k; ++i) {
+		m_length -= m_arcs.front()->getLength();
+		m_arcs.erase(m_arcs.begin());
+	}
+}
+
+bool patArcSequence::containsNodeFront(const patNode* node,
+		int stop_index) const {
+
+	if (stop_index > m_arcs.size()) {
+		throw RuntimeException("invalid stop index");
+	}
+	vector<const patArc*>::const_iterator arc_iter = m_arcs.begin();
+	if ((*arc_iter)->getUpNode() == node) {
+		return true;
+	}
+	for (int i = 0; i < stop_index; ++i) {
+		if ((*arc_iter)->getDownNode() == node) {
+			return true;
+		}
+		++arc_iter;
+	}
+	return false;
+}
+bool patArcSequence::containsNodeBack(const patNode* node,
+		int stop_index) const {
+
+	if (stop_index > m_arcs.size()) {
+		throw RuntimeException("invalid stop index");
+	}
+	vector<const patArc*>::const_iterator arc_iter = m_arcs.end();
+	--arc_iter;
+
+	if ((*arc_iter)->getDownNode() == node) {
+		return true;
+	}
+	for (int i = 0; i < stop_index; ++i) {
+		if ((*arc_iter)->getUpNode() == node) {
+			return true;
+		}
+		--arc_iter;
+	}
+	return false;
+}
+
+set<const patNode*> patArcSequence::getNodesFront(int stop_index) const {
+
+	set<const patNode*> nodes;
+	if (stop_index < 0) {
+		return nodes;
+	}
+	if (stop_index > m_arcs.size()) {
+		throw RuntimeException("invalid stop index");
+	}
+	vector<const patArc*>::const_iterator arc_iter = m_arcs.begin();
+	nodes.insert((*arc_iter)->getUpNode());
+	for (int i = 0; i < stop_index; ++i) {
+		nodes.insert((*arc_iter)->getDownNode());
+		++arc_iter;
+	}
+	return nodes;
+
+}
+set<const patNode*> patArcSequence::getNodesBack(int stop_index) const {
+
+	set<const patNode*> nodes;
+
+	if (stop_index < 0) {
+		return nodes;
+	}
+	if (stop_index > m_arcs.size()) {
+		throw RuntimeException("invalid stop index");
+	}
+	vector<const patArc*>::const_iterator arc_iter = m_arcs.end();
+	--arc_iter;
+	nodes.insert((*arc_iter)->getDownNode());
+
+	for (int i = 0; i < stop_index; ++i) {
+
+		nodes.insert((*arc_iter)->getUpNode());
+		--arc_iter;
+	}
+	return nodes;
+}

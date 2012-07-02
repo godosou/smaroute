@@ -24,10 +24,10 @@ patSample::patSample()
 
 }
 
-void patSample::setMapBounds(double minLat, 
-			      double maxLat, 
-			      double minLon, 
-			      double maxLon) {
+void patSample::setMapBounds(patReal minLat, 
+			      patReal maxLat, 
+			      patReal minLon, 
+			      patReal maxLon) {
 }
 
 /**
@@ -40,7 +40,7 @@ patTraveler* patSample::addTraveler(patTraveler theTraveler){
 }
 
 
-patTraveler* patSample::addTraveler(const unsigned long& theTravelerId){
+patTraveler* patSample::addTraveler(const patULong& theTravelerId){
 	patTraveler* travelerFound = findTraveler(theTravelerId);
 	if(travelerFound!=NULL){
 		return travelerFound;
@@ -50,7 +50,7 @@ patTraveler* patSample::addTraveler(const unsigned long& theTravelerId){
 	}
 }
 
-patTraveler* patSample::findTraveler(const unsigned long& theTravelerId){
+patTraveler* patSample::findTraveler(const patULong& theTravelerId){
 	patTraveler travelerToFind(theTravelerId);
 	set<patTraveler>::iterator travelerFound = travelerSet.find(travelerToFind);
 	if(travelerFound == travelerSet.end()){
@@ -66,20 +66,20 @@ set<patTraveler>* patSample::getAllTravelers(){
 /**
 *Od utilities
 */
-patOdJ* patSample::addOd( patOdJ theOd){
-	pair<set<patOdJ>::iterator,bool> insertResult = odSet.insert(theOd);
-	return const_cast<patOdJ*>(&(*(insertResult.first)));
+patOd* patSample::addOd( patOd theOd){
+	pair<set<patOd>::iterator,bool> insertResult = odSet.insert(theOd);
+	return const_cast<patOd*>(&(*(insertResult.first)));
 }
-patOdJ* patSample::findOd( patOdJ theOd){
-	set<patOdJ>::iterator odFound = odSet.find(theOd);
+patOd* patSample::findOd( patOd theOd){
+	set<patOd>::iterator odFound = odSet.find(theOd);
 		if(odFound == odSet.end()){
 		return NULL;
 	}
 	
-	return const_cast<patOdJ*>(&(*odFound));
+	return const_cast<patOd*>(&(*odFound));
 }
 
-set<patOdJ>* patSample::getAllOds(){
+set<patOd>* patSample::getAllOds(){
 	return &odSet;
 }
 
@@ -89,9 +89,9 @@ set<patOdJ>* patSample::getAllOds(){
 
 patPathJ* patSample::findPath(patPathJ& thePath){
 	
-	patOdJ* pathOd = thePath.getOd();
+	patOd* pathOd = thePath.getOd();
 	
-	patOdJ* odFound = findOd(*pathOd);
+	patOd* odFound = findOd(*pathOd);
 	
 	if(odFound == NULL){
 		return NULL;
@@ -111,8 +111,8 @@ patPathJ* patSample::findPath(patPathJ& thePath){
 *Observation utilities
 */
 
-unsigned long patSample::getNumberOfObservations()  {
-	unsigned long nbrOfObservations = 0;
+patULong patSample::getNumberOfObservations()  {
+	patULong nbrOfObservations = 0;
 	for(set<patTraveler>::iterator travelerIter = travelerSet.begin();
 							travelerIter !=travelerSet.end();
 							++travelerIter){
@@ -122,12 +122,12 @@ unsigned long patSample::getNumberOfObservations()  {
 }
 
 void patSample::assignPathIds(){
-	unsigned long i =1;
-	for(set<patOdJ>::iterator odIter = odSet.begin();
+	patULong i =1;
+	for(set<patOd>::iterator odIter = odSet.begin();
 				odIter!=odSet.end();
 				++odIter){
 		patError* err;
-		set<patPathJ>* pathSet = const_cast<patOdJ*>(&*(odIter))->getAllPaths();
+		set<patPathJ>* pathSet = const_cast<patOd*>(&*(odIter))->getAllPaths();
 		for(set<patPathJ>::iterator pathIter = pathSet->begin();
 					pathIter!=pathSet->end();
 					++pathIter){
@@ -152,7 +152,7 @@ void patSample::writeKML(patString fileName){
   kml << "            <description>File created by bioroute</description>" << endl ;
    	kml<<"<Folder>";
    	kml << "            <name>paths</name>" << endl ;
-	for(set<patOdJ>::iterator odIter = odSet.begin();
+	for(set<patOd>::iterator odIter = odSet.begin();
 			odIter!=odSet.end();
 			++odIter){
 			
@@ -162,7 +162,7 @@ void patSample::writeKML(patString fileName){
 	 kml<<"</name>"<<endl;
 	 patWriteKML wk;
 	 patError* err;
-	 set<patPathJ>* pathSet = const_cast<patOdJ*>(&(*odIter))->getAllPaths();
+	 set<patPathJ>* pathSet = const_cast<patOd*>(&(*odIter))->getAllPaths();
 //	 DEBUG_MESSAGE("path number"<<pathSet->size());
 	 for (set<patPathJ>::iterator pathIter = pathSet->begin();
 				pathIter!=pathSet->end();
@@ -188,8 +188,8 @@ void patSample::writeKML(patString fileName){
   kml.close() ;
 	}
 	
-list<unsigned long> patSample::getTripIds()  {
-list<unsigned long> tripIds;
+list<patULong> patSample::getTripIds()  {
+list<patULong> tripIds;
 	for(set<patTraveler>::iterator travelerIter = travelerSet.begin();
 							travelerIter !=travelerSet.end();
 							++travelerIter){
@@ -206,8 +206,8 @@ list<unsigned long> tripIds;
 
 patString patSample::getTripIdsStr(){
 	stringstream stream;
-	list<unsigned long> tripIds = getTripIds();
-	list<unsigned long>::iterator iIter = tripIds.begin();
+	list<patULong> tripIds = getTripIds();
+	list<patULong>::iterator iIter = tripIds.begin();
 	stream<<*(iIter++);
 	for(;
 		iIter!=tripIds.end();

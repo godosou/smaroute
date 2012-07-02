@@ -247,7 +247,7 @@ double patArcTransition::calProbability(patString algoType) {
 
 //	DEBUG_MESSAGE(prev_ddr_range.lower_bound<<"-"<<prev_ddr_range.upper_bound<<", "<<curr_ddr_range.lower_bound<<"-"<<curr_ddr_range.upper_bound);
 	G.params = &m_param;
-	unsigned long dimension;
+	unsigned long dimension=0;
 
 	double resConst =  m_param.MM_prev->getConstant()
 			* m_param.MM_curr->getConstant();

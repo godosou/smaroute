@@ -20,7 +20,7 @@ class patShortestPathTreeDest {
 
   friend class patShortestPathAlgoDest ;
   friend class patPathProcessor ;
-  friend class patOdJ;//add by Jingmin
+  friend class patOd;//add by Jingmin
   friend class patMapMatching;//add by Jingmin
     friend class patMapMatchingV2;//add by Jingmin
 

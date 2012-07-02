@@ -82,11 +82,11 @@ void patTripParser::genPath(){
 		patError* err;
 		patPathJ thePath = *pathIter;
 		
-		patOdJ od = thePath.generateOd( theNetwork, err);
+		patOd od = thePath.generateOd( theNetwork, err);
 		if(err!=NULL){
 			continue;
 		}
-		patOdJ* theOd = theSample->addOd(od);
+		patOd* theOd = theSample->addOd(od);
 
 		thePath.assignOd(theOd);
 		patPathJ* pathPointer = theOd->addPath(thePath);
@@ -128,7 +128,7 @@ void patTripParser::endOfTrip(vector< list <  pair<patArc*,unsigned long> > >* a
 	generatedObservation.getTraveler()->addObservation(generatedObservation);
 }
 
-void patTripParser::setOd(patOdJ* theOd){
+void patTripParser::setOd(patOd* theOd){
 	od = theOd;
 }
 
@@ -181,7 +181,7 @@ void patTripParser::writeToFile(){
 
 void patTripParser::writeToKML(patString fileName){
 	  ofstream kml(fileName.c_str()) ;
-	map<patOdJ*,map<patPathJ*,patPathDDR> > pathDDRsOrderByOd = generatedObservation.getPathDDRsOrderByOd();
+	map<patOd*,map<patPathJ*,patPathDDR> > pathDDRsOrderByOd = generatedObservation.getPathDDRsOrderByOd();
 	  kml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl ;
   	kml << "      <kml xmlns=\"http://earth.google.com/kml/2.0\">" << endl ;
   kml << "      <Document>" << endl ;
@@ -193,7 +193,7 @@ void patTripParser::writeToKML(patString fileName){
   kml << "            <description>File created by bioroute</description>" << endl ;
    	kml<<"<Folder>";
    	kml << "            <name>paths</name>" << endl ;
-  for(map<patOdJ*,map<patPathJ*,patPathDDR> >::iterator odIter = pathDDRsOrderByOd.begin();
+  for(map<patOd*,map<patPathJ*,patPathDDR> >::iterator odIter = pathDDRsOrderByOd.begin();
 					odIter != pathDDRsOrderByOd.end();
 					++odIter){
 	 kml<< "<Folder>";
@@ -408,7 +408,7 @@ void patTripParser::genOdDDR(){
 					pathDDRIter != pathDDRs->end();
 					++pathDDRIter){
 		
-		patOdJ* odFound = generatedObservation.odDDRs.find(pathDDRIter->first->getOd())->first;
+		patOd* odFound = generatedObservation.odDDRs.find(pathDDRIter->first->getOd())->first;
 		if (odFound == NULL){
 			generatedObservation.odDDRs[odFound] = pathDDRIter->second.getPathValue();
 		}

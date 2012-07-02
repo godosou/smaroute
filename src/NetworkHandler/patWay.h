@@ -14,61 +14,63 @@
 #include <list>
 #include "patError.h"
 #include "patArcSequence.h"
+#include <tr1/unordered_map>
+using namespace std::tr1;
 using namespace pqxx;
 using namespace std;
 class patNetworkElements;
 struct pt_info {
-	patString type; /*< train, bus,...*/
-	patString route; /*< route number*/
-	patString name;
-	map<patString, patString> attributes;
+	string type; /*< train, bus,...*/
+	string route; /*< route number*/
+	string name;
+	map<string, string> attributes;
 };
 
 class patWay : public patArcSequence{
 
 public:
 	patWay();
-	patWay(unsigned long the_way_id, map<patString, patString> the_attributes);
+	patWay(unsigned long the_way_id, unordered_map<string, string> the_tags);
 
 	void appendArc(const patArc* new_arc);
 	void appendReverseArc(const patArc* new_arc);
 	unsigned long getId() const;
 	unsigned long getId();
 	signed short int isOneway() const;
-	bool isWay(map<patString, set<patString> >& include_rules
-			,map<patString, set<patString> >& exclude_rules) const;
+	bool isWay(map<string, set<string> >& include_rules
+			,map<string, set<string> >& exclude_rules) const;
 	signed short int isCarOneWay() const;
 	signed short int isBikeOneWay() const;
 	signed short int isWalkOneWay() const;
-	patString getTagValue(patString tag_key) const;
+	string getTagValue(string tag_key) const;
 	bool readFromNodesIds(patNetworkElements* network,
 			list<unsigned long> the_list_of_nodes_ids, patError*& err);
-	patString getHighwayType() const;
+	string getHighwayType() const;
 	bool isHighway() const;
-	bool isHighway(patString highway_type);
+	bool isHighway(string highway_type);
 	void setId(unsigned long the_way_id);
-	static void loadRule(map<patString, set<patString> >& rule_map
-			, patString key, patString value);
+	static void loadRule(map<string, set<string> >& rule_map
+			, string key, string value);
 
 	const vector<const patArc*>* getArcListPointer(bool forward = true) const;
 	static void initiateNetworkTypeRules();
+	static void initiateNetworkTypeRules(string file_name);
 	virtual ~patWay();
-	static map<patString, set<patString> > car_include_rules;
-	static map<patString, set<patString> > car_exclude_rules;
-	static map<patString, set<patString> > bike_include_rules;
-	static map<patString, set<patString> > bike_exclude_rules;
-	static map<patString, set<patString> > walk_include_rules;
-	static map<patString, set<patString> > walk_exclude_rules;
+	static map<string, set<string> > car_include_rules;
+	static map<string, set<string> > car_exclude_rules;
+	static map<string, set<string> > bike_include_rules;
+	static map<string, set<string> > bike_exclude_rules;
+	static map<string, set<string> > walk_include_rules;
+	static map<string, set<string> > walk_exclude_rules;
 
 
-	void setTags(map<string, string>& tags);
+	void setTags(unordered_map<string, string>& tags);
 protected:
-	map<patString, patString> m_tags;
+	unordered_map<string, string> m_tags;
 
-	map<patString, patString> m_attributes;
 	vector<const patArc*> m_reverse_arcs;
 	unsigned long m_way_id;
-	double m_length;
+//	double m_length;
 	list<struct pt_info> m_pt_info_list;
 };
 

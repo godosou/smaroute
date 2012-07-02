@@ -14,6 +14,10 @@ class patNetworkMetro: public patNetworkPublicTransport {
 public:
 	patNetworkMetro();
 
+	virtual patNetworkBase* clone() const {
+		return new patNetworkMetro(*this);
+	}
+	;
 	void getFromNetwork(patNetworkElements* network,patGeoBoundingBox bounding_box);
 	virtual ~patNetworkMetro();
 	 double getMinSpeed() const;

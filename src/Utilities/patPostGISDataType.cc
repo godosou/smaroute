@@ -18,7 +18,7 @@ patPostGISDataType::patPostGISDataType() {
 
 }
 pair<double , double > patPostGISDataType::PointToLonLat(
-		patString lat_lon_string) {
+		string lat_lon_string) {
 
 	//string example "POINT(6.1666183 46.2721863)"
 	//DEBUG_MESSAGE(lat_lon_string);
@@ -34,7 +34,7 @@ pair<double , double > patPostGISDataType::PointToLonLat(
 	}
 	return pair<double , double >(lon, lat);
 }
-list<unsigned long> patPostGISDataType::IntArrayToULongList(patString str) {
+list<unsigned long> patPostGISDataType::IntArrayToULongList(string str) {
 	sregex time = sregex::compile("(\\d+)");
 	int const subs[] = { 1 };
 	list<unsigned long> long_list;
@@ -50,22 +50,22 @@ list<unsigned long> patPostGISDataType::IntArrayToULongList(patString str) {
 	return long_list;
 }
 
-map<patString, patString> patPostGISDataType::hstoreToMap(patString str) {
+unordered_map<string, string> patPostGISDataType::hstoreToMap(string str) {
 	//""bicycle"=>"yes", "highway"=>"path", "surface"=>"earth""
 	sregex rex = sregex::compile("\"(\\w+)\"=>\"([\\w\\d\\s]*)\"");
 
 	int const subs[] = { 1, 2};
-	map<patString, patString>  string_map;
+	unordered_map<string, string>  string_map;
 	sregex_token_iterator cur(str.begin(), str.end(), rex, subs);
 	sregex_token_iterator end;
-	patString the_key="";
+	string the_key="";
 
 	for (; cur != end; ++cur) {
 		if (the_key.empty()){
 			the_key=*cur;
 		}
 		else{
-			patString the_value;
+			string the_value;
 			string_map[the_key]=*cur;
 			the_key="";
 		}

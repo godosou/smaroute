@@ -20,17 +20,17 @@
 #include "patNBParameters.h"
 patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb,
 		patError*& err) {
+//Initiate rules for loading types of network elements.
+//	DEBUG_MESSAGE(patNBParameters::the()->enableTrainNetwork
+//			<<patNBParameters::the()->enableBikeNetwork
+//			<<patNBParameters::the()->enableWalkNetwork
+//			<<patNBParameters::the()->enableBusNetwork
+//			<<patNBParameters::the()->enableCarNetwork
+//			<<patNBParameters::the()->enableMetroNetwork
+//			);
 
-	patWay::initiateNetworkTypeRules(); //Initiate rules for loading types of network elements.
-	DEBUG_MESSAGE(patNBParameters::the()->enableTrainNetwork
-			<<patNBParameters::the()->enableBikeNetwork
-			<<patNBParameters::the()->enableWalkNetwork
-			<<patNBParameters::the()->enableBusNetwork
-			<<patNBParameters::the()->enableCarNetwork
-			<<patNBParameters::the()->enableMetroNetwork
-			);
-
-	m_network_elements.readNetworkFromPostGreSQL(bb, err);
+	//m_network_elements.readNetworkFromPostGreSQL(bb, err);
+	m_network_elements.readNetworkFromOSMFile(patNBParameters::the()->OsmNetworkFileName,bb, err);
 	if (err != NULL) {
 		WARNING("Fail to setup network environment");
 	} else {

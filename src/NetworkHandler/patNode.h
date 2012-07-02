@@ -12,18 +12,20 @@
 #include "patType.h"
 #include "patString.h"
 //#include "patArc.h"
-#include <set>
+#include <tr1/unordered_map>
+using namespace std::tr1;
 #include "kml/dom.h"
 
 using kmldom::PlacemarkPtr;
 using namespace std;
 struct node_attributes {
 	patString type;
+	bool traffic_signal;
 };
 class patArc;
 #include "patIterator.h"
 
-class patOdJ;
+class patOd;
 class patNode {
 
 	friend class patDisconnectedNode;
@@ -36,7 +38,7 @@ class patNode {
 	friend class patPathDDR; //add by Jingmin
 	friend class patReadSampleFromCsv; //add by Jingmin
 	friend class patTripParser; //add by Jingmin
-	friend class patOdJ; //add by Jingmin
+	friend class patOd; //add by Jingmin
 	friend class patMultiModalPath; //add by Jingmin
 	friend class patReadSample; //add by Jingmin
 	friend class patSample; //add by Jingmin
@@ -54,7 +56,7 @@ class patNode {
 	friend class patNetworkElements; //added by Jingmin
 
 	friend ostream& operator<<(ostream& str, const patNode& x);
-	friend bool operator<(const patOdJ& od1, const patOdJ& od2);
+	friend bool operator<(const patOd& od1, const patOd& od2);
 
 public:
 	/**
@@ -91,7 +93,7 @@ public:
 	double getLatitude() const;
 	double getLongitude() const;
 	void setName(string the_name) ;
-	void setTags(map<string, string>& tags);
+	void setTags(unordered_map<string, string>& tags);
 	/**
 	 */
 	bool isCentroid;
@@ -99,12 +101,12 @@ public:
 	string getTag(string tag_key) const;
 	string getTagString() const;
  void setTag(string key, string value);
-	map<string, string > getTags() const;
+ unordered_map<string, string > getTags() const;
 	double calHeading(const patNode* b_node) const;
 
 	bool hasTrafficSignal() const;
 protected:
-	map<string, string > m_tags;
+	unordered_map<string, string > m_tags;
 	unsigned long userId;
 	unsigned long internalId;
 	patString name;

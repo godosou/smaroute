@@ -12,6 +12,7 @@ template <class S>
 class MHWeight {
 public:
 virtual double logWeight(const S& State) const=0;
+virtual double logWeightWithoutCorrection(const S& State) const=0;
 
 };
 

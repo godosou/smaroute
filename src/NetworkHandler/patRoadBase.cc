@@ -19,11 +19,18 @@ void patRoadBase::setLength(bool the_length) {
 
 	m_length = the_length;
 }
+patRoadBase::patRoadBase(const patRoadBase& another) :
+		m_length(another.m_length) {
+
+}
 patRoadBase::~patRoadBase() {
 
 }
 
- FolderPtr patRoadBase::getKML(string mode) const {
+ double patRoadBase::getLength() const{
+	return m_length;
+}
+FolderPtr patRoadBase::getKML(string mode) const {
 	KmlFactory* factory = KmlFactory::GetFactory();
 	FolderPtr road_folder = factory->CreateFolder();
 	vector<const patArc*> arc_list = getArcList();

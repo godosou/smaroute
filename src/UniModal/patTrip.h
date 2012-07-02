@@ -19,43 +19,43 @@ class patTrip {
 
 public:
 	patTrip(patNetwork* network,
-			vector<list<pair<patArc*, unsigned long> > >* theAdjList);
+			vector<list<pair<patArc*, patULong> > >* theAdjList);
 
-	void newTrip(unsigned long theUserId, unsigned long theTripId, unsigned long theStartTime);
-	bool addPoint(const patGpsPoint theGpsPoint);
+	void newTrip(patULong theUserId, patULong theTripId, patULong theStartTime);
+	patBoolean addPoint(const patGpsPoint theGpsPoint);
 	void clean();
-	void endofTrip(unsigned long theEndTime);
+	void endofTrip(patULong theEndTime);
 	void genDDR();
 	void genOdDDR();
 	void genPath();
 	void writeToFile();
-	vector<double> getPathDDR(list<patArc*> path);
-	void recordPath(list<list<unsigned long> >* pathTemp);
-	void connectPoints(unsigned long endNodeId, unsigned long hierarchy,
-			list<list<unsigned long> >* pathTemp);
+	vector<patReal> getPathDDR(list<patArc*> path);
+	void recordPath(list<list<patULong> >* pathTemp);
+	void connectPoints(patULong endNodeId, patULong hierarchy,
+			list<list<patULong> >* pathTemp);
 	void writeToKML(patString fileName, patError*& err);
-	void setMapBounds(double minLat, double maxLat, double minLon,
-			double maxLon);
+	void setMapBounds(patReal minLat, patReal maxLat, patReal minLon,
+			patReal maxLon);
 protected:
-	unsigned long userId; //owner of the trip
-	unsigned long tripId; //trip id
-	unsigned long startTime; //timestamp of first gps record
-	unsigned long endTime; //timestamp of last gps record
-	double minLatitude;
-	double maxLatitude;
-	double minLongitude;
-	double maxLongitude;
-	unsigned long originNode;
-	unsigned long destinationNode;
+	patULong userId; //owner of the trip
+	patULong tripId; //trip id
+	patULong startTime; //timestamp of first gps record
+	patULong endTime; //timestamp of last gps record
+	patReal minLatitude;
+	patReal maxLatitude;
+	patReal minLongitude;
+	patReal maxLongitude;
+	patULong originNode;
+	patULong destinationNode;
 	vector<patGpsPoint> gpsSequence;
-	map<patNode*, double> originDDR;
-	map<patNode*, double> destinationDDR;
+	map<patNode*, patReal> originDDR;
+	map<patNode*, patReal> destinationDDR;
 	vector<patPath> listOfPath;
 
 	map<pair<patNode*, patNode*> ,vector<list<patArc*> > > pathList;
-	map<pair<patNode*, patNode*> ,vector<vector<double> > > pathDDRs;
+	map<pair<patNode*, patNode*> ,vector<vector<patReal> > > pathDDRs;
 	patNetwork* theNetwork;
-	vector<list<pair<patArc*, unsigned long> > >* adjList;
+	vector<list<pair<patArc*, patULong> > >* adjList;
 };
 
 #endif

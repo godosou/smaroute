@@ -3,12 +3,12 @@
 #define patWriteKML_h
 #include "patType.h"
 class patPathJ;
-class patOdJ;
+class patOd;
 class patWriteKML{
 public:
 patWriteKML();
 patString writePath(patPathJ* thePath,patString desc);
-patString writeODSample(patOdJ* od);
+patString writeODSample(patOd* od);
 protected:
 }; 
 #endif

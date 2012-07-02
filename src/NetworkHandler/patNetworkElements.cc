@@ -153,7 +153,7 @@ bool patNetworkElements::addWay(patWay* the_way,
 		return true;
 	}
 	the_way->readFromNodesIds(this, the_list_of_nodes_ids, err);
-	if (err!=NULL){
+	if (err != NULL) {
 		return false;
 	}
 	m_ways[the_way->getId()] = *the_way;
@@ -173,6 +173,15 @@ void patNetworkElements::readNetworkFromPostGreSQL(
 	readWaysFromPostGreSQL(bounding_box, err);
 	summarizeMembership();
 }
+
+void patNetworkElements::readNetworkFromOSMFile(string file_name,
+		patGeoBoundingBox& bounding_box, patError*& err) {
+	patReadNetworkFromOSM::read(file_name, *this, bounding_box,
+			err);
+	summarizeMembership();
+
+}
+
 void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box,
 		patError*& err) {
 
@@ -189,7 +198,7 @@ void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box,
 
 		pair<double, double> lon_lat = patPostGISDataType::PointToLonLat(
 				(*i)["geom"].c_str());
-		map<patString, patString> tags = patPostGISDataType::hstoreToMap(
+		unordered_map<string, string> tags = patPostGISDataType::hstoreToMap(
 				(*i)["tags"].c_str());
 		unsigned long id;
 		(*i)["id"].to(id);
@@ -233,7 +242,7 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 
 	 list<unsigned long> nodes_list =
 	 patPostGISDataType::IntArrayToULongList((*i)["nodes"].c_str());
-	 map < patString, patString > tags = patPostGISDataType::hstoreToMap(
+	 map < string, string > tags = patPostGISDataType::hstoreToMap(
 	 (*i)["tags"].c_str());
 	 patWay new_processed_way = patWay(edge_id, tags);
 	 addProcessedWay(new_processed_way, nodes_list, source, target, err);
@@ -248,13 +257,13 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 	string bb_box;
 	stringstream query_stream(bb_box);
 	/*
-	query_stream
-			<< "select ways.tags,ways.nodes,ways.id from ways "
-			<< "JOIN( "
-			<< "select distinct(osm_id) as osm_id from pg_ways where the_geom && 'BOX3D("
-			<< bounding_box.toString() << ")'::box3d) ways_in_region"
-			<< " on ways.id=ways_in_region.osm_id;";
-			*/
+	 query_stream
+	 << "select ways.tags,ways.nodes,ways.id from ways "
+	 << "JOIN( "
+	 << "select distinct(osm_id) as osm_id from pg_ways where the_geom && 'BOX3D("
+	 << bounding_box.toString() << ")'::box3d) ways_in_region"
+	 << " on ways.id=ways_in_region.osm_id;";
+	 */
 	query_stream
 			<< "select ways.tags,ways.nodes,ways.id from ways  where geom && 'BOX3D("
 			<< bounding_box.toString() << ")'::box3d;";
@@ -270,15 +279,14 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box,
 
 		list<unsigned long> nodes_list =
 				patPostGISDataType::IntArrayToULongList((*i)["nodes"].c_str());
-		map<patString, patString> tags = patPostGISDataType::hstoreToMap(
+		unordered_map<string, string> tags = patPostGISDataType::hstoreToMap(
 				(*i)["tags"].c_str());
 		if (way_id != last_way_id) {
 			patWay new_way = patWay(way_id, tags);
 			addWay(&new_way, nodes_list, err);
 		}
 		last_way_id = way_id;
-	}
-	DEBUG_MESSAGE("network node size: " << getNodeSize());
+	}DEBUG_MESSAGE("network node size: " << getNodeSize());
 	DEBUG_MESSAGE("network arc size: " << getArcSize());
 	DEBUG_MESSAGE("network way size: " << getWaySize());
 	DEBUG_MESSAGE("network processed way size: " << m_processed_ways.size());
@@ -288,17 +296,18 @@ patNetworkElements::~patNetworkElements() {
 	//
 }
 
-const patNode* patNetworkElements::getNode(int node_id) const{
+const patNode* patNetworkElements::getNode(int node_id) const {
 
 	//map<patULong, patNode> nodes;
-	map<unsigned long, patNode>::const_iterator node_find = m_nodes.find(node_id);
+	map<unsigned long, patNode>::const_iterator node_find = m_nodes.find(
+			node_id);
 	if (node_find == m_nodes.end()) {
 		return NULL;
 	} else {
 		return &(node_find->second);
 	}
 }
-const patArc* patNetworkElements::getArc(int arc_id) const{
+const patArc* patNetworkElements::getArc(int arc_id) const {
 
 	//map<patULong, patArc> m_arcs;
 	map<unsigned long, patArc>::const_iterator arc_find = m_arcs.find(arc_id);
@@ -404,17 +413,16 @@ set<const patNode*> patNetworkElements::getNearbyNode(
 			m_nodes.begin(); node_iter != m_nodes.end(); ++node_iter) {
 		double node_distance = node_iter->second.getGeoCoord().distanceTo(
 				coords);
-		if (node_distance!=0.0 && node_distance <= distance) {
+		if (node_distance != 0.0 && node_distance <= distance) {
 			nearby_nodes[node_distance];
 			nearby_nodes[node_distance].insert(&(node_iter->second));
 		}
 	}
 //DEBUG_MESSAGE("OK");
-	for (map<double, set<const patNode*> >::iterator iter = nearby_nodes.begin();
-			iter != nearby_nodes.end(); ++iter) {
+	for (map<double, set<const patNode*> >::iterator iter =
+			nearby_nodes.begin(); iter != nearby_nodes.end(); ++iter) {
 		//DEBUG_MESSAGE(iter->first);
-		nearest_nodes.insert(iter->second.begin(),
-				iter->second.end());
+		nearest_nodes.insert(iter->second.begin(), iter->second.end());
 		if (nearest_nodes.size() >= count) {
 			break;
 		}

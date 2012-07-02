@@ -7,7 +7,7 @@
 
 #ifndef PATCREATEKMLSTYLES_H_
 #define PATCREATEKMLSTYLES_H_
-#include "kml/dom.h"
+#include <kml/dom.h>
 using kmldom::DocumentPtr;
 
 class patCreateKmlStyles {

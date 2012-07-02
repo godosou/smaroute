@@ -18,7 +18,7 @@
 #include "patObservation.h"
 #include "patTripGraph.h"
 
-class patOdJ;
+class patOd;
 class patSample;
 class patPathJ;
 class patArcTransition;
@@ -62,7 +62,7 @@ vector<double> prepareParamsForSA(patString paramName);
 void genMapMatchingResult(vector< list < pair<patArc*, unsigned long> > >* adjList);
 	void endOfTrip(vector< list < pair<patArc*,unsigned long> > >* adjList,
 		unsigned long theEndTime);
-	void setOd(patOdJ* theOd);
+	void setOd(patOd* theOd);
 
 	void writeToKML(patString fileName);
 
@@ -78,7 +78,7 @@ vector<patGpsPoint> increaseSamplingInterval(double newInterval);
 vector<patGpsPoint>* getGpsSequence();
  protected:
   vector<patGpsPoint> gpsSequence ;
-  patOdJ* od;
+  patOd* od;
   double ddrAll;
   double ddrRawAll;
   double avgSpeed;
