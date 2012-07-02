@@ -9,6 +9,7 @@
 #define PATPATHGENERATOR_H_
 #include "patNetworkBase.h"
 #include "patNode.h"
+#include "patPathWriter.h"
 class patPathGenerator {
 public:
 	//patPathGenerator();
@@ -20,8 +21,11 @@ public:
 	 * @param network
 	 *            the network
 	 */
-	virtual void setNetwork( patNetworkBase* network) =0;
+	virtual void setNetwork(const patNetworkBase* network) =0;
+	virtual void setPathWriter(patPathWriter* path_writer) =0;
 
+	virtual patPathGenerator* clone() const = 0;
+	virtual double calculatePathLogWeight(const patMultiModalPath& path) const=0;
 	/**
 	 * Sets the path writer. It is called after <code>setNetwork</code> and
 	 * (once) before all calls to <code>run</code>.

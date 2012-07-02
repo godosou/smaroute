@@ -7,11 +7,18 @@
 
 
 #include "MHPoints.h"
-
+//#include "patException.h"
 #include <iostream>
 MHPoints::MHPoints(int A, int B, int C):
 m_A(A),m_B(B),m_C(C){
+//	if(m_A>m_B or m_B > m_C){
+//		stringstream ss;
+//		ss<<"wrong points combination"<<m_A<<","<<m_B<<","<<m_C;
+//		throw RuntimeException(ss.str().c_str());
+//	}
 
+}MHPoints::MHPoints(){
+    
 }
 int MHPoints::getA() const
 {
