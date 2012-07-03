@@ -46,7 +46,7 @@
       /home/jchen/libs/include/kml
       /home/jchen/libs/include
 
-    /data/jqdu/libs/include
+#    /data/jqdu/libs/include
     /data/jqdu/libs/include/kml
 
       ${_KML_DIR}/include
