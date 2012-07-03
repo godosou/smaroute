@@ -40,7 +40,7 @@
   )
 
   find_path( KML_INCLUDE_DIRECTORIES
-    NAMES kml/dom.h kml/engine.h
+    NAMES  dom.h
     PATHS
       ${_KML_DIR}
       /home/jchen/libs/include/kml
