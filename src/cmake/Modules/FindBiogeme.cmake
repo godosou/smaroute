@@ -25,13 +25,13 @@
     )
 
   find_library( LIB_UTILS
-    NAMES NAMES utils libutils patUtils libutils.la utils.la
+    NAMES NAMES utils libutils patUtils libutils.la utils.la libutils.a
     PATHS
       ${BIOGEME_POSSIBLE_ROOT_DIRS}
   )
 
     find_library(LIB_PARAMETERS
-                    NAMES param libparameters patParams parameters libparameters.la  parameters.la
+                    NAMES param libparameters patParams parameters libparameters.la  parameters.la libparameters.a
                     PATHS
                           ${BIOGEME_POSSIBLE_ROOT_DIRS})
 
