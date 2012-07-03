@@ -30,23 +30,9 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         message("linux")
 
     set(CMAKE_CXX_COMPILER g++)
-    set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include")
+    set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include -L/data/jqdu/libs/lib")
     SET(OperatingSystem "Linux")
     find_package(Biogeme)
-#    include_directories("/home/jchen/biogeme-2.0")
-#    include_directories("/home/jchen/biogeme-2.0/libraries/parameters")
-#    include_directories("/home/jchen/biogeme-2.0/libraries/utils")
-#    find_library(LIB_UTILS
-#                    NAMES utils libutils patUtils libutils.la utils.la
-#                    PATHS
-#                        "/home/jchen/biogeme-2.0/libraries/utils"
-#                        "/usr/local/lib/biogeme/"
-#                 )
-#    find_library(LIB_PARAMETERS
-#                    NAMES param libparameters patParams parameters libparameters.la  parameters.la
-#                    PATHS
-#                        "/home/jchen/biogeme-2.0/libraries/parameters"
-#                        "/usr/local/lib/biogeme/")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 #set(BIOGEME_FOLDER "/Users/jchen/Documents/Project/biogeme")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC -fopenmp")
