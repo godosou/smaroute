@@ -10,7 +10,7 @@
 #include "MHAlgorithm.h"
 #include "MHPoints.h"
 #include "patRouter.h"
-#include "patMultimodalPath.h"
+#include "patMultiModalPath.h"
 #include "patNode.h"
 using namespace std::tr1;
 
