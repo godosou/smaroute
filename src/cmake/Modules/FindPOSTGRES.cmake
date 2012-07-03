@@ -18,6 +18,7 @@ if ( NOT POSTGRES_INCLUDE_DIRECTORIES OR NOT POSTGRES_LIBRARIES OR NOT POSTGRES_
       /usr/local/pgsql/lib64
       /usr/local/lib64
       /usr/lib64
+      /data/jqdu/libs/lib
       ${_POSTGRES_DIR}
       ${_POSTGRES_DIR}/lib
       ${CMAKE_INSTALL_PREFIX}/bin
@@ -34,6 +35,7 @@ if ( NOT POSTGRES_INCLUDE_DIRECTORIES OR NOT POSTGRES_LIBRARIES OR NOT POSTGRES_
     PATHS
       ${_POSTGRES_DIR}
       ${_POSTGRES_DIR}/include
+      /data/jqdu/libs/include
       ${CMAKE_INSTALL_PREFIX}/include
       /usr/local/pgsql/include
 /usr/local/pgsql-9.0/include/
