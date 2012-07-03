@@ -8,7 +8,7 @@
 #define patNode_h
 
 #include <set>
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patType.h"
 #include "patString.h"
 //#include "patArc.h"
@@ -89,7 +89,7 @@ public:
 	 */
 	bool disconnected() const;
 
-	patGeoCoordinates getGeoCoord() const;
+	patCoordinates getGeoCoord() const;
 	double getLatitude() const;
 	double getLongitude() const;
 	void setName(string the_name) ;
@@ -110,7 +110,7 @@ protected:
 	unsigned long userId;
 	unsigned long internalId;
 	patString name;
-	patGeoCoordinates geoCoord;
+	patCoordinates geoCoord;
 	set<unsigned long> userPredecessors;
 	set<unsigned long> userSuccessors;
 	map<unsigned long, patArc*> outgoingArcs;

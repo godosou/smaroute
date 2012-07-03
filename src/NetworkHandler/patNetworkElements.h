@@ -139,7 +139,7 @@ public:
 			const patNode* down_node) const;
 	void computeLength();
 
-	set<const patNode*> getNearbyNode(const patGeoCoordinates& coords,
+	set<const patNode*> getNearbyNode(const patCoordinates& coords,
 			double distance, int count) const;
 protected:
 

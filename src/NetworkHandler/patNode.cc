@@ -6,7 +6,7 @@
 
 #include "patConst.h"
 #include "patNode.h"
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patDisplay.h"
 #include "patArc.h"
 #include "patStlSetIterator.h"
@@ -109,7 +109,7 @@ const patArc* patNode::getOutgoingArc(unsigned long down_node_id) const {
 	}
 }
 
-patGeoCoordinates patNode::getGeoCoord() const {
+patCoordinates patNode::getGeoCoord() const {
 	return geoCoord;
 }
 
@@ -175,8 +175,8 @@ void patNode::setTag(string key, string value) {
 
 double patNode::calHeading(const patNode* b_node) const {
 
-	patGeoCoordinates startCoord = getGeoCoord();
-	patGeoCoordinates nextCoord = b_node->getGeoCoord();
+	patCoordinates startCoord = getGeoCoord();
+	patCoordinates nextCoord = b_node->getGeoCoord();
 	double lng1 = startCoord.longitudeInRadians;
 	double lat1 = startCoord.latitudeInRadians;
 	double lng2 = nextCoord.longitudeInRadians;

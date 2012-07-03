@@ -404,7 +404,7 @@ public:
 };
 
 set<const patNode*> patNetworkElements::getNearbyNode(
-		const patGeoCoordinates& coords, double distance, int count) const {
+		const patCoordinates& coords, double distance, int count) const {
 
 	set<const patNode*> nearest_nodes;
 	map<double, set<const patNode*> > nearby_nodes;

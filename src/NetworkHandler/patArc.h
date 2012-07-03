@@ -10,7 +10,7 @@
 #include <iostream>
 #include <map>
 #include <list>
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patError.h"
 #include "patType.h"
 #include "patNode.h"
@@ -121,7 +121,7 @@ protected:
 	string m_name;
 	unsigned long m_way_id;
 	struct arc_attributes m_attributes;
-	list<patGeoCoordinates> m_polyline;
+	list<patCoordinates> m_polyline;
 };
 
 #endif

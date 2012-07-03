@@ -12,7 +12,7 @@
 #include "patDisplay.h"
 #include "patConst.h"
 #include "patErrNullPointer.h"
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patNBParameters.h"
 #include "patException.h"
 using kmldom::CoordinatesPtr;
@@ -107,8 +107,8 @@ void patArc::calPriority() {
 }
 double patArc::calHeading() {
 
-	patGeoCoordinates startCoord = m_up_node->getGeoCoord();
-	patGeoCoordinates nextCoord = m_down_node->getGeoCoord();
+	patCoordinates startCoord = m_up_node->getGeoCoord();
+	patCoordinates nextCoord = m_down_node->getGeoCoord();
 	double lng1 = startCoord.longitudeInRadians;
 	double lat1 = startCoord.latitudeInRadians;
 	double lng2 = nextCoord.longitudeInRadians;
@@ -198,9 +198,9 @@ map<string, double> patArc::distanceTo(const patNode* a_node) const {
 
 	map<string, double> distance;
 
-	patGeoCoordinates up_geo = getUpNode()->getGeoCoord();
-	patGeoCoordinates down_geo = getDownNode()->getGeoCoord();
-	patGeoCoordinates a_node_geo = a_node->getGeoCoord();
+	patCoordinates up_geo = getUpNode()->getGeoCoord();
+	patCoordinates down_geo = getDownNode()->getGeoCoord();
+	patCoordinates a_node_geo = a_node->getGeoCoord();
 	distance["up"] = a_node_geo.distanceTo(up_geo);
 	distance["down"] = a_node_geo.distanceTo(down_geo);
 	distance["length"] = up_geo.distanceTo(down_geo);
