@@ -1,4 +1,4 @@
-# Find LIBSHP library and header file
+locat# Find LIBSHP library and header file
 # Sets
 #   KML_FOUND               to 0 or 1 depending on the result
 #   KML_INCLUDE_DIRECTORIES to directories required for using libpq
@@ -47,7 +47,7 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
       /home/jchen/libs/include
 
     /data/jqdu/libs/include
-    /data/jqdu/libs/kml
+    /data/jqdu/libs/include/kml
 
       ${_KML_DIR}/include
       ${CMAKE_INSTALL_PREFIX}/include
