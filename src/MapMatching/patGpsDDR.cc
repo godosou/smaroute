@@ -9,7 +9,7 @@
 #include "math.h"
 #include "patDisplay.h"
 //biogeme
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patDisplay.h"
 //same folder
 #include "patGpsDDR.h"
@@ -50,8 +50,8 @@ double patGpsDDR::measureDDR(const patArc* arc, TransportMode mode) {
 
 	const patNode* upNode = arc->getUpNode();
 	const patNode* downNode = arc->getDownNode();
-	patGeoCoordinates upNodeGeoCoord = upNode->getGeoCoord();
-	patGeoCoordinates downNodeGeoCoord = downNode->getGeoCoord();
+	patCoordinates upNodeGeoCoord = upNode->getGeoCoord();
+	patCoordinates downNodeGeoCoord = downNode->getGeoCoord();
 	map<string, double> distance_to_arc = m_gps->distanceTo(upNodeGeoCoord,
 			downNodeGeoCoord);
 	struct link_ddr_range ldr = detArcDDRRange(distance_to_arc);
@@ -60,8 +60,8 @@ double patGpsDDR::measureDDR(const patArc* arc, TransportMode mode) {
 bool patGpsDDR::detArcDDR(const patArc* arc, TransportMode mode) {
 	const patNode* upNode = arc->getUpNode();
 	const patNode* downNode = arc->getDownNode();
-	patGeoCoordinates upNodeGeoCoord = upNode->getGeoCoord();
-	patGeoCoordinates downNodeGeoCoord = downNode->getGeoCoord();
+	patCoordinates upNodeGeoCoord = upNode->getGeoCoord();
+	patCoordinates downNodeGeoCoord = downNode->getGeoCoord();
 
 	map<string, double> distance_to_arc;
 	double heading_accuracy_bound = patNBParameters::the()->maxHeadingGPSArc;

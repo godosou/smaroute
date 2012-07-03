@@ -7,7 +7,7 @@
 #include "patGpsPoint.h"
 #include "patArc.h"
 #include "patConst.h"
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include <math.h>
 #include "patDisplay.h"
 #include "patNBParameters.h"
@@ -78,8 +78,8 @@ bool operator<(const patGpsPoint& g1, const patGpsPoint& g2) {
 
 }
 
-map<string, double> patGpsPoint::distanceTo(const patGeoCoordinates& upGeoCoord,
-		const patGeoCoordinates& downGeoCoord) const {
+map<string, double> patGpsPoint::distanceTo(const patCoordinates& upGeoCoord,
+		const patCoordinates& downGeoCoord) const {
 
 	map<string, double> distance;
 
@@ -228,8 +228,8 @@ double patGpsPoint::calSpeed(const patGpsPoint* prevGpsPoint,
 		return time_diff_prev<=time_diff_next?speed_prev:speed_next;
 	}
 }
-double patGpsPoint::calHeading(const patGeoCoordinates* startCoord,
-		const patGeoCoordinates* nextCoord) const {
+double patGpsPoint::calHeading(const patCoordinates* startCoord,
+		const patCoordinates* nextCoord) const {
 
 	double lng1 = startCoord->longitudeInRadians;
 	double lat1 = startCoord->latitudeInRadians;
@@ -298,7 +298,7 @@ double patGpsPoint::getHorizonAccuracy() const {
 	return m_horizonAccuracy;
 }
 
-const patGeoCoordinates* patGpsPoint::getGeoCoord() const {
+const patCoordinates* patGpsPoint::getGeoCoord() const {
 	return &m_geoCoord;
 }
 
@@ -307,7 +307,7 @@ pair<bool, double> patGpsPoint::isGpsPointInZone(
 	double radiusCeiling = patNBParameters::the()->zoneRadius; //meter
 	double timeCeiling = patNBParameters::the()->zoneTime;
 	pair<bool, double> rtnValue = pair<bool, double>(false, 0.0);
-	patGeoCoordinates center(
+	patCoordinates center(
 			(m_geoCoord.latitudeInDegrees
 					+ prevGpsPoint->getGeoCoord()->latitudeInDegrees) / 2,
 			(m_geoCoord.longitudeInDegrees

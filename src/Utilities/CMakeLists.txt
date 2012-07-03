@@ -1,7 +1,7 @@
 
 add_library(Utilities
                 patTimeFunctions.cc
-                patGeoCoordinates.cc
+                patCoordinates.cc
                 patDisplay.cc
                 patTransportMode.cc
                 patCreateKmlStyles.cc

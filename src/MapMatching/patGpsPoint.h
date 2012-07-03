@@ -7,7 +7,7 @@
 #ifndef patGpsPoint_h
 #define patGpsPoint_h
 
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patArc.h"
 #include "patNode.h"
 #include "dataStruct.h"
@@ -97,7 +97,7 @@ public:
 
 	/**
 	 * Calculate the headings according to the previous and next GPS point.
-	 * @see  calHeading(const patGeoCoordinates* startCoord, const patGeoCoordinates* nextCoord)
+	 * @see  calHeading(const patCoordinates* startCoord, const patCoordinates* nextCoord)
 	 */
 	double calHeading(const patGpsPoint* prevGpsPoint,
 			const patGpsPoint* nextGpsPoint) const;
@@ -105,8 +105,8 @@ public:
 	/**
 	 * Calculate the headings according to the coordinates of previous and next GPS point.
 	 */
-	double calHeading(const patGeoCoordinates* startCoord,
-			const patGeoCoordinates* nextCoord) const;
+	double calHeading(const patCoordinates* startCoord,
+			const patCoordinates* nextCoord) const;
 
 	/**
 	 * Calculate the speed according to another GPS point.
@@ -124,7 +124,7 @@ public:
 	/**
 	 * Get the pointer to the coordinates
 	 */
-	const patGeoCoordinates* getGeoCoord() const;
+	const patCoordinates* getGeoCoord() const;
 	/**
 	 * Get the latitude of the GPS.
 	 */
@@ -171,12 +171,12 @@ public:
 	 * ["ver"]: vertical distance;
 	 * ["link"]: perpendicular distance;
 	 */
-	map<string, double> distanceTo(const patGeoCoordinates& upGeoCoord,
-			const patGeoCoordinates& downGeoCoord) const;
+	map<string, double> distanceTo(const patCoordinates& upGeoCoord,
+			const patCoordinates& downGeoCoord) const;
 	/**
 	 * Distance to a link.
 	 * @param theArc: The pointer to the arc
-	 * @see  distanceTo(patGeoCoordinates* upGeoCoord,patGeoCoordinates* downGeoCoord);
+	 * @see  distanceTo(patCoordinates* upGeoCoord,patCoordinates* downGeoCoord);
 	 */
 	map<string, double> distanceTo(const patArc* theArc) const;
 
@@ -236,7 +236,7 @@ protected:
 	double m_distanceThreshold_Loc;
 	double m_minNormalSpeed;
 	double m_maxNormalSpeedHeading;
-	patGeoCoordinates m_geoCoord;
+	patCoordinates m_geoCoord;
 
 };
 

@@ -7,7 +7,7 @@
 
 #ifndef PATPOSTGISDATATYPE_H_
 #define PATPOSTGISDATATYPE_H_
-#include "patGeoCoordinates.h"
+#include "patCoordinates.h"
 #include "patType.h"
 #include <list>
 #include <tr1/unordered_map>

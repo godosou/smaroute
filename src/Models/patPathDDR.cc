@@ -12,7 +12,7 @@ patPathDDR::patPathDDR(patPathJ* aPath,
 		 thePath(aPath),
 		 theGpsSequence(aGpsSequence)
 {
-	
+
 }
 patReal patPathDDR::lowerBound = 0;
 patReal patPathDDR::upperBound = 0;
@@ -56,7 +56,7 @@ patReal patPathDDR::rawAlgorithm( ){
 	arcValues.assign(theGpsSequence->size(),0);
 
 	for (int i=0;i<theGpsSequence->size();++i){
-		
+
 		for(map<patArc*,patReal>::iterator aIter = (*theGpsSequence)[i].getLinkDDR()->begin();
 						aIter != (*theGpsSequence)[i].getLinkDDR()->end();
 						++aIter){
@@ -70,27 +70,27 @@ patReal patPathDDR::rawAlgorithm( ){
 }
 
 patReal patPathDDR::rawAlgorithm_average( ){
-	
+
 	patReal ddrSum;
 	for(vector<patReal>::iterator ddrIter = arcValues.begin();
 			ddrIter!=arcValues.end();
 			++ddrIter){
 		ddrSum+=*ddrIter;
 	}
-	
+
 	return ddrSum/thePath->computePathLength();
-	
+
 }
 /**
 *Following section is for time space algorithm
 */
 void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 	DEBUG_MESSAGE("PathLength:"<<thePath->getPathLength() ) ;
-	vector<patReal> nodePosition;	 
+	vector<patReal> nodePosition;
 	pathValue = 1;
 		arcValues.assign(theGpsSequence->size(),0);
 	calNodePosition(&nodePosition);
-	
+
 	//vector<patReal> pointProbas;
 	patReal lastEstimate = 0.0;
 	patReal currEstimate = 0.0;
@@ -98,10 +98,10 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 	vector<map<patArc*, map<char*, patReal> > > theDistance;
 	theDistance.resize(theGpsSequence->size());
 	calDistance(&theDistance,theNetwork);
-	
+
 	//DEBUG_MESSAGE("OK4" ) ;
 	patReal alpha = 0 ;
-	
+
 	for(patULong i = 0; i< theGpsSequence->size();++i){
 		typefn pdf= &patPathDDR::pointPDFDenumerator;
 		DEBUG_MESSAGE("gps:" <<i) ;
@@ -114,14 +114,14 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 		lowerBound = lastEstimate;
 		patReal speed = (theGpsSequence->at(i).getSpeed()>theGpsSequence->at(i-1).getSpeed())?
 			theGpsSequence->at(i).getSpeed():theGpsSequence->at(i-1).getSpeed();
-			speed*=1.20/3.6; 
+			speed*=1.20/3.6;
 		timeDiff = (theGpsSequence->at(i).getTimeStamp()-theGpsSequence->at(i-1).getTimeStamp());
 		patReal far = speed * timeDiff;
 		upperBound = lastEstimate + far;
 		DEBUG_MESSAGE("bound:"<<lowerBound<<"-"<<upperBound);
 			patReal speed0 = theGpsSequence->at(i-1).getSpeed()/3.6;
 	patReal speed1 = speed ;
-	
+
 	if(speed0>speed1){
 		patReal speedt = speed1;
 		speed1 = speed0;
@@ -132,16 +132,16 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 	 x3 = x0+timeDiff*speedf;
 	 x1 = lastEstimate + timeDiff*speed0;
 	 x2 = lastEstimate + timeDiff*speed1;
-	
+
 	}
-	
+
 		patReal pointProbaDenumerator = integration(pdf,
 							0.0,
 							lowerBound,
 							 i,
 							&theDistance[i],
 							0.0,
-							&nodePosition, 
+							&nodePosition,
 							alpha)+
 							integration(pdf,
 							lowerBound,
@@ -149,7 +149,7 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 							 i,
 							&theDistance[i],
 							0.0,
-							&nodePosition, 
+							&nodePosition,
 							alpha)+
 							integration(pdf,
 							upperBound,
@@ -157,17 +157,17 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 							 i,
 							&theDistance[i],
 							0.0,
-							&nodePosition, 
+							&nodePosition,
 							alpha);
 		DEBUG_MESSAGE("pointProbaDenumerator:"<<pointProbaDenumerator ) ;
-		patReal pointProba = calPointProba( i, 
-							  
+		patReal pointProba = calPointProba( i,
+
 							&theDistance[i],
 							pointProbaDenumerator,
 							&nodePosition,
 							alpha);
-		arcValues[i]=pointProba; 
-		//arcValues[i]=	1/fabs(log(pointProba));	
+		arcValues[i]=pointProba;
+		//arcValues[i]=	1/fabs(log(pointProba));
 		pathValue*=	arcValues[i];
 		DEBUG_MESSAGE("pointProba:"<<pointProba<<","<<arcValues[i] ) ;
 		//pointProbas.push_back(pointProba);
@@ -176,7 +176,7 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 		DEBUG_MESSAGE("currEstimate:"<<currEstimate ) ;
 		alpha = getAlpha(currEstimate,
 								 i,
-								   
+
 								&theDistance[i],
 								 pointProbaDenumerator,
 								&nodePosition,
@@ -184,7 +184,7 @@ void patPathDDR::timeSpaceAlgorithm( patNetwork* theNetwork){
 		DEBUG_MESSAGE("next alpha:" <<alpha) ;
 		lastEstimate = currEstimate;
 	}
-	
+
 	patReal paN = 1/fabs(log(pathValue));
 DEBUG_MESSAGE("path proba:"<<pathValue<<","<<paN ) ;
 	//pathValue = paN;
@@ -205,14 +205,14 @@ patReal patPathDDR::pointPDF(patReal position,
 						patReal pointProbaDenumerator,
 						vector<patReal>* theNodePosition,
 						patReal alpha){
-						
+
 	patReal rtnValue =  locationPDF( position, currGpsNumber,  distanceToPath,pointProbaDenumerator, theNodePosition,
 						 alpha) * distancePDF( position, currGpsNumber,distanceToPath,theNodePosition);
 	if(isnan(rtnValue)){
-	
-		rtnValue =0.0;	
+
+		rtnValue =0.0;
 	}
-	
+
 	return rtnValue;
 }
 patReal patPathDDR::calPointProba(	patULong& currGpsNumber,
@@ -226,7 +226,7 @@ patReal patPathDDR::calPointProba(	patULong& currGpsNumber,
 		integration(pdf,lowerBound,upperBound, currGpsNumber,distanceToPath,pointProbaDenumerator,theNodePosition, alpha)+
 		integration(pdf,upperBound,thePath->getPathLength(), currGpsNumber,distanceToPath,pointProbaDenumerator,theNodePosition, alpha)
 	;
-	
+
 }
 
 patReal patPathDDR::integration(patReal (patPathDDR::*fp	)(patReal ,
@@ -235,8 +235,8 @@ patReal patPathDDR::integration(patReal (patPathDDR::*fp	)(patReal ,
 						patReal ,
 						vector<patReal>* ,
 						patReal ),
-			 patReal a, 
-			 patReal b, 
+			 patReal a,
+			 patReal b,
 			 patULong currGpsNumber,
 			 map<patArc*, map<char*, patReal> >* distanceToPath,
 			 patReal pointProbaDenumerator,
@@ -255,19 +255,19 @@ patReal patPathDDR::integration(patReal (patPathDDR::*fp	)(patReal ,
     patReal s2;
     patReal s3;
     patReal x;
-	 
+
 	 patReal c;
 	 if (a>b){
 		c=a;
 		a=b;
-		b=c;	 
+		b=c;
 	 }
-	 
+
     s2 = 1;
     h = b-a;
     s = (this->*fp)(a, currGpsNumber,   distanceToPath,pointProbaDenumerator,theNodePosition,alpha)+
     (this->*fp)(b, currGpsNumber,   distanceToPath,pointProbaDenumerator,theNodePosition,alpha);
-   	
+
     do
     {
         s3 = s2;
@@ -296,12 +296,12 @@ patReal patPathDDR::integration(patReal (patPathDDR::*fp	)(patReal ,
 }
 
 
-patReal patPathDDR::pointPDFNumerator(patReal position, 
-								patULong currGpsNumber, 
+patReal patPathDDR::pointPDFNumerator(patReal position,
+								patULong currGpsNumber,
 								map<patArc*, map<char*, patReal> >* distanceToPath,
 								vector<patReal>* theNodePosition,
 								patReal alpha){//integration f^2 * g
-	return 
+	return
 	distancePDF(position,
 				currGpsNumber,
 				distanceToPath,
@@ -309,15 +309,15 @@ patReal patPathDDR::pointPDFNumerator(patReal position,
 	distancePDF(position,
 				currGpsNumber,
 				distanceToPath,
-				theNodePosition) * 
+				theNodePosition) *
 	priorPDF(position,
-				 
+
 				currGpsNumber,
 				alpha);
 }
 
-patReal	 patPathDDR::pointPDFDenumerator(patReal position, 
-								patULong currGpsNumber, 
+patReal	 patPathDDR::pointPDFDenumerator(patReal position,
+								patULong currGpsNumber,
 								map<patArc*, map<char*, patReal> >* distanceToPath,
 								patReal nothing,
 								vector<patReal>* theNodePosition,
@@ -332,17 +332,17 @@ patReal	 patPathDDR::pointPDFDenumerator(patReal position,
 				currGpsNumber,
 				alpha) );
 	*/
-	patReal distanceProba = 	
+	patReal distanceProba =
 	distancePDF(position,
 				currGpsNumber,
 				distanceToPath,
 				theNodePosition);
-	patReal priorProba = 
+	patReal priorProba =
 	priorPDF(position,
-				 
+
 				currGpsNumber,
 				alpha);
-				
+
 	patReal rtnValue = distanceProba * priorProba;
 	if(isnan(rtnValue)){
 		DEBUG_MESSAGE("distanceProba:"<<distanceProba<<",priorProba"<<priorProba);
@@ -358,19 +358,19 @@ patReal patPathDDR::distancePDF(patReal position,
 						vector<patReal>* theNodePosition){
 
 	patULong arcNumber = getArcNumberFromPosition(position,theNodePosition);
-	//DEBUG_MESSAGE("OK" <<position<<","<<arcNumber) ;	
+	//DEBUG_MESSAGE("OK" <<position<<","<<arcNumber) ;
 	patArc* theArc = thePath->getArc(arcNumber);
 
 	patReal positionOnArc = position - (*theNodePosition)[arcNumber];
 	map<char*, patReal> distanceToArc  = (*distanceToPath)[theArc];
-		        				//DEBUG_MESSAGE("OK8" ) ;	
-			patReal rtnValue;	        				
+		        				//DEBUG_MESSAGE("OK8" ) ;
+			patReal rtnValue;
 	if(isnan(distanceToArc["ver"])){
 		patDDR theDDR (theGpsSequence->at(currGpsNumber).getHorizonAccuracy());
 
 
 		if ( distanceToArc["position"]==-1 ){//gps point at left
-			
+
 			rtnValue = theDDR.errPDF(distanceToArc["up"]+positionOnArc);
 		}
 		else if(distanceToArc["position"]==1){//gps point at right
@@ -383,11 +383,11 @@ patReal patPathDDR::distancePDF(patReal position,
 	}
 	else{
 		patReal startLength = sqrt( distanceToArc["up"]* distanceToArc["up"]-distanceToArc["ver"]*distanceToArc["ver"]);
-		
+
 		patArcDDR theArcDDR(theGpsSequence->at(currGpsNumber).getHorizonAccuracy());
 
 		if ( distanceToArc["position"]==-1 ){//gps point at left
-			
+
 			rtnValue = theArcDDR.errPDF(distanceToArc["ver"],startLength+positionOnArc);
 		}
 		else if(distanceToArc["position"]==1){//gps point at right
@@ -398,22 +398,22 @@ patReal patPathDDR::distancePDF(patReal position,
 		}
 	}
 	//DEBUG_MESSAGE("distanceToArc:"<<distanceToArc["ver"]);
-	
+
 	if(isnan(rtnValue)){
-		DEBUG_MESSAGE("startLength:"<<arcNumber<<","<<positionOnArc<<","<<distanceToArc["up"]<<","<<distanceToArc["ver"]);	
+		DEBUG_MESSAGE("startLength:"<<arcNumber<<","<<positionOnArc<<","<<distanceToArc["up"]<<","<<distanceToArc["ver"]);
 	}
-	
+
 	return rtnValue;
 }
 
 
-patReal patPathDDR::priorPDF(patReal position, 
+patReal patPathDDR::priorPDF(patReal position,
 						patULong currGpsNumber,
 						patReal alpha){
 	if (alpha == 0.0){
 		return uniform();
 	}
-	patReal mg = manipG(position, 
+	patReal mg = manipG(position,
 					currGpsNumber);
 	patReal g = alpha * mg+
 			(1-alpha) * uniform();
@@ -425,7 +425,7 @@ patReal patPathDDR::priorPDF(patReal position,
 }
 
 //uniform
-patReal patPathDDR::manipG(patReal position, 
+patReal patPathDDR::manipG(patReal position,
 					patULong currGpsNumber){
 
 	if (position<=upperBound && position >= lowerBound){
@@ -438,7 +438,7 @@ patReal patPathDDR::manipG(patReal position,
 
 /*
 //triangular
-patReal patPathDDR::manipG(patReal position, 
+patReal patPathDDR::manipG(patReal position,
 					patULong currGpsNumber){
 
 	patReal h = 2/(x3-x0+x2-x1);
@@ -466,7 +466,7 @@ patReal patPathDDR::getAlpha(patReal position,
 					patReal pointProbaDenumerator,
 					vector<patReal>* theNodePosition,
 					patReal alpha){
-	
+
 	patReal locProba = locationPDF( position,
 								 currGpsNumber,
 								distanceToPath,
@@ -474,33 +474,33 @@ patReal patPathDDR::getAlpha(patReal position,
 								theNodePosition,
 								alpha);
 	locProba = fabs(log(locProba));
-	locProba = 1/locProba;							
+	locProba = 1/locProba;
 
 	return 0.8 + 0.2*locProba;
 }
 
 
 void patPathDDR::calDistance(vector<map<patArc*, map<char*, patReal> > >* theDistance,patNetwork* theNetwork){
-	
+
 	list<patArc*>* arcList = thePath->getArcList();
 	for(list<patArc*>::iterator arcIter = arcList->begin();
 						arcIter != arcList->end();
 						++arcIter){
-		
-		patGeoCoordinates* upNodeGeoCoord = &(theNetwork->getNodeFromUserId((*arcIter)->upNodeId)->geoCoord);
-		patGeoCoordinates* downNodeGeoCoord = &(theNetwork->getNodeFromUserId((*arcIter)->downNodeId)->geoCoord);
-		
+
+		patCoordinates* upNodeGeoCoord = &(theNetwork->getNodeFromUserId((*arcIter)->upNodeId)->geoCoord);
+		patCoordinates* downNodeGeoCoord = &(theNetwork->getNodeFromUserId((*arcIter)->downNodeId)->geoCoord);
+
 		for(int i = 0; i< theGpsSequence->size();++i){
 						//DEBUG_MESSAGE("OK" ) ;
 			theDistance->at(i)[*arcIter] = theGpsSequence->at(i).distanceTo(upNodeGeoCoord,downNodeGeoCoord);
 		}
-	
+
 	}
 
 }
 
 void patPathDDR::calNodePosition(vector<patReal>* theNodePosition){
-	
+
 	theNodePosition->push_back(0.0);
 	list<patArc*>* arcList = thePath->getArcList();
 	patULong length_temp = 0;
@@ -543,45 +543,45 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 	list<patArc*>* arcList = thePath->getArcList();//arc list of the path
 	//DEBUG_MESSAGE("OK90");
 	//get boundary of current location
-	//base on estimated location of last gps point, time difference between two gps points and free flow 
+	//base on estimated location of last gps point, time difference between two gps points and free flow
 
 		//DEBUG_MESSAGE("OK91");
 	//get max likly distance from a gps point to a location on path
 	//i.e. the peak point of err distance distribution
 	patReal maxLikliDistance = theGpsSequence->at(currGpsNumber).getHorizonAccuracy()/sqrt(2.0);
-	
+
 	patReal estimatePositionOnPath,estimatePositionInBound,estimatePositionNotInBound;
-	
+
 	//search through all arcs in the path, to get the locations with maxLikliDistance to GPS point
-	
+
 	patReal leastDistanceInBound = patMaxReal;//There are maybe several peak points. Among those, choose the one with least distance from gps to arc.
 	patReal leastDistanceNotInBound = patMaxReal;
 	patULong i = 0;
 	for(list<patArc*>::iterator arcIter = arcList->begin();
 						arcIter != arcList->end();
 						++arcIter){
-		
+
 
 		map<char*, patReal> distanceToArc = (*distanceToPath)[*arcIter];
-		
+
 	//DEBUG_MESSAGE("OK92");
 		patReal lowerDistance;
 		patReal upperDistance;
-		
+
 		//if projection of gps point to arc is on arc
 		if (distanceToArc["position"]!=-1  && distanceToArc["position"]!=1){
-			
+
 			//if the max likly location is between upnode and projection
 			if(maxLikliDistance <= distanceToArc["up"] && maxLikliDistance>=distanceToArc["ver"]){
-			
+
 				//position of the location
-				patReal estPosition = (*theNodePosition)[i] + 
+				patReal estPosition = (*theNodePosition)[i] +
 						sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"])-
 						sqrt(maxLikliDistance * maxLikliDistance - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				//if the position is within boundary
 				if (estPosition  >= lowerBound && estPosition  <= upperBound){
-				
+
 					//if the distance is the least among all possible positions
 					//	take it as the most likly position
 					if ( distanceToArc["link"] < leastDistanceInBound){
@@ -591,11 +591,11 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 
 					}
 				}
-				
+
 				//if not in boundary and have no peak point in boundary
 				//if there is a peak point in boundary, this peak point must be the most likly position
 				else if(leastDistanceInBound == patMaxReal){
-				
+
 					//if the distance is the least among all possible positions
 					if(distanceToArc["link"] < leastDistanceNotInBound){
 						estimatePositionNotInBound = estPosition;
@@ -605,10 +605,10 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 				}
 			}
 			if(maxLikliDistance<=distanceToArc["down"] && maxLikliDistance>=distanceToArc["ver"]){
-				patReal estPosition = (*theNodePosition)[i] - 
+				patReal estPosition = (*theNodePosition)[i] -
 						sqrt(distanceToArc["down"] * distanceToArc["down"] - distanceToArc["ver"] * distanceToArc["ver"])+
 						sqrt(maxLikliDistance * maxLikliDistance - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				if (estPosition  >= lowerBound && estPosition  <= upperBound){
 					if ( distanceToArc["link"] < leastDistanceInBound){
 						estimatePositionInBound = estPosition;
@@ -616,7 +616,7 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 						continue;
 
 					}
-					
+
 				}
 				else if(leastDistanceInBound == patMaxReal){
 					if(distanceToArc["link"] < leastDistanceNotInBound){
@@ -626,23 +626,23 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 					}
 				}
 
-			}		
+			}
 		}
-		
+
 		//if projection not on arc
 		else {
-		
+
 			//compare the distance of two termintal nodes to gps points
 			lowerDistance = (distanceToArc["up"]<distanceToArc["down"])?distanceToArc["up"]:distanceToArc["down"];
 			upperDistance = (distanceToArc["up"]>=distanceToArc["down"])?distanceToArc["up"]:distanceToArc["down"];
-			
+
 			//if maxLikliDistance is within distance Range, get the most Likely position
 			if(maxLikliDistance<=upperDistance && maxLikliDistance>=lowerDistance){
-			
-				patReal estPosition =  (*theNodePosition)[i] + 
+
+				patReal estPosition =  (*theNodePosition)[i] +
 						sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"])-
 						sqrt(maxLikliDistance * maxLikliDistance - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				//if the most likly position is in boundary(use the same logic as the case which projection is on arc)
 				if (estPosition  >= lowerBound && estPosition  <= upperBound){
 					if ( distanceToArc["link"] < leastDistanceInBound){
@@ -659,23 +659,23 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 					}
 				}
 			}
-			
+
 		}
 		++i;
-		
+
 	}
-	
-	
+
+
 	//if no peak point found
 	//search for potential positions with max probability
 	//potential positions are nodes, projections on arc, and boundarys
 	if(leastDistanceInBound == patMaxReal){
-	
+
 		//get where is the boundary on
 		patULong startArcNum = getArcNumberFromPosition(lowerBound,theNodePosition);
 		patULong endArcNum = getArcNumberFromPosition(upperBound,theNodePosition);
-		
-		
+
+
 		vector<patReal> positionToBeTested;//potentail positions
 			//DEBUG_MESSAGE("OK93");
 		//insert the boundaries
@@ -686,28 +686,28 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 		if(startArcNum == endArcNum){
 			patArc* onlyArc = thePath->getArc(startArcNum);
 			map<char*, patReal> distanceToArc = (*distanceToPath)[onlyArc];
-			
+
 			//if the projection is on arc,take the projection position
 			if(distanceToArc["position"]!=1 && distanceToArc["position"]!=-1){
 				patReal v = (*theNodePosition)[startArcNum] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				if(v > lowerBound && v < upperBound){
 					positionToBeTested.push_back(v);
 				}
 			}
-			
+
 		}
-		
+
 		//if the boundaries cotains several arcs
 		else{
 			patArc* startArc = thePath->getArc(startArcNum);
 			patArc* endArc = thePath->getArc(endArcNum);
-			
+
 			positionToBeTested.push_back((*theNodePosition)[startArcNum+1]);
 			map<char*, patReal> distanceToArc = (*distanceToPath)[startArc];
 			if(distanceToArc["position"] != 1 && distanceToArc["position"]!=-1){
 				patReal v = (*theNodePosition)[startArcNum] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				if(v > lowerBound && v < (*theNodePosition)[startArcNum+1]){
 					positionToBeTested.push_back(v);
 				}
@@ -716,7 +716,7 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 			 distanceToArc = (*distanceToPath)[endArc];
 			if(distanceToArc["position"] != 1 && distanceToArc["position"]!=-1){
 				patReal v = (*theNodePosition)[endArcNum] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				if( v > (*theNodePosition)[endArcNum] && v < upperBound){
 					positionToBeTested.push_back(v);
 				}
@@ -724,19 +724,19 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 
 
 			for(patULong i=startArcNum+1; i < endArcNum && i+1<theNodePosition->size();++i){
-				
+
 			//DEBUG_MESSAGE("OK940"<<i+1<<","<<theNodePosition->size());
 				positionToBeTested.push_back((theNodePosition->at(i+1)));
 			//DEBUG_MESSAGE("OK941");
 				map<char*, patReal> distanceToArc = (*distanceToPath)[thePath->getArc(i)];
 				if(distanceToArc["position"] != 1 && distanceToArc["position"]!=-1){
-					
+
 					patReal v =(*theNodePosition)[i] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
 					positionToBeTested.push_back(v);
 				}
 			}
 		}
-		
+
 		//if peak points outside of boundary are also not found,
 		//also search for potential positions
 		if(leastDistanceNotInBound == patMaxReal){
@@ -745,18 +745,18 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 			for(patULong i=0; i < startArcNum;++i){
 				positionToBeTested.push_back((theNodePosition->at(i)));
 				map<char*, patReal> distanceToArc = (*distanceToPath)[thePath->getArc(i)];
-				
+
 				if(distanceToArc["position"] != 1 && distanceToArc["position"]!=-1){
 					patReal v = (*theNodePosition)[i] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
 					positionToBeTested.push_back(v);
 				}
 			}
-			
+
 			positionToBeTested.push_back((theNodePosition->at(startArcNum)));
 			map<char*, patReal> distanceToArc = (*distanceToPath)[startArc];
 			if(distanceToArc["position"] != 1 && distanceToArc["position"]!=-1){
 				patReal v = (*theNodePosition)[startArcNum] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				if(v < lowerBound){
 					positionToBeTested.push_back(v);
 				}
@@ -769,14 +769,14 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 			distanceToArc = (*distanceToPath)[endArc];
 			if(distanceToArc["position"] != 1 && distanceToArc["position"]!=-1){
 				patReal v = (*theNodePosition)[endArcNum] + sqrt(distanceToArc["up"] * distanceToArc["up"] - distanceToArc["ver"] * distanceToArc["ver"]);
-				
+
 				if(v > upperBound){
 					positionToBeTested.push_back(v);
 				}
 			}
 
 			for(patULong i=endArcNum+1; i < arcList->size();++i){
-			
+
 				positionToBeTested.push_back((theNodePosition->at(i+1)));
 				map<char*, patReal> distanceToArc = (*distanceToPath)[thePath->getArc(i)];
 
@@ -793,7 +793,7 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 			positionToBeTested.push_back(estimatePositionInBound);
 
 		}
-		
+
 		//calculate location probability, take the location with the highest probability
 		patReal maxLiklihood = 0;
 		for(patULong i=0;i<positionToBeTested.size();++i){
@@ -804,7 +804,7 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 								 pointProbaDenumerator,
 								 theNodePosition,
 								 alpha);
-			
+
 			if(currProba > maxLiklihood){
 				estimatePositionOnPath = positionToBeTested[i];
 				maxLiklihood = currProba;
@@ -814,7 +814,7 @@ patReal patPathDDR::estimatePosition(patULong currGpsNumber,
 	else{//if a peak point in boundary, take it as estimated position
 		estimatePositionOnPath = estimatePositionInBound;
 	}
-	
+
 	return estimatePositionOnPath;
 }
 

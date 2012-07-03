@@ -1,6 +1,6 @@
 #include <fstream>
 #include <vector>
-#include <list> 
+#include <list>
 #include "patArc.h"
 #include "patPathJ.h"
 #include "patOdJ.h"
@@ -25,9 +25,9 @@ for (list<patArc*>::iterator aIter= listOfArcs->begin();
     patString theName((*aIter)->name) ;
     replaceAll(&theName,patString("&"),patString("and")) ;
     kml << "                  <name>"<< theName <<"</name>" << ' ' ;
-    kml << "                  <description>Arc "<< (*aIter)->userId 
+    kml << "                  <description>Arc "<< (*aIter)->userId
 	<< " from node "
-	<< (*aIter)->upNodeId 
+	<< (*aIter)->upNodeId
 	<< " to node "
 	<< (*aIter)->downNodeId
 	<< "</description>" << ' '<<endl ;
@@ -41,31 +41,31 @@ for (list<patArc*>::iterator aIter= listOfArcs->begin();
     kml << " " << ' ' <<endl;
     kml << "                  <LineString>" << ' ' <<endl;
     kml << "                        <coordinates>" << ' '<<endl ;
-    
-    list<patGeoCoordinates>::iterator gIter((*aIter)->polyline.begin()) ;
-    list<patGeoCoordinates>::iterator hIter((*aIter)->polyline.begin()) ;
+
+    list<patCoordinates>::iterator gIter((*aIter)->polyline.begin()) ;
+    list<patCoordinates>::iterator hIter((*aIter)->polyline.begin()) ;
     ++hIter ;
     for ( ; hIter != (*aIter)->polyline.end() ; ++gIter, ++hIter) {
-      
+
       double a1 = gIter->longitudeInDegrees ;
       double a2 = gIter->latitudeInDegrees ;
       double b1 = hIter->longitudeInDegrees ;
       double b2 = hIter->latitudeInDegrees ;
 
-      kml << a1 <<"," << a2 << ",0 "  
+      kml << a1 <<"," << a2 << ",0 "
 	  << b1 <<"," << b2 << ",0" << ' ' ;
     }
 
-		
+
 		    kml << "</coordinates>	" << ' ' ;
     kml << "                  </LineString>" << ' ' ;
     kml << "            </Placemark>" << ' ' ;
   }
   kml<< "</Folder>"<<' '<<endl;
-  
+
  return kml.str();
 }
 
 patString patWriteKML::writeODSample(patOd* od){
-	
+
 }
