@@ -17,7 +17,7 @@
 #include "patNBParameters.h"
 #include "patPower.h"
 #include "patBTMeasurementModel.h"
-#include "patACCELMeasurementModel.h"
+#include "patAccelMeasurementModel.h"
 #include "patMeasurementDDR.h"
 
 patMultiModalPathMatching::patMultiModalPathMatching() {
@@ -282,7 +282,7 @@ bool patMultiModalPathMatching::updatePoint(int measurement_index,
 					}
 					if (prev_arc_iter == arcs_with_modes.begin()) {
 						break;
-					} 
+					}
 					else if(!m_measurement_sequence[measurement_index]->isGPS() && prev_arc_iter==first_arc_prev_ddr_tmp){
 						break;
 					}
@@ -290,12 +290,12 @@ bool patMultiModalPathMatching::updatePoint(int measurement_index,
 						--prev_arc_iter;
 					}
 				}
-			} 
+			}
 			else {
 				++curr_gap_in_ddr;
 			}
 		}
-			
+
 	}
 	if(norminator==0.0 && new_measurement){
 		WARNING(m_measurement_sequence[measurement_index]->isGPS()<<","<<curr_gap_in_ddr);
