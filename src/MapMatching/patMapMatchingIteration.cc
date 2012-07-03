@@ -11,7 +11,7 @@
 #include "patArc.h"
 #include <set>
 #include "patDisplay.h"
-#include "patGPSDDR.h"
+#include "patGpsDDR.h"
 #include "patSampleFromDiscreteUntilCdf.h"
 #include "patNBParameters.h"
 #include <vector>
@@ -330,7 +330,7 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 						++arc_iter) {
 					//DEBUG_MESSAGE("road size"<<arc_iter->second->size());
 					list<const patRoadBase*> shortest_path_roads;
-                    
+
 							shortest_path_tree->getShortestPathTo(shortest_path_roads,
 									arc_iter->second->getUpNode());
 					bool create_path_success = true;
