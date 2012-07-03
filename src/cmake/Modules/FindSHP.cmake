@@ -19,6 +19,7 @@ if ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES OR NOT SHP_FOUND )
       /usr/lib
       ${_SHP_DIR}
       /users/jchen/libs/lib
+        /data/jqdu/libs/lib
       ${CMAKE_INSTALL_PREFIX}/bin
     NO_DEFAULT_PATH
   )
@@ -28,6 +29,7 @@ if ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES OR NOT SHP_FOUND )
     PATHS
       ${_SHP_DIR}
       /users/jchen/libs/include
+        /data/jqdu/libs/include
       ${_SHP_DIR}/include
       ${CMAKE_INSTALL_PREFIX}/include
       /usr/local/include
@@ -35,11 +37,11 @@ if ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES OR NOT SHP_FOUND )
     NO_DEFAULT_PATH
   )
 
-  if ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES ) 
+  if ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES )
     if ( SHP_REQUIRED )
       message( FATAL_ERROR "libshap is required. Set SHP_DIR" )
     endif ( SHP_REQUIRED )
-  else ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES ) 
+  else ( NOT SHP_INCLUDE_DIRECTORIES OR NOT SHP_LIBRARIES )
     set( SHP_FOUND 1 )
     message("libshp found")
     mark_as_advanced( SHP_FOUND )
