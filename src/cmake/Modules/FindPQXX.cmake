@@ -26,6 +26,7 @@ if ( NOT PQXX_INCLUDE_DIRECTORIES OR NOT PQXX_LIBRARIES )
       NO_DEFAULT_PATH
     )
 
+    message(${PQXX_LIBRARY})
     find_path( PQXX_HEADER_PATH
       NAMES pqxx/pqxx
       PATHS
