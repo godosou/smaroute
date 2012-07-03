@@ -41,6 +41,8 @@ if ( NOT PQXX_INCLUDE_DIRECTORIES OR NOT PQXX_LIBRARIES )
       DOC "Path to pqxx/pqxx header file. Do not include the 'pqxx' directory in this value."
       NO_DEFAULT_PATH
     )
+    else (POSTGRES_FOUND)
+    message (FATAL_ERROR "postgres not found ")
 endif( POSTGRES_FOUND )
 
   if ( PQXX_HEADER_PATH AND PQXX_LIBRARY )
