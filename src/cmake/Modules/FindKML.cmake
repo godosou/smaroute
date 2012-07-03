@@ -1,4 +1,4 @@
-locat# Find LIBSHP library and header file
+# Find LIBSHP library and header file
 # Sets
 #   KML_FOUND               to 0 or 1 depending on the result
 #   KML_INCLUDE_DIRECTORIES to directories required for using libpq
