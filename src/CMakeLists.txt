@@ -30,7 +30,7 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         message("linux")
 
     set(CMAKE_CXX_COMPILER g++)
-    set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include -L/data/jqdu/libs/lib")
+    set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include")
     SET(OperatingSystem "Linux")
     find_package(Biogeme)
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
