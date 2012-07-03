@@ -20,6 +20,7 @@ if ( NOT PQXX_INCLUDE_DIRECTORIES OR NOT PQXX_LIBRARIES )
         /usr/local/pgsql/lib
         /usr/local/lib
         /home/jchen/libs/lib
+        /data/fqdu/libs/lib
         /usr/lib
       DOC "Location of libpqxx library"
       NO_DEFAULT_PATH
@@ -33,6 +34,7 @@ if ( NOT PQXX_INCLUDE_DIRECTORIES OR NOT PQXX_LIBRARIES )
         ${CMAKE_INSTALL_PREFIX}/include
         /usr/local/pgsql/include
         /home/jchen/libs/include
+        /data/fqdu/libs/include
         /usr/local/include
         /usr/include
       DOC "Path to pqxx/pqxx header file. Do not include the 'pqxx' directory in this value."
