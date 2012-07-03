@@ -18,6 +18,7 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
       /usr/local/lib
       /usr/lib
       /home/jchen/libs/lib
+      /data/jqdu/libs/lib
       ${_KML_DIR}
       ${CMAKE_INSTALL_PREFIX}/bin
     NO_DEFAULT_PATH
@@ -30,6 +31,8 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
       ${CMAKE_INSTALL_PREFIX}/lib
       /usr/local/lib
       /home/jchen/libs/lib
+      /data/jqdu/libs/lib
+
       /usr/lib
       ${_KML_DIR}
       ${CMAKE_INSTALL_PREFIX}/bin
@@ -42,6 +45,10 @@ if ( NOT KML_INCLUDE_DIRECTORIES OR NOT KML_LIBRARIES OR NOT KML_FOUND )
       ${_KML_DIR}
       /home/jchen/libs/include/kml
       /home/jchen/libs/include
+
+    /data/jqdu/libs/include
+    /data/jqdu/libs/kml
+
       ${_KML_DIR}/include
       ${CMAKE_INSTALL_PREFIX}/include
       /usr/local/include

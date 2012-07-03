@@ -156,6 +156,7 @@ pair<int, int> patObservation::countChosenPathsSampled() {
 		map<patOd, patChoiceSet>::const_iterator find_choice_set =
 				m_choice_set.find(od);
 		if (find_choice_set == m_choice_set.end()) {
+			WARNING(" no choice set is given"<<m_choice_set.size());
 			throw RuntimeException("no choice set is given");
 		}
 		if (find_choice_set->second.isSampled(*path_iter) == true) {
@@ -181,6 +182,7 @@ list<unordered_map<string, string> > patObservation::genAttributes(
 		map<patOd, patChoiceSet>::const_iterator find_choice_set =
 				m_choice_set.find(od);
 		if (find_choice_set == m_choice_set.end()) {
+			WARNING(" no choice set is given");
 			throw RuntimeException("no choice set is given");
 		}
 

@@ -146,8 +146,6 @@ int main(int argc, char *argv[]) {
 
 		patReadObservationFromKML ro(&network_environment.getNetworkElements());
 		ro.parseFile(obsrevation_file, &new_observation);
-		DEBUG_MESSAGE(
-				"\t Observation read with number of ods: "<<new_observation.getNbOfOds());
 		string sample_file = sample_folder + "/" + new_observation.getId()
 				+ "_sample.kml";
 
@@ -207,6 +205,7 @@ int main(int argc, char *argv[]) {
 				pair<int, int>(new_observation.getNbOfOds(),
 						new_observation.getNbrOfCandidates()));
 		DEBUG_MESSAGE("===End " << sample_file << " ===");
+//		break;
 		//boost::thread workerThread(workerFunc,file_path,&path_generator,&network_environment.getNetworkElements());
 //		    boost::thread workerThread = testThread();
 		//	    workerThread.join();
