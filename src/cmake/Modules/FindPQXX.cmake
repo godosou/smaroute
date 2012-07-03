@@ -11,7 +11,7 @@ if ( NOT PQXX_INCLUDE_DIRECTORIES OR NOT PQXX_LIBRARIES )
     file( TO_CMAKE_PATH "$ENV{PQXX_DIR}" _PQXX_DIR )
 
     find_library( PQXX_LIBRARY
-      NAMES libpqxx pqxx
+      NAMES libpqxx pqxx libpqxx.a
       PATHS
         ${_PQXX_DIR}/lib
         ${_PQXX_DIR}
