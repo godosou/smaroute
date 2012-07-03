@@ -3,6 +3,7 @@ project (NewBioroute)
 set (NewBioroute_VERSION_MAJOR 2)
 set (NewBioroute_VERSION_MINOR 0)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 message(${CMAKE_SYSTEM_NAME})
@@ -31,20 +32,21 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_CXX_COMPILER g++)
     set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include")
     SET(OperatingSystem "Linux")
-    include_directories("/home/jchen/biogeme-2.0")
-    include_directories("/home/jchen/biogeme-2.0/libraries/parameters")
-    include_directories("/home/jchen/biogeme-2.0/libraries/utils")
-    find_library(LIB_UTILS
-                    NAMES utils libutils patUtils libutils.la utils.la
-                    PATHS
-                        "/home/jchen/biogeme-2.0/libraries/utils"
-                        "/usr/local/lib/biogeme/"
-                 )
-    find_library(LIB_PARAMETERS
-                    NAMES param libparameters patParams parameters libparameters.la  parameters.la
-                    PATHS
-                        "/home/jchen/biogeme-2.0/libraries/parameters"
-                        "/usr/local/lib/biogeme/")
+    find_package(Biogeme)
+#    include_directories("/home/jchen/biogeme-2.0")
+#    include_directories("/home/jchen/biogeme-2.0/libraries/parameters")
+#    include_directories("/home/jchen/biogeme-2.0/libraries/utils")
+#    find_library(LIB_UTILS
+#                    NAMES utils libutils patUtils libutils.la utils.la
+#                    PATHS
+#                        "/home/jchen/biogeme-2.0/libraries/utils"
+#                        "/usr/local/lib/biogeme/"
+#                 )
+#    find_library(LIB_PARAMETERS
+#                    NAMES param libparameters patParams parameters libparameters.la  parameters.la
+#                    PATHS
+#                        "/home/jchen/biogeme-2.0/libraries/parameters"
+#                        "/usr/local/lib/biogeme/")
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 #set(BIOGEME_FOLDER "/Users/jchen/Documents/Project/biogeme")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC -fopenmp")
@@ -58,7 +60,6 @@ include_directories("/usr/local/include")
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("/usr/local/boost_1_49_0")
 include_directories("/home/jchen/libs/include")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(POSTGRES)
 find_package(PQXX)
