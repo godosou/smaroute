@@ -9,6 +9,8 @@
 #include "patException.h"
 #include "patComputePathSize.h"
 #include "patNBParameters.h"
+#include "patRandomNumber.h"
+#include "patSampleDiscreteDistribution.h"
 #include <fstream>
 #include <iomanip>
 patChoiceSet::patChoiceSet() {
@@ -25,8 +27,8 @@ void patChoiceSet::setOD(const patNode* origin, const patNode* destination) {
 	m_od.setDestination(destination);
 }
 
-void patChoiceSet::setOd(patOd& od){
-	m_od=od;
+void patChoiceSet::setOd(patOd& od) {
+	m_od = od;
 //	DEBUG_MESSAGE(m_od);
 }
 
@@ -138,6 +140,14 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 		const patMultiModalPath& chosen_path,
 		const patUtilityFunction* utility_function,
 		const patPathGenerator* path_generator,
+		const patChoiceSet* universal_choiceset, const unsigned& choice_set_size, const patRandomNumber& rnd) const {
+	patChoiceSet new_choice_set = sampleSubSet(choice_set_size,rnd);
+	return new_choice_set.genAttributes(chosen_path, utility_function,path_generator,universal_choiceset);
+}
+unordered_map<string, double> patChoiceSet::genAttributes(
+		const patMultiModalPath& chosen_path,
+		const patUtilityFunction* utility_function,
+		const patPathGenerator* path_generator,
 		const patChoiceSet* universal_choiceset) const {
 	//bool chosen_sampled = isSampled(chosen_path);
 	unordered_map<string, double> attributes;
@@ -152,7 +162,8 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 	} else {
 		ps_u = ps_computer.computePS(*universal_choiceset);
 	}
-	map<const patMultiModalPath, double> sc = computeSC(chosen_path, path_generator);
+	map<const patMultiModalPath, double> sc = computeSC(chosen_path,
+			path_generator);
 //	DEBUG_MESSAGE(ps.size()<<","<<sc.size());
 	set<patMultiModalPath>::const_iterator find_chosen = m_paths.find(
 			chosen_path);
@@ -338,7 +349,8 @@ map<const patMultiModalPath, double> patChoiceSet::computeSC(
 		sc[chosen_alternative] = log((double) chosen_replicates) - log_proba;
 	} else {
 		int chosen_replicates = 1;
-		double log_proba = path_generator->calculatePathLogWeight(chosen_alternative);
+		double log_proba = path_generator->calculatePathLogWeight(
+				chosen_alternative);
 		sc[chosen_alternative] = log((double) chosen_replicates) - log_proba;
 	}
 
@@ -446,3 +458,48 @@ void patChoiceSet::exportCadytsVisData(const patMultiModalPath& chosen_path,
 	cadyts_vis_data.close();
 }
 
+patChoiceSet patChoiceSet::sampleSubSet(const unsigned choice_set_size,const patRandomNumber& rnd) const {
+	if (m_paths.size() > choice_set_size) {
+		vector<patMultiModalPath> all_paths;
+		vector<double> all_logweights;
+		for (set<patMultiModalPath>::const_iterator path_iter = m_paths.begin();
+				path_iter != m_paths.end(); ++path_iter) {
+			map<const patMultiModalPath, int>::const_iterator find_count =
+					m_count.find(*path_iter);
+			map<const patMultiModalPath, double>::const_iterator find_log_weight =
+					m_log_weight.find(*path_iter);
+			if (find_count == m_count.end()) {
+				WARNING("path not in count");
+				throw RuntimeException("path not in count");
+			}
+			if (find_log_weight == m_log_weight.end()) {
+				WARNING("path not in count");
+				throw RuntimeException("path not in count");
+			}
+			int count = find_count->second;
+			for (unsigned count_iter = 0; count_iter < count; ++count_iter) {
+				all_paths.push_back(*path_iter);
+				all_logweights.push_back(find_log_weight->second);
+			}
+		}
+		patChoiceSet new_choice_set;
+		patOd new_od=m_od;
+		new_choice_set.setOd(new_od);
+
+		vector<double> probas(all_paths.size(), 1.0);
+		vector<unsigned int> sampled_path_indics =
+				patSampleDiscreteDistribution::sampleWithOutReplaceMent(probas,
+						choice_set_size, rnd);
+
+		for (vector<unsigned int>::iterator sample_iter =
+				sampled_path_indics.begin();
+				sample_iter != sampled_path_indics.end(); ++sample_iter) {
+
+			new_choice_set.addPath(all_paths[*sample_iter],all_logweights[*sample_iter], 1);
+		}
+		return new_choice_set;
+//					DEBUG_MESSAGE("OK");
+	} else {
+		return *this;
+	}
+}

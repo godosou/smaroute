@@ -12,22 +12,23 @@
 #include "patDisplay.h"
 #include "patLinkAndPathCost.h"
 #include "patNBParameters.h"
+#include "patRandomNumber.h"
 #include "patArc.h"
+#include <boost/lexical_cast.hpp>
 using namespace std;
 patWriteBiogemeData::patWriteBiogemeData(
 		const vector<patObservation>& observations,
 		const patUtilityFunction* utility_function,
-		const patPathGenerator* path_generator, const patChoiceSet* choice_set) :
+		const patPathGenerator* path_generator, const patChoiceSet* choice_set, const patRandomNumber& rnd) :
 		m_observations(observations), m_utility_function(utility_function), m_path_generator(
-				path_generator), m_universal_choiceset(choice_set) {
+				path_generator), m_universal_choiceset(choice_set), m_rnd(rnd) {
 	// TODO Auto-generated constructor stub
-	genHeader();
 }
 
 patWriteBiogemeData::~patWriteBiogemeData() {
 	// TODO Auto-generated destructor stub
 }
-void patWriteBiogemeData::genHeader() {
+void patWriteBiogemeData::genHeader(const unsigned& choiceset_size) {
 	m_header.clear();
 	m_header.push_back("id");
 	m_header.push_back("AggLast");
@@ -37,7 +38,7 @@ void patWriteBiogemeData::genHeader() {
 	m_header.push_back("tripId");
 	m_header.push_back("Orig");
 	m_header.push_back("Dest");
-	for (int i = 0; i <= patNBParameters::the()->choiceSetInBiogemeData; ++i) {
+	for (int i = 0; i <= choiceset_size; ++i) {
 		{
 			stringstream ss;
 			ss << "sc" << i;
@@ -88,7 +89,8 @@ void patWriteBiogemeData::writeHeader(const string& fileName) {
 	sampleFile << endl;
 	sampleFile.close();
 }
-void patWriteBiogemeData::writeData(const string& fileName) {
+void patWriteBiogemeData::writeData(const string& fileName,
+		const unsigned& choiceset_size) {
 
 	ofstream sampleFile(fileName.c_str(), ios::app);
 	int i = 0;
@@ -97,7 +99,7 @@ void patWriteBiogemeData::writeData(const string& fileName) {
 			++obs_iter) {
 
 		list<unordered_map<string, string> > abs_attributes =
-				(*obs_iter).genAttributes(m_utility_function, m_path_generator,
+				(*obs_iter).genAttributes(choiceset_size, m_rnd,m_utility_function, m_path_generator,
 						m_universal_choiceset);
 		for (list<unordered_map<string, string> >::const_iterator p_iter =
 				abs_attributes.begin(); p_iter != abs_attributes.end();
@@ -127,11 +129,10 @@ void patWriteBiogemeData::writeData(const string& fileName) {
 						sampleFile << "\t" << int_n;
 					} else if (k == "tripId") {
 						string trip_id = p_attributes[k];
-						try{
-							trip_id.erase(trip_id.find(" "),1);
-							trip_id.erase(trip_id.find("-"),1);
-						}
-						catch(...){
+						try {
+							trip_id.erase(trip_id.find(" "), 1);
+							trip_id.erase(trip_id.find("-"), 1);
+						} catch (...) {
 
 						}
 						sampleFile << "\t" << trip_id;
@@ -148,19 +149,45 @@ void patWriteBiogemeData::writeData(const string& fileName) {
 
 	sampleFile.close();
 }
-void patWriteBiogemeData::writeSampleFile(const string& fileName) {
-	DEBUG_MESSAGE(m_observations.size()<<" observations write to"<<fileName);
-//	DEBUG_MESSAGE("Create " << fileName);
-	ofstream sample(fileName.c_str());
-	sample << setprecision(7) << setiosflags(ios::scientific);
+void patWriteBiogemeData::writeSampleFile(const string& folder) {
+	string choiceset_size_string =
+			patNBParameters::the()->choiceSetInBiogemeData;
+	DEBUG_MESSAGE(choiceset_size_string)
+	size_t last_space = 0;
+	size_t space_position = choiceset_size_string.find_first_of(',',
+			last_space);
+	while (space_position != string::npos) {
+		string int_str = choiceset_size_string.substr(last_space,
+				space_position-last_space);
+		DEBUG_MESSAGE(int_str);
+		int c_size = atoi(int_str.c_str());
+		DEBUG_MESSAGE(c_size);
+		if (c_size > 0) {
+			string file_name = folder + string("/sample_")
+					+ boost::lexical_cast<string>(c_size) + string(".dat");
+			DEBUG_MESSAGE(
+					m_observations.size()<<" observations write to"<<file_name);
 
-	writeHeader(fileName);
-	writeData(fileName);
-	sample.close();
+			ofstream sample(file_name.c_str());
+			sample << setprecision(7) << setiosflags(ios::scientific);
+
+			genHeader(c_size);
+			writeHeader(file_name);
+			writeData(file_name, c_size);
+			sample.close();
+
+		}
+
+		last_space = space_position+1;
+		space_position = choiceset_size_string.find(',',
+				last_space );
+	}
+//	DEBUG_MESSAGE("Create " << fileName);
 
 }
 
-void patWriteBiogemeData::writeSpecFile(const string& fileName) {
+void patWriteBiogemeData::writeSpecFile(const string& fileName,
+		const unsigned& choiceset_size) {
 	ofstream spec(fileName.c_str());
 	spec << "[Choice]" << endl;
 	spec << "choiceRP" << endl;
@@ -214,7 +241,8 @@ void patWriteBiogemeData::writeSpecFile(const string& fileName) {
 	for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator lc_iter =
 			link_coefficients_map.begin();
 			lc_iter != link_coefficients_map.end(); ++lc_iter) {
-		link_coefficients.push_back(patArc::getAttributeTypeString(lc_iter->first));
+		link_coefficients.push_back(
+				patArc::getAttributeTypeString(lc_iter->first));
 	}
 
 	spec << "BETA_PS" << "\t0.0\t-1000.0\t1000.0\t0" << endl;
@@ -238,8 +266,7 @@ void patWriteBiogemeData::writeSpecFile(const string& fileName) {
 			<< "// Id Name  Avail  linear-in-parameter expression (beta1*x1 + beta2*x2 + ... )"
 			<< endl;
 
-	for (unsigned long alt = 0;
-			alt <= patNBParameters::the()->choiceSetInBiogemeData; ++alt) {
+	for (unsigned long alt = 0; alt <= choiceset_size; ++alt) {
 		spec << alt << '\t'; // id
 		spec << "alt" << alt << '\t'; //alt
 		spec << "avail" << alt << '\t'; //alt
@@ -267,8 +294,7 @@ void patWriteBiogemeData::writeSpecFile(const string& fileName) {
 			<< "// Id   linear-in-parameter expression (beta1*x1 + beta2*x2 + ... )"
 			<< endl;
 
-	for (unsigned long alt = 0;
-			alt <= patNBParameters::the()->choiceSetInBiogemeData; ++alt) {
+	for (unsigned long alt = 0; alt <= choiceset_size; ++alt) {
 		spec << alt << '\t'; // id
 		spec << "MU" << " * " << " BETA_PS_U " << " * " << " log_ps_u" << alt;
 		spec << " + ";
@@ -293,15 +319,13 @@ void patWriteBiogemeData::writeSpecFile(const string& fileName) {
 	spec << "one = 1" << endl;
 	spec << "" << endl;
 
-	for (unsigned long alt = 0;
-			alt <= patNBParameters::the()->choiceSetInBiogemeData; ++alt) {
+	for (unsigned long alt = 0; alt <= choiceset_size; ++alt) {
 		spec << "log_ps" << alt << " = log( ps" << alt << " )";
 		spec << " " << endl;
 	}
 
 	spec << "" << endl;
-	for (unsigned long alt = 0;
-			alt <= patNBParameters::the()->choiceSetInBiogemeData; ++alt) {
+	for (unsigned long alt = 0; alt <= choiceset_size; ++alt) {
 		spec << "log_ps_u" << alt << " = log( ps_u" << alt << " )";
 		spec << " " << endl;
 	}

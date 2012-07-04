@@ -266,7 +266,7 @@ double discardGPSGap;
 	unsigned long overwriteSampleFile;
 	double errorInSimulatedObservations;
 
-	unsigned long choiceSetInBiogemeData;
+	string choiceSetInBiogemeData;
 
 	string pathSampleAlgorithm;
 private:

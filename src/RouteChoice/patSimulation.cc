@@ -39,8 +39,7 @@ void patSimulation::run(string folder, const patRouter* router) {
 		return;
 	}
 
-	map<patOd, patChoiceSet> od_choice_set = rc.read(choiceset_file, 100000,
-			m_rnd);
+	map<patOd, patChoiceSet> od_choice_set = rc.read(choiceset_file, m_rnd);
 //	DEBUG_MESSAGE(od_choice_set.size());
 	patOd od = od_choice_set.begin()->first;
 	patChoiceSet choice_set = od_choice_set.begin()->second;
@@ -97,7 +96,7 @@ void patSimulation::run(string folder, const patRouter* router) {
 //		if (i % 10 == 0) {
 //			DEBUG_MESSAGE(i);
 //		}
-		string i_str = boost::lexical_cast < string > (i);
+		string i_str = boost::lexical_cast<string>(i);
 		patKMLPathWriter kml_writer(folder + "observations/" + i_str + ".kml");
 		int sampled = patSampleDiscreteDistribution()(utility_vector, m_rnd);
 		sampled_file << sampled << endl;
@@ -106,11 +105,11 @@ void patSimulation::run(string folder, const patRouter* router) {
 		sampled_count[sampled]++;
 
 		map<string, string> attrs_true;
-		attrs_true["true"] = boost::lexical_cast < string
-				> (utility_vector[sampled]);
-		attrs_true["id"] = boost::lexical_cast < string > (sampled);
-		attrs_true["proba"] = boost::lexical_cast < string
-				> (1.0 - patNBParameters::the()->errorInSimulatedObservations);
+		attrs_true["true"] = boost::lexical_cast<string>(
+				utility_vector[sampled]);
+		attrs_true["id"] = boost::lexical_cast<string>(sampled);
+		attrs_true["proba"] = boost::lexical_cast<string>(
+				1.0 - patNBParameters::the()->errorInSimulatedObservations);
 		kml_writer.writePath(paths_vector[sampled], attrs_true);
 		if (patNBParameters::the()->errorInSimulatedObservations > 0.0
 				&& patNBParameters::the()->nbrOfSimulatedErrorPaths > 0) {
@@ -124,11 +123,10 @@ void patSimulation::run(string folder, const patRouter* router) {
 					simulated_paths.begin(); path_iter != simulated_paths.end();
 					++path_iter) {
 				map<string, string> attrs;
-				attrs["true"] = boost::lexical_cast < string
-						> (utility_vector[sampled]);
-				attrs["id"] = boost::lexical_cast < string > (sampled);
-				attrs["proba"] = boost::lexical_cast < string
-						> (path_iter->second);
+				attrs["true"] = boost::lexical_cast<string>(
+						utility_vector[sampled]);
+				attrs["id"] = boost::lexical_cast<string>(sampled);
+				attrs["proba"] = boost::lexical_cast<string>(path_iter->second);
 				kml_writer.writePath(path_iter->first, attrs);
 
 			}
@@ -145,8 +143,7 @@ void patSimulation::run(string folder, const patRouter* router) {
 				* (theo_proba - empirical_proba) / theo_proba;
 		DEBUG_MESSAGE(
 				utility_vector[i]<<","<<sampled_count[i]/(double)total_sampled_count);
-	}
-	DEBUG_MESSAGE("chi2: "<<chi2);
+	}DEBUG_MESSAGE("chi2: "<<chi2);
 }
 
 patSimulation::~patSimulation() {

@@ -32,8 +32,7 @@ patReadChoiceSetFromKML::~patReadChoiceSetFromKML() {
 	// TODO Auto-generated destructor stub
 }
 
-map<patOd, patChoiceSet> patReadChoiceSetFromKML::read(string file_name,
-		const unsigned int &sampled_count, const patRandomNumber& rnd) {
+map<patOd, patChoiceSet> patReadChoiceSetFromKML::read(string file_name, const patRandomNumber& rnd) {
 	map<patOd, patChoiceSet> ods;
 	xml::tree_parser parser(file_name.c_str());
 
@@ -93,7 +92,7 @@ map<patOd, patChoiceSet> patReadChoiceSetFromKML::read(string file_name,
 							}
 //							DEBUG_MESSAGE(origin_id<<"-"<<dest_id);
 							od = patOd(origin_node, dest_node);
-//							od_choice_set.setOD(origin_node, dest_node);
+							od_choice_set.setOD(origin_node, dest_node);
 
 						} else {
 							WARNING("not od given");
@@ -249,16 +248,16 @@ map<patOd, patChoiceSet> patReadChoiceSetFromKML::read(string file_name,
 //						DEBUG_MESSAGE(new_path.computeLength());
 //						DEBUG_MESSAGE(new_path. generateOd());
 //						DEBUG_MESSAGE(count<<","<<log_weight);
-						if (count == 0) {
-							count = 1;
-						}
-						for (unsigned count_iter = 0; count_iter < count;
-								++count_iter) {
-							paths.push_back(new_path);
-							log_weights.push_back(log_weight);
-						}
-						nbr_paths += count;
-//						od_choice_set.addPath(new_path, log_weight, count);
+//						if (count == 0) {
+//							count = 1;
+//						}
+//						for (unsigned count_iter = 0; count_iter < count;
+//								++count_iter) {
+//							paths.push_back(new_path);
+//							log_weights.push_back(log_weight);
+//						}
+//						nbr_paths += count;
+						od_choice_set.addPath(new_path, log_weight, count);
 //						++nbr_paths;
 //						if (nbr_paths
 //								>= patNBParameters::the()->choiceSetInBiogemeData) {
@@ -268,36 +267,36 @@ map<patOd, patChoiceSet> patReadChoiceSetFromKML::read(string file_name,
 				}
 //				DEBUG_MESSAGE(od);
 //				DEBUG_MESSAGE(paths.size());
-				patChoiceSet od_chocie_set;
-				od_chocie_set.setOd(od);
-//				DEBUG_MESSAGE(od.getOrigin()->getUserId()<<","<<od.getDestination()->getUserId());
-				if (paths.size() > sampled_count) {
-//					DEBUG_MESSAGE("random sample the choice set: "<<sampled_count<<"<"<<paths.size() );
-					vector<double> probas(paths.size(), 1.0);
-//					DEBUG_MESSAGE(probas.size()<<","<<log_weights.size());
-					vector<unsigned int> sampled_path_indics =
-							patSampleDiscreteDistribution::sampleWithOutReplaceMent(
-									probas, sampled_count, rnd);
-
-//					DEBUG_MESSAGE(sampled_path_indics.size());
-					for (vector<unsigned int>::iterator sample_iter =
-							sampled_path_indics.begin();
-							sample_iter != sampled_path_indics.end();
-							++sample_iter) {
-
-						od_choice_set.addPath(paths[*sample_iter],
-								log_weights[*sample_iter], 1);
-					}
-//					DEBUG_MESSAGE("OK");
-				} else {
-					od_chocie_set.setOd(od);
-					for (unsigned int sample_iter = 0;
-							sample_iter < paths.size(); ++sample_iter) {
-//						DEBUG_MESSAGE(sample_iter);
-						od_choice_set.addPath(paths[sample_iter],
-								log_weights[sample_iter], 1);
-					}
-				}
+//				patChoiceSet od_chocie_set;
+//				od_chocie_set.setOd(od);
+////				DEBUG_MESSAGE(od.getOrigin()->getUserId()<<","<<od.getDestination()->getUserId());
+//				if (paths.size() > sampled_count) {
+////					DEBUG_MESSAGE("random sample the choice set: "<<sampled_count<<"<"<<paths.size() );
+//					vector<double> probas(paths.size(), 1.0);
+////					DEBUG_MESSAGE(probas.size()<<","<<log_weights.size());
+//					vector<unsigned int> sampled_path_indics =
+//							patSampleDiscreteDistribution::sampleWithOutReplaceMent(
+//									probas, sampled_count, rnd);
+//
+////					DEBUG_MESSAGE(sampled_path_indics.size());
+//					for (vector<unsigned int>::iterator sample_iter =
+//							sampled_path_indics.begin();
+//							sample_iter != sampled_path_indics.end();
+//							++sample_iter) {
+//
+//						od_choice_set.addPath(paths[*sample_iter],
+//								log_weights[*sample_iter], 1);
+//					}
+////					DEBUG_MESSAGE("OK");
+//				} else {
+//					od_chocie_set.setOd(od);
+//					for (unsigned int sample_iter = 0;
+//							sample_iter < paths.size(); ++sample_iter) {
+////						DEBUG_MESSAGE(sample_iter);
+//						od_choice_set.addPath(paths[sample_iter],
+//								log_weights[sample_iter], 1);
+//					}
+//				}
 				ods[od] = od_choice_set;
 			}
 		}

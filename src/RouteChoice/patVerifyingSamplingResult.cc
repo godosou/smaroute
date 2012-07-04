@@ -67,8 +67,7 @@ void patVerifyingSamplingResult::getpaths() {
 			continue;
 		}
 		try {
-			map<patOd, patChoiceSet> css = rc.read(file_name,
-					patNBParameters::the()->choiceSetInBiogemeData, m_rnd);
+			map<patOd, patChoiceSet> css = rc.read(file_name, m_rnd);
 			for (map<patOd, patChoiceSet>::const_iterator od_iter = css.begin();
 					od_iter != css.end(); ++od_iter) {
 
@@ -126,7 +125,8 @@ void patVerifyingSamplingResult::getpaths() {
 
 }
 double patVerifyingSamplingResult::verifyProbability(
-		const patChoiceSet& universal_set, const patPathGenerator* path_generator) const {
+		const patChoiceSet& universal_set,
+		const patPathGenerator* path_generator) const {
 	set<patMultiModalPath> path_set = universal_set.getChoiceSet();
 	double chi2 = 0.0;
 	vector<double> theo_probas;
@@ -153,8 +153,10 @@ double patVerifyingSamplingResult::verifyProbability(
 		empirical_probas.push_back(empirical_proba);
 //		DEBUG_MESSAGE(
 //				"probas:"<< empirical_proba<<"/"<<theo_proba_file<<", log weight file/theo: "<<log_weight_file<<"/"<< theo_proba);
-		if(log_weight_file!=0.0 && abs(log_weight_file-theo_proba)>0.0001){
-			WARNING("log weight in file ("<<log_weight_file<<") and theo ("<<theo_proba<<") not the same.");
+		if (log_weight_file != 0.0
+				&& abs(log_weight_file - theo_proba) > 0.0001) {
+			WARNING(
+					"log weight in file ("<<log_weight_file<<") and theo ("<<theo_proba<<") not the same.");
 		}
 
 	}
@@ -166,8 +168,7 @@ double patVerifyingSamplingResult::verifyProbability(
 		chi2 += m_total_nbr_of_paths * (theo_probas[i] - empirical_probas[i])
 				* (theo_probas[i] - empirical_probas[i]) / theo_probas[i];
 
-	}
-	DEBUG_MESSAGE("CHI2: "<<chi2);
+	}DEBUG_MESSAGE("CHI2: "<<chi2);
 	DEBUG_MESSAGE("done verifying");
 	return chi2;
 //	return true;

@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	string network_file = patNBParameters::the()->OsmNetworkFileName;
-	string network_folder = network_file.substr(0,network_file.rfind("/"));
-	string network_rule = network_folder+"/network_rules.csv";
+	string network_folder = network_file.substr(0, network_file.rfind("/"));
+	string network_rule = network_folder + "/network_rules.csv";
 	DEBUG_MESSAGE("network rules file: "<<network_rule);
 	patWay::initiateNetworkTypeRules(network_rule);
 	patGeoBoundingBox bb = patGeoBoundingBox(
@@ -138,6 +138,8 @@ int main(int argc, char *argv[]) {
 	int not_sampled = 0;
 	vector<int> uppod;
 	vector<pair<int, int> > od_paths;
+
+	string choice_set_string = patNBParameters::the()->choiceSetInBiogemeData;
 	for (unsigned int i = 0; i < observation_files.size(); ++i) {
 		string obsrevation_file = observation_folder + observation_files[i];
 
@@ -153,8 +155,7 @@ int main(int argc, char *argv[]) {
 		patReadChoiceSetFromKML rc(&network_environment.getNetworkElements());
 
 		if (ifstream(sample_file.c_str())) {
-			css = rc.read(sample_file,
-					patNBParameters::the()->choiceSetInBiogemeData, rnd);
+			css = rc.read(sample_file, rnd);
 			DEBUG_MESSAGE(
 					"\t read sample file "<<new_observation.getId() + "_sample.kml");
 
@@ -165,13 +166,12 @@ int main(int argc, char *argv[]) {
 			while (true) {
 				++file_index;
 				sample_file = sample_folder + "/" + new_observation.getId()
-						+ "_" + boost::lexical_cast < string
-						> (file_index) + "_sample.kml";
+						+ "_" + boost::lexical_cast<string>(file_index)
+						+ "_sample.kml";
 				if (!ifstream(sample_file.c_str())) {
 					break;
 				}
-				map<patOd, patChoiceSet> new_css = rc.read(sample_file,
-						patNBParameters::the()->choiceSetInBiogemeData, rnd);
+				map<patOd, patChoiceSet> new_css = rc.read(sample_file,rnd);
 				css.insert(new_css.begin(), new_css.end());
 //				DEBUG_MESSAGE(
 //						"\t read sample file "<<new_observation.getId() + "_" + boost::lexical_cast < string > (file_index) + "_sample.kml");
@@ -218,7 +218,6 @@ int main(int argc, char *argv[]) {
 				patNBParameters::the()->router_cost_length_coef, 0.0,
 				patNBParameters::the()->router_cost_sb_coef);
 
-
 		map<ARC_ATTRIBUTES_TYPES, double> link_coef;
 		link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_length_coef;
 		link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
@@ -237,19 +236,10 @@ int main(int argc, char *argv[]) {
 			sco.averagePathProbas();
 			mh_weight.setPathProbas(&sco.getPathProbas());
 		}
-		patWriteBiogemeData wbd(sco.getObs(), &utility_function, &path_generator,
-				NULL);
+		patWriteBiogemeData wbd(sco.getObs(), &utility_function,
+				&path_generator, NULL,rnd);
 
-		wbd.writeSampleFile(
-				sample_folder + string("/sample_") + boost::lexical_cast < string
-						> (patNBParameters::the()->choiceSetInBiogemeData)
-								+ string(".dat"));
-		if (patNBParameters::the()->writeBiogemeModelFile > 0) {
-			wbd.writeSpecFile(
-					sample_folder + string("/model_") + boost::lexical_cast < string
-							> (patNBParameters::the()->choiceSetInBiogemeData)
-									+ string(".mod"));
-		}
+		wbd.writeSampleFile(sample_folder);
 	} else if (patNBParameters::the()->pathSampleAlgorithm == "RW") {
 		patLinkAndPathCost router_link_cost(1.0, 1.0, 0.0, 0.0);
 		RWPathGenerator path_generator(patNBParameters::the()->randomSeed,
@@ -257,23 +247,15 @@ int main(int argc, char *argv[]) {
 				&router_link_cost);
 		path_generator.setNetwork(network_environment.getNetwork(CAR));
 
-		patWriteBiogemeData wbd(sco.getObs(), &utility_function, &path_generator,
-				NULL);
+		patWriteBiogemeData wbd(sco.getObs(), &utility_function,
+				&path_generator, NULL,rnd);
 
-		wbd.writeSampleFile(
-				sample_folder + string("/sample_") + boost::lexical_cast < string
-						> (patNBParameters::the()->choiceSetInBiogemeData)
-								+ string(".dat"));
-		if (patNBParameters::the()->writeBiogemeModelFile > 0) {
-			wbd.writeSpecFile(
-					sample_folder + string("/model_") + boost::lexical_cast < string
-							> (patNBParameters::the()->choiceSetInBiogemeData)
-									+ string(".mod"));
-		}
+		wbd.writeSampleFile(sample_folder);
 	}
 	string scp_txt_fn = sample_folder + string("/sampledChosenPath_")
-			+ boost::lexical_cast < string
-			> (patNBParameters::the()->choiceSetInBiogemeData) + string(".txt");
+			+ boost::lexical_cast<string>(
+					patNBParameters::the()->SAMPLE_COUNT)
+			+ string(".txt");
 	ofstream sampleFile(scp_txt_fn.c_str());
 	sampleFile << "sampled" << "," << "not_sampled" << endl;
 	sampleFile << sampled << "," << not_sampled << endl;

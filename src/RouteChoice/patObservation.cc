@@ -8,7 +8,7 @@
 #include <boost/lexical_cast.hpp>
 #include <iomanip>
 #include <iostream>
-
+#include "patRandomNumber.h"
 patObservation::patObservation():m_id("") {
 	m_path_probas.clear();
 //	make_pair(patMultiModalPath(), 1.0);
@@ -168,6 +168,7 @@ pair<int, int> patObservation::countChosenPathsSampled() {
 	return pair<int, int>(sampled, not_sampled);
 }
 list<unordered_map<string, string> > patObservation::genAttributes(
+		const unsigned& choice_set_size, const patRandomNumber& rnd,
 		const patUtilityFunction* utility_function,
 		const patPathGenerator* path_generator,
 		const patChoiceSet* universal_choiceset) const {
@@ -188,7 +189,7 @@ list<unordered_map<string, string> > patObservation::genAttributes(
 
 		unordered_map<string, double> row_attributes =
 				find_choice_set->second.genAttributes(*path_iter,
-						utility_function, path_generator, universal_choiceset);
+						utility_function, path_generator, universal_choiceset,choice_set_size,rnd);
 		unordered_map < string, string > path_attributes;
 
 		row_attributes["AggWeight"] = m_path_probas.find(*path_iter)->second;

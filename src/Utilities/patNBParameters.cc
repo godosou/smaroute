@@ -297,7 +297,7 @@ void patNBParameters::init(patError*& err) {
 	intParams["nbrOfThreads"] = &nbrOfThreads;
 	intParams["nbrOfSimulatedErrorPaths"] = &nbrOfSimulatedErrorPaths;
 	intParams["overwriteSampleFile"] = &overwriteSampleFile;
-	intParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
+	strParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
 
 
 	strParams["gpsIcon"] = &gpsIcon;

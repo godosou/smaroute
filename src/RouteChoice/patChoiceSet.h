@@ -16,6 +16,7 @@
 #include "patUtilityFunction.h"
 using namespace std;
 using namespace std::tr1;
+class patRandomNumber;
 class patChoiceSet {
 public:
 	patChoiceSet();
@@ -30,6 +31,12 @@ public:
 	int getSampledCount(const patMultiModalPath& path) const;
 	double getLogWeight(const patMultiModalPath& path) const;
 	set<patMultiModalPath> getChoiceSet() const;
+
+	unordered_map<string, double> genAttributes(
+			const patMultiModalPath& chosen_path,
+			const patUtilityFunction* utility_function,
+			const patPathGenerator* path_generator,
+			const patChoiceSet* universal_choiceset, const unsigned& choice_set_size, const patRandomNumber& rnd) const;
 	unordered_map<string, double> genAttributes(
 			const patMultiModalPath& chosen_path,
 			const patUtilityFunction* utility_function,
@@ -41,6 +48,8 @@ public:
 	void exportCadytsVisData(const patMultiModalPath& chosen_path,
 			string file_path) const;
 	int getUniquePaths() const;
+
+	patChoiceSet sampleSubSet(const unsigned choice_set_size,const patRandomNumber& rnd) const;
 	const map<const patMultiModalPath, int>& getCount() const {
 		return m_count;
 	}

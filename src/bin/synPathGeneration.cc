@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
 
 			patRandomNumber rnd(patNBParameters::the()->randomSeed);
 			map<patOd, patChoiceSet> od_choice_set = rc.read(choiceset_file,
-					1000000, rnd);
+					 rnd);
 			//	DEBUG_MESSAGE(od_choice_set.size());
 			patOd od = od_choice_set.begin()->first;
 			patChoiceSet choice_set = od_choice_set.begin()->second;

@@ -13,12 +13,12 @@ class patRandomNumber;
 class patReadChoiceSetFromKML {
 public:
 	patReadChoiceSetFromKML(const patNetworkElements* a_network);
-		map<patOd, patChoiceSet>  read(string file_name,		const unsigned int &sampled_count,
+	map<patOd, patChoiceSet> read(string file_name,
 
-				const patRandomNumber& rnd);
+	const patRandomNumber& rnd);
 	virtual ~patReadChoiceSetFromKML();
 private:
-   const patNetworkElements* m_network;
+	const patNetworkElements* m_network;
 
 };
 

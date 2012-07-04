@@ -13,6 +13,7 @@
 using namespace std;
 using namespace std::tr1;
 #include "patPathGenerator.h"
+class patRandomNumber;
 class patObservation {
 public:
 	friend bool operator==(const patObservation& observation1,
@@ -39,7 +40,7 @@ public:
 	void sampleChoiceSet(patPathGenerator* path_generator, const string folder);
 //	void putODChoiceSet(patOd od, patChoiceSet& od_choice_set);
 
-	list<unordered_map<string, string> > genAttributes(
+	list<unordered_map<string, string> > genAttributes(const unsigned& choice_set_size, const patRandomNumber& rnd,
 			const patUtilityFunction* utility_function,
 			const patPathGenerator* path_generator,
 			const patChoiceSet* universal_choiceset = NULL) const;
