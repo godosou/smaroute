@@ -43,12 +43,14 @@ void patSampleChoiceSetWithRandomWalk::sampleChoiceSet(
 #pragma omp for
 
 		for (int j = 0; j < m_observations.size(); ++j) {
-			RWPathGenerator* generator_clone = path_generator->clone();
 			patNetworkBase* cloned_network =
 					path_generator->getNetwork()->clone();
+			
+			RWPathGenerator* generator_clone = path_generator->clone();
 			generator_clone->setNetwork(cloned_network);
 
-			m_observations.at(j).sampleChoiceSet(path_generator, choice_set_folder);
+			m_observations.at(j).sampleChoiceSet(path_generator,
+					choice_set_folder);
 			delete generator_clone;
 			generator_clone = NULL;
 			delete cloned_network;
@@ -57,31 +59,32 @@ void patSampleChoiceSetWithRandomWalk::sampleChoiceSet(
 	}
 }
 void patSampleChoiceSetWithRandomWalk::addObservation(patObservation& obs) {
-/**
- * Get relevant OD first.
- */
-if (obs.getId() == string("")) {
-	obs.setId(boost::lexical_cast < string > (m_observations.size()));
-}
-
-map<const patMultiModalPath, double> path_probas =
-		obs.getNormalizedPathProbas();
-set < patOd > od_set;
-
-unsigned long obs_id = 1;
-for (map<const patMultiModalPath, double>::const_iterator path_iter =
-		path_probas.begin(); path_iter != path_probas.end(); ++path_iter) {
-	patOd the_od(path_iter->first.getUpNode(), path_iter->first.getDownNode());
-	pair<set<patOd>::const_iterator, bool> insert_result = od_set.insert(
-			the_od);
-	if (insert_result.second == true) {
-		patObservation new_obs;
-		new_obs.setId(
-				obs.getId() + string("_") + boost::lexical_cast < string
-						> (obs_id));
-		new_obs.addPath(path_iter->first, path_iter->second);
-		m_observations.push_back(new_obs);
-		++obs_id;
+	/**
+	 * Get relevant OD first.
+	 */
+	if (obs.getId() == string("")) {
+		obs.setId(boost::lexical_cast<string>(m_observations.size()));
 	}
-}
+
+	map<const patMultiModalPath, double> path_probas =
+			obs.getNormalizedPathProbas();
+	set<patOd> od_set;
+
+	unsigned long obs_id = 1;
+	for (map<const patMultiModalPath, double>::const_iterator path_iter =
+			path_probas.begin(); path_iter != path_probas.end(); ++path_iter) {
+		patOd the_od(path_iter->first.getUpNode(),
+				path_iter->first.getDownNode());
+		pair<set<patOd>::const_iterator, bool> insert_result = od_set.insert(
+				the_od);
+		if (insert_result.second == true) {
+			patObservation new_obs;
+			new_obs.setId(
+					obs.getId() + string("_")
+							+ boost::lexical_cast<string>(obs_id));
+			new_obs.addPath(path_iter->first, path_iter->second);
+			m_observations.push_back(new_obs);
+			++obs_id;
+		}
+	}
 }

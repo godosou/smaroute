@@ -297,6 +297,12 @@ void patNBParameters::init(patError*& err) {
 	intParams["nbrOfThreads"] = &nbrOfThreads;
 	intParams["nbrOfSimulatedErrorPaths"] = &nbrOfSimulatedErrorPaths;
 	intParams["overwriteSampleFile"] = &overwriteSampleFile;
+	intParams["WARMUP_ITERATIONS"] = &WARMUP_ITERATIONS;
+
+
+	intParams["OriginId"] = &OriginId;
+	intParams["DestinationId"] = &DestinationId;
+
 	strParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
 
 

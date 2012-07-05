@@ -160,6 +160,7 @@ int main(int argc, char *argv[]) {
 						observations[i].getNbrOfCandidates()));
 
 	}
+	DEBUG_MESSAGE("number of observations: "<<sco.getObs().size());
 	patVerifyingSamplingResult vsr(sample_folder,
 			&network_environment.getNetworkElements(), rnd);
 	patUtilityFunction utility_function(
@@ -200,10 +201,21 @@ int main(int argc, char *argv[]) {
 			mh_weight.setPathProbas(&sco.getPathProbas());
 		}
 		vsr_chi2 = vsr.verifyProbability(choice_set, &path_generator);
-		patWriteBiogemeData wbd(sco.getObs(), &utility_function,
-				&path_generator, &choice_set, rnd);
 
-		wbd.writeSampleFile(sample_folder);
+		if (argc == 3 && string(argv[2]) == "full") {
+			patWriteBiogemeData wbd(observations, &utility_function,
+					&path_generator, &choice_set, rnd);
+
+			wbd.writeSampleFile(sample_folder);
+
+		}
+		else{
+
+			patWriteBiogemeData wbd(sco.getObs(), &utility_function,
+					&path_generator, &choice_set, rnd);
+
+			wbd.writeSampleFile(sample_folder);
+		}
 	} else if (patNBParameters::the()->pathSampleAlgorithm == "RW") {
 		patLinkAndPathCost router_link_cost(1.0, 1.0, 0.0, 0.0);
 		RWPathGenerator path_generator(patNBParameters::the()->randomSeed,
@@ -212,10 +224,20 @@ int main(int argc, char *argv[]) {
 		path_generator.setNetwork(network_environment.getNetwork(CAR));
 
 		vsr_chi2 = vsr.verifyProbability(choice_set, &path_generator);
-		patWriteBiogemeData wbd(sco.getObs(), &utility_function,
-				&path_generator, &choice_set, rnd);
+		if (argc == 3 && string(argv[2]) == "full") {
+			patWriteBiogemeData wbd(observations, &utility_function,
+					&path_generator, &choice_set, rnd);
 
-		wbd.writeSampleFile(sample_folder);
+			wbd.writeSampleFile(sample_folder);
+
+		}
+		else{
+
+			patWriteBiogemeData wbd(sco.getObs(), &utility_function,
+					&path_generator, &choice_set, rnd);
+
+			wbd.writeSampleFile(sample_folder);
+		}
 	}
 
 	else {

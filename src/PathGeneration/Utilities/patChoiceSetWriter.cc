@@ -28,6 +28,7 @@ patChoiceSetWriter::patChoiceSetWriter(patPathWriter* pathWriter,
 				"sample interval is not strictly positive");
 	}
 
+	m_warmup_iterations = patNBParameters::the()->WARMUP_ITERATIONS;
 }
 
 void patChoiceSetWriter::start() {
@@ -39,7 +40,7 @@ void patChoiceSetWriter::processState(const patMultiModalPath& path, const doubl
 	 * (1) check if this path should be written
 	 */
 	m_path_count++;
-	if (m_path_count % m_sample_interval != 0) {
+	if (m_path_count <= m_warmup_iterations || m_path_count % m_sample_interval != 0) {
 
 		return;
 	}

@@ -36,6 +36,7 @@ public:
 	void setNetwork(const patNetworkBase* network_base);
 	void run(const patNode* origin, const patNode* destination);
 	void setPathWriter( patPathWriter* path_writer);
+	void setWritterWrapper(MHStateProcessor<MHPath>* writter_wrapper);
 	void setRouterLinkCost(const patLinkAndPathCost* linkCost) ;
 	void setMHWeight(const MHWeightFunction* MHWeight);
 	const MHWeightFunction* getMHWeight() const{
@@ -67,7 +68,7 @@ protected:
 	const patLinkAndPathCost* m_linkAndPathCost;
 	const MHWeightFunction* m_MHWeight;
 	patPathWriter* m_path_writer;
-
+	MHStateProcessor<MHPath>* m_writter_wrapper;
 };
 
 #endif /* MHPATHGENERATOR_H_ */

@@ -58,7 +58,8 @@ void patSampleChoiceSetWithObservations::sampleChoiceSet(
 	int num_threads = patNBParameters::the()->nbrOfThreads;
 	if (m_observations.size() <= num_threads) {
 		num_threads = m_observations.size();
-	}DEBUG_MESSAGE( "threads: "<<num_threads<<", obs:"<<m_observations.size());
+	}
+	DEBUG_MESSAGE( "threads: "<<num_threads<<", obs:"<<m_observations.size());
 
 #pragma omp parallel num_threads( num_threads)
 
@@ -88,13 +89,11 @@ void patSampleChoiceSetWithObservations::addObservation(patObservation& obs,
 	 * Get relevant OD first.
 	 */
 	if (obs.getId() == string("")) {
-		obs.setId(boost::lexical_cast < string > (m_observations.size()));
+		obs.setId(boost::lexical_cast<string>(m_observations.size()));
 	}
-//    m_observations.push_back(obs);
-//    DEBUG_MESSAGE(obs.getId());
+
 	map<const patMultiModalPath, double> path_probas =
 			obs.getNormalizedPathProbas();
-	//set<int> test_set;
 	set<patOd> od_set;
 
 	unsigned long obs_id = 1;
@@ -109,8 +108,8 @@ void patSampleChoiceSetWithObservations::addObservation(patObservation& obs,
 			if (sample == true) {
 				patObservation new_obs;
 				new_obs.setId(
-						obs.getId() + string("_") + boost::lexical_cast < string
-								> (obs_id));
+						obs.getId() + string("_")
+								+ boost::lexical_cast<string>(obs_id));
 				new_obs.addPath(path_iter->first, path_iter->second);
 				m_observations.push_back(new_obs);
 				++obs_id;

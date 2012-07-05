@@ -234,6 +234,7 @@ double discardGPSGap;
 	unsigned long MSGINTERVAL_ELEMENT;
 	unsigned long TOTALITERATIONS_ELEMENT;
 	unsigned long SAMPLEINTERVAL_ELEMENT;
+	unsigned long WARMUP_ITERATIONS;
 	unsigned long SAMPLE_COUNT;
 	double CUTOFFPROBABILITY_ELEMENT;
 	double RELATIVECOSTSCALE_ELEMENT;
@@ -269,6 +270,9 @@ double discardGPSGap;
 	string choiceSetInBiogemeData;
 
 	string pathSampleAlgorithm;
+
+	unsigned long OriginId;
+	unsigned long DestinationId;
 private:
 
 	map<patString, pair<patString, patString> > params;

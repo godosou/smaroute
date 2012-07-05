@@ -187,7 +187,7 @@ void patWay::initiateNetworkTypeRules(string file_name) {
 
 		getline(linestream, item, '\n');
 		string value = item;
-		DEBUG_MESSAGE(type<<","<<key<<":"<<value<<", include: "<<include);
+//		DEBUG_MESSAGE(type<<","<<key<<":"<<value<<", include: "<<include);
 		if (type == "car") {
 			if (include) {
 				loadRule(car_include_rules, key, value);

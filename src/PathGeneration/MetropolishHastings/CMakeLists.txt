@@ -13,5 +13,6 @@ add_library(MHPath
     MHPathProposal.cc
     MHWeightFunction.cc
   MHPathGenerator.cc
+  MHObservationWritterWrapper.cc
 )
 target_link_libraries (MHPath PGUtilities Math ${LIB_EXTRA})

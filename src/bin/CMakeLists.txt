@@ -34,5 +34,8 @@ target_link_libraries (synWriteBiogeme RandomWalk PGUtilities RouteChoice MHPath
 add_executable(writeBiogeme writeBiogeme.cc)
 target_link_libraries (writeBiogeme RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 
+add_executable(simulateObservations simulateObservations.cc)
+target_link_libraries (simulateObservations   MHPath  NetworkHandler PGUtilities ShortestPath Utilities  Math ${LIB_EXTRA})
+
 #add_executable(countSampledChosenPath countSampledChosenPath.cc)
 #target_link_libraries (countSampledChosenPath RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})

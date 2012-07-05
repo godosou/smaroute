@@ -12,7 +12,7 @@
 #include "patNetworkReducer.h"
 #include "patNetworkCar.h"
 MHPathGenerator::MHPathGenerator(unsigned long rng) :
-		m_rnd(rng), m_network(NULL) {
+		m_rnd(rng), m_network(NULL), m_writter_wrapper(NULL) {
 	m_msgInterval = patNBParameters::the()->MSGINTERVAL_ELEMENT;
 	m_randomSeed = patNBParameters::the()->RANDOMSEED_ELEMENT;
 
@@ -31,7 +31,7 @@ MHPathGenerator::MHPathGenerator(unsigned long rng) :
 
 MHPathGenerator::MHPathGenerator(MHPathGenerator const& other) :
 		m_rnd(other.m_rnd), m_linkAndPathCost(other.m_linkAndPathCost), m_MHWeight(
-				other.m_MHWeight) {
+				other.m_MHWeight), m_writter_wrapper(other.m_writter_wrapper) {
 	m_network = other.m_network->clone();
 	int DEFAULT_MSGINTERVAL = INT_MAX;
 
@@ -124,7 +124,9 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 				<< endl;
 		patNetworkReducer nr(origin, destination, m_linkAndPathCost, expansion);
 		nr.reduce(m_network);
-		m_network->exportKML(m_path_writer->getFileName()+".reduced.kml");
+		if (m_path_writer != NULL) {
+			m_network->exportKML(m_path_writer->getFileName() + ".reduced.kml");
+		}
 		cout << "network reduced NODE SIZE:" << (m_network->getNodeSize());
 		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
 	}
@@ -158,7 +160,7 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 		unordered_map<const patNode*, double>::const_iterator bc_iter =
 				bwdCost.find(node_iter->first);
 		if (bc_iter != bwdCost.end() && bc_iter->second != DBL_MAX
-				&& node_iter->second != DBL_MAX) {
+		&& node_iter->second != DBL_MAX) {
 			double cost = node_iter->second + bc_iter->second;
 			minCost = cost < minCost ? cost : minCost;
 			proposal_probabilities[node_iter->first] = cost;
@@ -179,17 +181,36 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 			node_iter != proposal_probabilities.end(); ++node_iter) {
 		node_iter->second /= weightSum;
 	}
-	cout<<"---NODE INTERSTION DONE---"<<endl;
+	cout << "---NODE INTERSTION DONE---" << endl;
 	MHPathProposal proposal(origin, destination, &router,
 			proposal_probabilities, 1.0, &m_rnd);
 
 	MHAlgorithm<MHPath> algo(&proposal, m_MHWeight, &m_rnd);
 	algo.setMsgInterval(m_msgInterval);
-	MHPathWriterWrapper pww(m_path_writer, m_sampleInterval);
-	algo.addStateProcessor(&pww);
-//	cout<<
-//			"sample cout"<<m_total_samples<<", interval"<<m_sampleInterval<<endl;
-	algo.run((m_total_samples) * m_sampleInterval);
+	if (m_writter_wrapper != NULL) {
+		algo.addStateProcessor(m_writter_wrapper);
+		algo.run(
+				patNBParameters::the()->WARMUP_ITERATIONS
+						+ (m_total_samples) * m_sampleInterval);
+
+	} else {
+		if (m_path_writer != NULL) {
+			MHPathWriterWrapper pww(m_path_writer, m_sampleInterval);
+			algo.addStateProcessor(&pww);
+
+			algo.run(
+					patNBParameters::the()->WARMUP_ITERATIONS
+							+ (m_total_samples) * m_sampleInterval);
+
+		} else {
+			throw RuntimeException("invalid path writter.");
+		}
+	}
 	delete m_network;
 	m_network = NULL;
+}
+
+void MHPathGenerator::setWritterWrapper(
+		MHStateProcessor<MHPath>* writter_wrapper) {
+	m_writter_wrapper = writter_wrapper;
 }

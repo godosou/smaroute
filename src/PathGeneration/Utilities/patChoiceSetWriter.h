@@ -12,7 +12,6 @@
 
 #include "patMultiModalPath.h"
 #include <set>
-using namespace std;
 class patChoiceSetWriter {
 public:
 	patChoiceSetWriter();
@@ -25,6 +24,7 @@ public:
 
 protected:
 	patPathWriter* m_path_writer;
+	unsigned long m_warmup_iterations;
 	int m_sample_interval;
 //	const MHLinkAndPathCost* m_path_cost;
 	map<patMultiModalPath,pair<int, double> > m_sampled_set;

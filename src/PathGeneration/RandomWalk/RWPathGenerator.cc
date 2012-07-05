@@ -76,7 +76,7 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 	}
 
 	//Loop on the outgoing arcs, and compute the cost of each shortest path.
-	double total(0.0);
+	double smallest_kuma=DBL_MAX;
 	for (set<const patRoadBase*>::const_iterator arc_iter =
 			outgoing_roads.begin(); arc_iter != outgoing_roads.end();
 			++arc_iter) {
@@ -104,27 +104,37 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 			return map<const patRoadBase*, double>();
 		}
 
-		double kuma = 1 - pow((1 - pow(theRatio, m_kumaA)), m_kumaB);
+//		double kuma = 1 - pow((1 - pow(theRatio, m_kumaA)), m_kumaB);//FIXME
+		double kuma = m_kumaA * log(theRatio);
+		smallest_kuma = (kuma<smallest_kuma)?kuma:smallest_kuma;
 		if (!finite(kuma)) {
 			kuma = 0.0;
 		}
 //		DEBUG_MESSAGE(kuma);
-		total += kuma;
+//		total += kuma;
 
 		arc_probas.insert(
 				pair<const patRoadBase*, const double>(*arc_iter, kuma));
+
+	}
+	double total(0.0);
+	for (map<const patRoadBase*, double>::iterator arc_iter =
+			arc_probas.begin(); arc_iter != arc_probas.end(); ++arc_iter) {
+		arc_iter->second -= smallest_kuma;
+		arc_iter->second = exp(arc_iter->second);
+		total+=arc_iter->second;
 
 	}
 	if (arc_probas.size() == 0 || total == 0.0) {
 		throw RuntimeException("Invalid probas for ougoing arcs");
 		return map<const patRoadBase*, double>();
 	}
+
 	for (map<const patRoadBase*, double>::iterator arc_iter =
 			arc_probas.begin(); arc_iter != arc_probas.end(); ++arc_iter) {
 		arc_iter->second /= total;
 
 	}
-
 	return arc_probas;
 
 }
@@ -236,6 +246,10 @@ double RWPathGenerator::calculatePathLogWeight(
 				arc_probas.find(*arc_iter);
 		if (find_arc == arc_probas.end()) {
 			throw RuntimeException("arc no in ougoing choice set");
+		}
+		if(find_arc->second==0.0){
+			WARNING("invalid proba for arc"<<*(*arc_iter));
+			throw RuntimeException("invalid proba for arc");
 		}
 		path_log_proba += log(find_arc->second);
 

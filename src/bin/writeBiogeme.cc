@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
 				<< " doesn't exist or no permission to read.";
 		WARNING(str.str());
 		exit(-1);
-	}DEBUG_MESSAGE("Direcotry " << dir_name_char << " is now open");
+	}
+	DEBUG_MESSAGE("Direcotry " << dir_name_char << " is now open");
 	vector<string> observation_files;
 	unsigned char isFile = 0x8;
 	string esp("~");
@@ -162,23 +163,46 @@ int main(int argc, char *argv[]) {
 		} else {
 
 			unsigned file_index = 0;
-
-			while (true) {
+			unsigned biggest_file_index = file_index;
+			while(true){
 				++file_index;
+
 				sample_file = sample_folder + "/" + new_observation.getId()
 						+ "_" + boost::lexical_cast<string>(file_index)
 						+ "_sample.kml";
 				if (!ifstream(sample_file.c_str())) {
 					break;
 				}
-				map<patOd, patChoiceSet> new_css = rc.read(sample_file,rnd);
-				css.insert(new_css.begin(), new_css.end());
-//				DEBUG_MESSAGE(
-//						"\t read sample file "<<new_observation.getId() + "_" + boost::lexical_cast < string > (file_index) + "_sample.kml");
+
+				biggest_file_index = file_index;
 
 			}
-		}DEBUG_MESSAGE("\t chocie set read with ods: "<<css.size());
-		//			DEBUG_MESSAGE(css.size());
+#pragma omp parallel num_threads( 15)
+
+			{
+
+#pragma omp for
+
+				for (unsigned file_index = 1; file_index <= biggest_file_index; ++file_index) {
+
+					const string ind_sample_file = sample_folder + "/" + new_observation.getId()
+							+ "_" + boost::lexical_cast<string>(file_index)
+							+ "_sample.kml";
+					if (!ifstream(ind_sample_file.c_str())) {
+						cout<<"file "<<ind_sample_file<<" does not exist";
+						continue;
+					}
+					map<patOd, patChoiceSet> new_css = rc.read(ind_sample_file,
+							rnd);
+#pragma omp critical
+					{
+						css.insert(new_css.begin(), new_css.end());
+						DEBUG_MESSAGE( "\t read sample file "<<ind_sample_file);
+					}
+				}
+			}
+		}
+		DEBUG_MESSAGE("\t chocie set read with ods: "<<css.size());
 		if (css.size() == 0) {
 			continue;
 		}
@@ -204,11 +228,7 @@ int main(int argc, char *argv[]) {
 		od_paths.push_back(
 				pair<int, int>(new_observation.getNbOfOds(),
 						new_observation.getNbrOfCandidates()));
-		DEBUG_MESSAGE("===End " << sample_file << " ===");
-//		break;
-		//boost::thread workerThread(workerFunc,file_path,&path_generator,&network_environment.getNetworkElements());
-//		    boost::thread workerThread = testThread();
-		//	    workerThread.join();
+		DEBUG_MESSAGE("===End " << observation_files[i] << " ===");
 	}
 
 	if (patNBParameters::the()->pathSampleAlgorithm == "MH") {
@@ -237,7 +257,7 @@ int main(int argc, char *argv[]) {
 			mh_weight.setPathProbas(&sco.getPathProbas());
 		}
 		patWriteBiogemeData wbd(sco.getObs(), &utility_function,
-				&path_generator, NULL,rnd);
+				&path_generator, NULL, rnd);
 
 		wbd.writeSampleFile(sample_folder);
 	} else if (patNBParameters::the()->pathSampleAlgorithm == "RW") {
@@ -248,13 +268,12 @@ int main(int argc, char *argv[]) {
 		path_generator.setNetwork(network_environment.getNetwork(CAR));
 
 		patWriteBiogemeData wbd(sco.getObs(), &utility_function,
-				&path_generator, NULL,rnd);
+				&path_generator, NULL, rnd);
 
 		wbd.writeSampleFile(sample_folder);
 	}
 	string scp_txt_fn = sample_folder + string("/sampledChosenPath_")
-			+ boost::lexical_cast<string>(
-					patNBParameters::the()->SAMPLE_COUNT)
+			+ boost::lexical_cast<string>(patNBParameters::the()->SAMPLE_COUNT)
 			+ string(".txt");
 	ofstream sampleFile(scp_txt_fn.c_str());
 	sampleFile << "sampled" << "," << "not_sampled" << endl;
