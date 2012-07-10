@@ -31,6 +31,7 @@ patObservationWritter::patObservationWritter(string folder,
 		throw IllegalArgumentException(
 				"sample interval is not strictly positive");
 	}
+	DEBUG_MESSAGE(m_warmup_iterations);
 
 }
 
@@ -45,20 +46,23 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 	 * (1) check if this path should be written
 	 */
 	m_path_count++;
-	if (m_path_count <= m_warmup_iterations || m_path_count% m_sample_interval != 0) {
+	int sampled_count = m_path_count-m_warmup_iterations;
+	if (sampled_count<=0 || sampled_count% m_sample_interval != 0) {
 
 		return;
 	}
+
 	/*
 	 * (2) write out the path
 	 */
 
+//	cout << m_path_count<<"-"<<m_warmup_iterations<<endl;
 
-
+//	cout <<"export a path"<<endl;
 	m_sampled_path_count++;
 	string i_str = boost::lexical_cast<string>(m_sampled_path_count);
 	patKMLPathWriter kml_writer(m_folder + "observations/" + i_str + ".kml");
-
+//	cout <<m_folder + "observations/" + i_str + ".kml"<<endl;
 	map<string, string> attrs_true;
 	attrs_true["true"] = boost::lexical_cast<string>(log_weight);
 	attrs_true["id"] = i_str;

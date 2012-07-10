@@ -12,7 +12,7 @@
 #include "patNetworkReducer.h"
 #include "patNetworkCar.h"
 MHPathGenerator::MHPathGenerator(unsigned long rng) :
-		m_rnd(rng), m_network(NULL), m_writter_wrapper(NULL) {
+		m_rnd(rng), m_network(NULL), m_writter_wrapper(NULL),m_path_writer(NULL) {
 	m_msgInterval = patNBParameters::the()->MSGINTERVAL_ELEMENT;
 	m_randomSeed = patNBParameters::the()->RANDOMSEED_ELEMENT;
 
@@ -31,7 +31,7 @@ MHPathGenerator::MHPathGenerator(unsigned long rng) :
 
 MHPathGenerator::MHPathGenerator(MHPathGenerator const& other) :
 		m_rnd(other.m_rnd), m_linkAndPathCost(other.m_linkAndPathCost), m_MHWeight(
-				other.m_MHWeight), m_writter_wrapper(other.m_writter_wrapper) {
+				other.m_MHWeight), m_writter_wrapper(other.m_writter_wrapper),m_path_writer(other.m_path_writer) {
 	m_network = other.m_network->clone();
 	int DEFAULT_MSGINTERVAL = INT_MAX;
 

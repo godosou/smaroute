@@ -56,10 +56,6 @@ void patKMLPathWriter::close() {
 	KmlPtr kml = factory->CreateKml();
 	kml->set_feature(m_document);
 	ofstream kml_file_op(m_file_name.c_str());
-//	kml_file_op <<"\n";
-//	stringstream ss;
-//	ss<<kmldom::SerializePretty(kml);
-//	DEBUG_MESSAGE(ss.str());
 	kml_file_op << kmldom::SerializePretty(kml)<<endl;
 
 	kml_file_op.close();

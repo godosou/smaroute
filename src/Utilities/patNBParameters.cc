@@ -302,6 +302,9 @@ void patNBParameters::init(patError*& err) {
 
 	intParams["OriginId"] = &OriginId;
 	intParams["DestinationId"] = &DestinationId;
+	intParams["syntheticObservations"] = &syntheticObservations;
+
+
 
 	strParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
 

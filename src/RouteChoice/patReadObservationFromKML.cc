@@ -64,7 +64,7 @@ void patReadObservationFromKML::parseFile(string file_name,
 				}
 			}
 		}
-		//DEBUG_MESSAGE(paths_folder->get_name());
+		DEBUG_MESSAGE(paths_folder->get_name());
 		xml::node::iterator od_iter = paths_folder->begin();
 		for (; od_iter != paths_folder->end(); ++od_iter) {
 			if (od_iter->is_text()) {

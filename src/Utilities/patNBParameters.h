@@ -273,6 +273,8 @@ double discardGPSGap;
 
 	unsigned long OriginId;
 	unsigned long DestinationId;
+
+	unsigned long syntheticObservations;
 private:
 
 	map<patString, pair<patString, patString> > params;
