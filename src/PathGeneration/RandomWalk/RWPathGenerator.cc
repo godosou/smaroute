@@ -203,17 +203,6 @@ void RWPathGenerator::sampleOnePath(const patNode* origin,
 	}
 	if (logProba <= DBL_MAX || logProba >= -DBL_MAX) {
 		csw.processState(new_path, logProba);
-//		map<patMultiModalPath, pair<int, double> >::iterator find_sampled_path =
-//				m_sampled_set.find(new_path);
-//
-//		pair<int, double> d(1, logProba);
-//		if (find_sampled_path == m_sampled_set.end()) {
-//			m_sampled_set.insert(
-//					pair<patMultiModalPath, pair<int, double> >(new_path, d));
-//		} else {
-//			find_sampled_path->second.first += 1;
-//			find_sampled_path->second.second += logProba;
-//		}
 
 	} else {
 		stringstream ss;
