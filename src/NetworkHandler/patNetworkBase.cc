@@ -121,13 +121,21 @@ void patNetworkBase::exportKML(const string file_path) const {
 	KmlFactory* factory = KmlFactory::GetFactory();
 	FolderPtr stop_folder = factory->CreateFolder();
 	FolderPtr links_folder = factory->CreateFolder();
+	FolderPtr signals_folder = factory->CreateFolder();
 
 	stop_folder->set_name(string("Stop"));
+	signals_folder->set_name(string("Signals"));
 	links_folder->set_name(string("Links"));
 	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
 			m_outgoing_incidents.begin();
 			incid_iter != m_outgoing_incidents.end(); ++incid_iter) {
 
+		if (incid_iter->first->hasTrafficSignal()) {
+
+			PlacemarkPtr node = incid_iter->first->getKML();
+			node->set_styleurl("#signal");
+			signals_folder->add_feature(node);
+		}
 		if (isStop(incid_iter->first)) {
 			PlacemarkPtr node = incid_iter->first->getKML();
 			node->set_styleurl("#stop");
@@ -144,6 +152,7 @@ void patNetworkBase::exportKML(const string file_path) const {
 
 	document->add_feature(stop_folder);
 	document->add_feature(links_folder);
+	document->add_feature(signals_folder);
 	KmlPtr kml = factory->CreateKml();
 	kml->set_feature(document);
 
@@ -195,7 +204,8 @@ void patNetworkBase::exportCadytsOSM(const string file_path) const {
 		if (*arc_iter != NULL) {
 			cadyts_vis_data << "\t<way id=\""
 					<< (*arc_iter)->getUpNode()->getUserId() << "_"
-					<< (*arc_iter)->getDownNode()->getUserId() << "\" >" << endl;
+					<< (*arc_iter)->getDownNode()->getUserId() << "\" >"
+					<< endl;
 			cadyts_vis_data << "\t\t<nd ref=\""
 					<< (*arc_iter)->getUpNode()->getUserId() << "\" />" << endl;
 			cadyts_vis_data << "\t\t<nd ref=\""
@@ -212,24 +222,41 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 
 	string shape_file_path = file_path + ".shp";
 	string stop_file_path = file_path + "_stops.shp";
+	string traffic_signal_path = file_path + "_signals.shp";
+
 	SHPHandle shp_file_handler = SHPCreate(shape_file_path.c_str(), SHPT_ARC);
 	SHPHandle stop_file_handler = SHPCreate(stop_file_path.c_str(), SHPT_POINT);
+	SHPHandle signals_file_handler = SHPCreate(traffic_signal_path.c_str(),
+			SHPT_POINT);
 
 	DEBUG_MESSAGE("writing path to" << shape_file_path);
 	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
 			m_outgoing_incidents.begin();
 			incid_iter != m_outgoing_incidents.end(); ++incid_iter) {
+		if (incid_iter->first->hasTrafficSignal()) {
 
+			double node_padfX[1] = {
+					incid_iter->first->getGeoCoord().longitudeInDegrees };
+			double node_padfY[1] = {
+					incid_iter->first->getGeoCoord().latitudeInDegrees };
+			SHPObject* node_shp_object = SHPCreateSimpleObject(SHPT_POINT, 2,
+					node_padfX, node_padfY, NULL);
+
+			int stop_number = SHPWriteObject(signals_file_handler, -1,
+					node_shp_object);
+			SHPDestroyObject(node_shp_object);
+		}
 		if (isStop(incid_iter->first)) {
 			double node_padfX[1] = {
 					incid_iter->first->getGeoCoord().longitudeInDegrees };
 			double node_padfY[1] = {
 					incid_iter->first->getGeoCoord().latitudeInDegrees };
-			SHPObject* stop_shp_object = SHPCreateSimpleObject(SHPT_POINT, 2,
+			SHPObject* node_shp_object = SHPCreateSimpleObject(SHPT_POINT, 2,
 					node_padfX, node_padfY, NULL);
+
 			int stop_number = SHPWriteObject(stop_file_handler, -1,
-					stop_shp_object);
-			SHPDestroyObject(stop_shp_object);
+					node_shp_object);
+			SHPDestroyObject(node_shp_object);
 		}
 		for (set<const patRoadBase*>::const_iterator road_iter =
 				incid_iter->second.begin();
@@ -262,6 +289,7 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 	}
 
 	SHPClose(shp_file_handler);
+	SHPClose(signals_file_handler);
 	SHPClose(stop_file_handler);
 	DEBUG_MESSAGE("shape files written");
 	return true;
@@ -283,7 +311,8 @@ set<const patArc*> patNetworkBase::getAllArcs() const {
 }
 
 void patNetworkBase::addArc(const patArc* arc) {
-	DEBUG_MESSAGE(arc->getUpNode()->getUserId()<<"-"<<arc->getDownNode()->getUserId());
+	DEBUG_MESSAGE(
+			arc->getUpNode()->getUserId()<<"-"<<arc->getDownNode()->getUserId());
 	const patNode* up_node = arc->getUpNode();
 	m_outgoing_incidents[up_node];
 	m_outgoing_incidents[up_node].insert(arc);
@@ -300,12 +329,13 @@ void patNetworkBase::removeNode(const patNode* node) {
 	m_outgoing_incidents.erase(node);
 
 }
-const set<const patRoadBase*> patNetworkBase::getOutgoingRoads(const patNode* node) const{
-	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_outgoing =  m_outgoing_incidents.find(node);
-	if(find_outgoing == m_outgoing_incidents.end()){
+const set<const patRoadBase*> patNetworkBase::getOutgoingRoads(
+		const patNode* node) const {
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_outgoing =
+			m_outgoing_incidents.find(node);
+	if (find_outgoing == m_outgoing_incidents.end()) {
 		return set<const patRoadBase*>();
-	}
-	else{
+	} else {
 		return find_outgoing->second;
 	}
 

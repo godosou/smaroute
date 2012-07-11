@@ -56,6 +56,20 @@ patCreateKmlStyles::~patCreateKmlStyles() {
 	stop->set_iconstyle(iconstyle);
 	document->add_styleselector(stop);
 
+
+
+	StylePtr signal = kml_factory->CreateStyle();
+	signal->set_id("signal");
+	iconstyle = kml_factory->CreateIconStyle();
+	iconstyle->set_scale(0.5);
+	 icon = kml_factory->CreateIconStyleIcon();
+	icon->set_href("http://maps.google.com/mapfiles/kml/shapes/police.png");
+	iconstyle->set_icon(icon);
+	signal->set_iconstyle(iconstyle);
+	document->add_styleselector(signal);
+
+
+
 	vector<string> colors;
 	colors.push_back("ffffff00");
 	colors.push_back("ffff00ff");

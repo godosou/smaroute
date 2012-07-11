@@ -50,6 +50,7 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 			from_node);
 
 	double sp_cost_up = DBL_MAX;
+
 	if (from_node == destination) {
 
 		for (set<const patRoadBase*>::const_iterator arc_iter =
@@ -71,7 +72,7 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 		sp_cost_up = sp_tree->getLabel(from_node);
 	}
 	if (sp_cost_up == DBL_MAX) {
-		WARNING("UP COST DLB_MAX");
+//		WARNING("UP COST DLB_MAX");
 		return map<const patRoadBase*, double>();
 	}
 
@@ -91,7 +92,7 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 		if (theRatio == 0.0) {
 			stringstream str;
 			str << "Ratio should be greater than zeros, and is " << theRatio;
-			WARNING(str.str());
+//			WARNING(str.str());
 			throw RuntimeException(str.str().c_str());
 		} else if (theRatio > 1.0) {
 			stringstream str;
@@ -99,7 +100,7 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 			str << ", shortest cost:" << sp_cost_up << ", sp cost" << spCost
 					<< ", arc cost:" << m_link_cost->getCost(*arc_iter)
 					<< ", length:" << (*arc_iter)->getLength();
-			WARNING(str.str());
+//			WARNING(str.str());
 			throw RuntimeException(str.str().c_str());
 			return map<const patRoadBase*, double>();
 		}
@@ -133,6 +134,7 @@ map<const patRoadBase*, double> RWPathGenerator::getOutgoingArcProbas(
 	for (map<const patRoadBase*, double>::iterator arc_iter =
 			arc_probas.begin(); arc_iter != arc_probas.end(); ++arc_iter) {
 		arc_iter->second /= total;
+//		cout<<arc_iter->second<<endl;
 
 	}
 	return arc_probas;
@@ -191,7 +193,7 @@ void RWPathGenerator::sampleOnePath(const patNode* origin,
 
 		if (result.first == NULL
 				|| !new_path.addRoadTravelToBack(result.first, CAR)) {
-			WARNING("fail to add downstream road"<<result.second);
+//			WARNING("fail to add downstream road"<<result.second);
 			throw RuntimeException("fail to add downstream road");
 			return;
 		}
@@ -201,13 +203,14 @@ void RWPathGenerator::sampleOnePath(const patNode* origin,
 		current_node = result.first->getDownNode();
 
 	}
+//	cout<<"visited destinations "<<dest_count;
 	if (logProba <= DBL_MAX || logProba >= -DBL_MAX) {
 		csw.processState(new_path, logProba);
 
 	} else {
 		stringstream ss;
 		ss << "sampling algorithm is not valid:" << exp(logProba);
-		WARNING(ss.str());
+//		WARNING(ss.str());
 		return;
 
 	}
@@ -237,7 +240,7 @@ double RWPathGenerator::calculatePathLogWeight(
 			throw RuntimeException("arc no in ougoing choice set");
 		}
 		if(find_arc->second==0.0){
-			WARNING("invalid proba for arc"<<*(*arc_iter));
+//			WARNING("invalid proba for arc"<<*(*arc_iter));
 			throw RuntimeException("invalid proba for arc");
 		}
 		path_log_proba += log(find_arc->second);

@@ -1,4 +1,6 @@
 
+
+include_directories("${NewBioroute_SOURCE_DIR}/headers")
 include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
 include_directories("${NewBioroute_SOURCE_DIR}/NetworkHandler")
 include_directories("${NewBioroute_SOURCE_DIR}/MapMatching")
@@ -19,6 +21,13 @@ include_directories("${NewBioroute_SOURCE_DIR}/RouteChoice")
 add_executable(pathGeneration pathGeneration.cc)
 target_link_libraries (pathGeneration RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 #
+
+add_executable(osm2kml osm2kml.cc)
+target_link_libraries (osm2kml   NetworkHandler  Utilities   ${LIB_EXTRA})
+add_executable(pathGenerationWithOd pathGenerationWithOd.cc)
+target_link_libraries (pathGenerationWithOd RandomWalk MHPath PGUtilities ShortestPath RouteChoice NetworkHandler  Utilities Math  ${LIB_EXTRA})
+
+
 add_executable(enumeratPaths pathEnumeration.cc)
 target_link_libraries (enumeratPaths  PGUtilities PathEnumeration  NetworkHandler  Utilities   ${LIB_EXTRA})
 

@@ -7,7 +7,10 @@
 
 #include "patNBParameters.h"
 #include "patDisplay.h"
-#include "funcs.h"
+#include "initParams.h"
+#include "initNetworks.h"
+#include "getObservations.h"
+#include "sampleChoiceSet.h"
 #include "patNetworkEnvironment.h"
 #include "patObservation.h"
 #include <vector>
