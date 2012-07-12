@@ -21,10 +21,11 @@ class patLinkAndPathCost;
 class patShortestPathTreeGeneral;
 class RWPathGenerator: public patPathGenerator {
 public:
-	RWPathGenerator(unsigned long rng, double kumaA, double kumaB,
+	RWPathGenerator(const patRandomNumber& rnd, double kumaA, double kumaB,
 			const patLinkAndPathCost* link_cost);
 	void setPathWriter(patPathWriter* path_writer);
 	void setLinkCost(const patLinkAndPathCost* link_cost);
+	RWPathGenerator(const RWPathGenerator& another);
 	RWPathGenerator* clone() const {
 		return new RWPathGenerator(*this);
 	}
@@ -48,7 +49,7 @@ protected:
 
 	unsigned long m_total_samples;
 
-	patRandomNumber m_rnd;
+	const patRandomNumber& m_rnd;
 
 
 	const patLinkAndPathCost* m_link_cost;

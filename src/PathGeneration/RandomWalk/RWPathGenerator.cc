@@ -18,16 +18,31 @@
 #include "patPathWriter.h"
 #include "patAbstractCost.h"
 
-RWPathGenerator::RWPathGenerator(unsigned long rng, double kumaA, double kumaB,
+RWPathGenerator::RWPathGenerator(const patRandomNumber& rnd, double kumaA, double kumaB,
 		const patLinkAndPathCost* link_cost) :
 		patPathGenerator::patPathGenerator(),
-		m_rnd(rng), m_kumaA(kumaA), m_kumaB(kumaB), m_link_cost(link_cost) {
+		m_rnd(rnd), m_kumaA(kumaA), m_kumaB(kumaB), m_link_cost(link_cost) {
 
 	m_msgInterval = patNBParameters::the()->MSGINTERVAL_ELEMENT;
 	m_total_samples = patNBParameters::the()->SAMPLE_COUNT;
 
 }
 
+
+RWPathGenerator::RWPathGenerator(const RWPathGenerator& another):
+		m_rnd(another.m_rnd){
+
+	m_origin = another.m_origin;
+	m_origin = another.m_destination;
+	m_msgInterval = another.m_msgInterval;
+	m_total_samples = another.m_total_samples;
+	m_link_cost = another.m_link_cost;
+	m_path_writer = another.m_path_writer;
+	m_kumaA = another.m_kumaA;
+	m_kumaB = another.m_kumaB;
+
+	setNetwork(another.m_network);
+}
 RWPathGenerator::~RWPathGenerator() {
 	// TODO Auto-generated destructor stub
 }
@@ -154,6 +169,9 @@ pair<const patRoadBase*, const double> RWPathGenerator::getNextArcInRandomWalk(
 		theArcs.push_back(arc_iter->first);
 		probas.push_back(arc_iter->second);
 
+	}
+	if(probas.empty()){
+		return pair<const patRoadBase*, const double>(NULL,0.0);
 	}
 	int selectId = patSampleDiscreteDistribution()(probas, m_rnd);
 
