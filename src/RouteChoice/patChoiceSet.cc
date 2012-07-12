@@ -7,7 +7,7 @@
 
 #include "patChoiceSet.h"
 #include "patException.h"
-#include "patComputePathSize.h"
+#include "patPathSizeComputer.h"
 #include "patNBParameters.h"
 #include "patRandomNumber.h"
 #include "patSampleDiscreteDistribution.h"
@@ -140,9 +140,11 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 		const patMultiModalPath& chosen_path,
 		const patUtilityFunction* utility_function,
 		const patPathGenerator* path_generator,
-		const patChoiceSet* universal_choiceset, const unsigned& choice_set_size, const patRandomNumber& rnd) const {
-	patChoiceSet new_choice_set = sampleSubSet(choice_set_size,rnd);
-	return new_choice_set.genAttributes(chosen_path, utility_function,path_generator,universal_choiceset);
+		const patChoiceSet* universal_choiceset,
+		const unsigned& choice_set_size, const patRandomNumber& rnd) const {
+	patChoiceSet new_choice_set = sampleSubSet(choice_set_size, rnd);
+	return new_choice_set.genAttributes(chosen_path, utility_function,
+			path_generator, universal_choiceset);
 }
 unordered_map<string, double> patChoiceSet::genAttributes(
 		const patMultiModalPath& chosen_path,
@@ -152,15 +154,14 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 	//bool chosen_sampled = isSampled(chosen_path);
 	unordered_map<string, double> attributes;
 
-	patComputePathSize ps_computer;
+	patPathSizeComputer* ps_computer = new patPathSizeComputer(getChoiceSet(),
+			chosen_path);
+	patPathSizeComputer* ps_computer_u = NULL;
 
-	map<const patMultiModalPath, double> ps = ps_computer.computePS(chosen_path,
-			*this);
-	map<const patMultiModalPath, double> ps_u;
 	if (universal_choiceset == NULL) {
-		ps_u = ps;
+		ps_computer_u = ps_computer->clone();
 	} else {
-		ps_u = ps_computer.computePS(*universal_choiceset);
+		ps_computer_u = new patPathSizeComputer(universal_choiceset->getChoiceSet());
 	}
 	map<const patMultiModalPath, double> sc = computeSC(chosen_path,
 			path_generator);
@@ -176,18 +177,8 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 		map<ARC_ATTRIBUTES_TYPES, double> path_cost =
 				utility_function->getAttributes(chosen_path);
 		chosen_cost = path_cost;
-		map<const patMultiModalPath, double>::const_iterator find_ps = ps.find(
-				chosen_path);
-		map<const patMultiModalPath, double>::const_iterator find_ps_u =
-				ps_u.find(chosen_path);
 		map<const patMultiModalPath, double>::const_iterator find_sc = sc.find(
 				chosen_path);
-		if (find_ps == ps.end()) {
-			throw RuntimeException("no ps found");
-		}
-		if (find_ps_u == ps_u.end()) {
-			throw RuntimeException("no ps_u found");
-		}
 		if (find_sc == sc.end()) {
 			throw RuntimeException("no sc found");
 		}
@@ -207,14 +198,15 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 
 			stringstream ss;
 			ss << "ps" << i;
-			attributes[ss.str()] = find_ps->second;
+			attributes[ss.str()] = ps_computer->getPS(chosen_path);
 		}
 
 		{
 
 			stringstream ss;
 			ss << "ps_u" << i;
-			attributes[ss.str()] = find_ps_u->second;
+			attributes[ss.str()] = ps_computer_u->getPS(chosen_path);
+
 		}
 
 		{
@@ -235,18 +227,8 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 		map<ARC_ATTRIBUTES_TYPES, double> path_cost =
 				utility_function->getAttributes(*path_iter);
 		chosen_cost = path_cost;
-		map<const patMultiModalPath, double>::const_iterator find_ps = ps.find(
-				*path_iter);
-		map<const patMultiModalPath, double>::const_iterator find_ps_u =
-				ps_u.find(*path_iter);
 		map<const patMultiModalPath, double>::const_iterator find_sc = sc.find(
 				*path_iter);
-		if (find_ps == ps.end()) {
-			throw RuntimeException("no ps found");
-		}
-		if (find_ps_u == ps_u.end()) {
-			throw RuntimeException("no ps_u found");
-		}
 		if (find_sc == sc.end()) {
 			throw RuntimeException("no sc found");
 		}
@@ -255,14 +237,14 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 
 			stringstream ss;
 			ss << "ps" << i;
-			attributes[ss.str()] = find_ps->second;
+			attributes[ss.str()] = ps_computer->getPS(*path_iter);
 		}
 
 		{
 
 			stringstream ss;
 			ss << "ps_u" << i;
-			attributes[ss.str()] = find_ps_u->second;
+			attributes[ss.str()] = ps_computer_u->getPS(*path_iter);
 		}
 		{
 
@@ -326,6 +308,11 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 			attributes[ss.str()] = 9999;
 		}
 	}
+	delete ps_computer;
+	ps_computer = NULL;
+	delete ps_computer_u;
+	ps_computer_u = NULL;
+
 	return attributes;
 }
 map<const patMultiModalPath, double> patChoiceSet::computeSC(
@@ -458,7 +445,8 @@ void patChoiceSet::exportCadytsVisData(const patMultiModalPath& chosen_path,
 	cadyts_vis_data.close();
 }
 
-patChoiceSet patChoiceSet::sampleSubSet(const unsigned choice_set_size,const patRandomNumber& rnd) const {
+patChoiceSet patChoiceSet::sampleSubSet(const unsigned choice_set_size,
+		const patRandomNumber& rnd) const {
 	if (m_paths.size() > choice_set_size) {
 		vector<patMultiModalPath> all_paths;
 		vector<double> all_logweights;
@@ -483,7 +471,7 @@ patChoiceSet patChoiceSet::sampleSubSet(const unsigned choice_set_size,const pat
 			}
 		}
 		patChoiceSet new_choice_set;
-		patOd new_od=m_od;
+		patOd new_od = m_od;
 		new_choice_set.setOd(new_od);
 
 		vector<double> probas(all_paths.size(), 1.0);
@@ -495,7 +483,8 @@ patChoiceSet patChoiceSet::sampleSubSet(const unsigned choice_set_size,const pat
 				sampled_path_indics.begin();
 				sample_iter != sampled_path_indics.end(); ++sample_iter) {
 
-			new_choice_set.addPath(all_paths[*sample_iter],all_logweights[*sample_iter], 1);
+			new_choice_set.addPath(all_paths[*sample_iter],
+					all_logweights[*sample_iter], 1);
 		}
 		return new_choice_set;
 //					DEBUG_MESSAGE("OK");

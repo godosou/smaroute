@@ -1,4 +1,5 @@
 /*
+ *  deprecated!
  * patComputePathSize.cc
  *
  *  Created on: May 3, 2012

@@ -8,18 +8,21 @@ include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
 include_directories("${NewBioroute_SOURCE_DIR}/Router")
 include_directories("${NewBioroute_SOURCE_DIR}/Math")
 add_library(RouteChoice
+patExperimentBed.cc
 patSimulateProbabilisticPaths.cc
+patGetPathProbasFromObservations.cc
     patChoiceSet.cc
     patVerifyingSamplingResult.cc
     patReadChoiceSetFromKML.cc
+    patSampleChoiceSetForObservations.cc
                 patSampleChoiceSetWithObservations.cc
                 patSimulation.cc
                 patWriteBiogemeData.cc
                 patReadPathsFromKML.cc
-                patComputePathSize.cc
+                #patComputePathSize.cc
                 patObservation.cc
                 patUtilityFunction.cc
                 patReadObservationFromKML.cc
                 patSampleChoiceSetWithRandomWalk.cc
 )
-target_link_libraries (RouteChoice ShortestPath MHPath  ${LIB_EXTRA})
+target_link_libraries (RouteChoice ShortestPath MHPath  RandomWalk ${LIB_EXTRA})

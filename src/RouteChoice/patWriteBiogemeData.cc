@@ -23,6 +23,17 @@ patWriteBiogemeData::patWriteBiogemeData(
 		m_observations(observations), m_utility_function(utility_function), m_path_generator(
 				path_generator), m_universal_choiceset(choice_set), m_rnd(rnd) {
 	// TODO Auto-generated constructor stub
+
+	if (m_observations.empty()){
+		throw RuntimeException("no observation.");
+	}
+	if (m_utility_function==NULL){
+		throw RuntimeException("no utility function.");
+	}
+
+	if (m_path_generator==NULL){
+		throw RuntimeException("no path generator function.");
+	}
 }
 
 patWriteBiogemeData::~patWriteBiogemeData() {
