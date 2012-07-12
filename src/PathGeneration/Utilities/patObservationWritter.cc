@@ -61,7 +61,7 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 //	cout <<"export a path"<<endl;
 	m_sampled_path_count++;
 	string i_str = boost::lexical_cast<string>(m_sampled_path_count);
-	patKMLPathWriter kml_writer(m_folder + "observations/" + i_str + ".kml");
+	patKMLPathWriter kml_writer(m_folder + "/" + i_str + ".kml");
 //	cout <<m_folder + "observations/" + i_str + ".kml"<<endl;
 	map<string, string> attrs_true;
 	attrs_true["true"] = boost::lexical_cast<string>(log_weight);
