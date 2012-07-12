@@ -82,11 +82,12 @@ double patPathSizeComputer::computePS(const patMultiModalPath& path){
 			arc_iter != arc_list.end(); ++arc_iter) {
 		unordered_map<const patArc*, int>::const_iterator find_arc_overlap =
 				m_arc_overlap.find(*arc_iter);
-		if (find_arc_overlap == m_arc_overlap.end()) {
-			throw RuntimeException("an arc not in path set");
+		if (find_arc_overlap != m_arc_overlap.end()) {
+			continue;
+//			throw RuntimeException("an arc not in path set");
 		} else {
 			ps += (*arc_iter)->getLength()
-					/ (pL * find_arc_overlap->second);
+					/ (pL * (double) find_arc_overlap->second);
 
 		}
 	}
