@@ -17,6 +17,9 @@ public:
 	/**
 	 * Constructor. Load networks from the database.
 	 */
+	patNetworkEnvironment(){
+		;
+	}
 	patNetworkEnvironment(patGeoBoundingBox& bb, patError*& err);
 	 ~patNetworkEnvironment();
 

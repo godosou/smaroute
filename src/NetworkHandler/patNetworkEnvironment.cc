@@ -93,9 +93,15 @@ patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb,
 							<< network_iter->second->getNodeSize());
 
 		}
-		DEBUG_MESSAGE("finished");
+
+//		DEBUG_MESSAGE("network with nodes: "<<getNetwork(CAR)->getNodeSize());
+
+//		DEBUG_MESSAGE("finished");
 		exportNetwork();
+
 	}
+
+	DEBUG_MESSAGE("network with nodes: "<<getNetwork(CAR)->getNodeSize());
 }
 
 void patNetworkEnvironment::exportNetwork() {
@@ -139,10 +145,12 @@ const patNetworkBase* patNetworkEnvironment::getNetwork(
 			m_networks.find(network_string);
 
 	if (find_network == m_networks.end()) {
-		DEBUG_MESSAGE("NETWORK"<<mode<<"NOT FOUND");
+//		DEBUG_MESSAGE("NETWORK"<<mode<<"NOT FOUND");
+
+		throw RuntimeException("Network not found");
 		return NULL;
 	} else {
-		DEBUG_MESSAGE("NETWORK"<<mode<<" FOUND");
+//		DEBUG_MESSAGE("NETWORK"<<mode<<" FOUND");
 		return find_network->second;
 	}
 }

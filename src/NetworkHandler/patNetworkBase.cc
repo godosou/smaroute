@@ -33,7 +33,6 @@ patNetworkBase::patNetworkBase(const patNetworkBase& other) :
 				other.m_incoming_incidents), m_minimum_label(
 				other.m_minimum_label), m_nodes(other.m_nodes), m_network_type(
 				other.m_network_type), m_transport_mode(other.m_transport_mode) {
-
 }
 unsigned long patNetworkBase::getNodeSize() const {
 	return m_outgoing_incidents.size();
@@ -158,7 +157,7 @@ void patNetworkBase::exportKML(const string file_path) const {
 
 	kml_file << kmldom::SerializePretty(kml);
 	kml_file.close();
-	DEBUG_MESSAGE(kml_file_path << " written");
+	cout<<"\t"<<kml_file_path << " written";
 }
 void patNetworkBase::exportCadytsOSM(const string file_path) const {
 
@@ -229,7 +228,6 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 	SHPHandle signals_file_handler = SHPCreate(traffic_signal_path.c_str(),
 			SHPT_POINT);
 
-	DEBUG_MESSAGE("writing path to" << shape_file_path);
 	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator incid_iter =
 			m_outgoing_incidents.begin();
 			incid_iter != m_outgoing_incidents.end(); ++incid_iter) {
@@ -291,7 +289,7 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 	SHPClose(shp_file_handler);
 	SHPClose(signals_file_handler);
 	SHPClose(stop_file_handler);
-	DEBUG_MESSAGE("shape files written");
+	cout<<"\tshape files written";
 	return true;
 }
 
@@ -311,8 +309,6 @@ set<const patArc*> patNetworkBase::getAllArcs() const {
 }
 
 void patNetworkBase::addArc(const patArc* arc) {
-	DEBUG_MESSAGE(
-			arc->getUpNode()->getUserId()<<"-"<<arc->getDownNode()->getUserId());
 	const patNode* up_node = arc->getUpNode();
 	m_outgoing_incidents[up_node];
 	m_outgoing_incidents[up_node].insert(arc);
