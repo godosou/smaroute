@@ -12,6 +12,9 @@
 using namespace std;
 class patRandomNumber {
 public:
+	patRandomNumber(){
+
+	};
 	patRandomNumber(unsigned long seed);
 	double nextDouble() const;
 	int nextInt(int n) const;//including n
