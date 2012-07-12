@@ -15,7 +15,7 @@ patGetPathProbasFromObservations.cc
     patVerifyingSamplingResult.cc
     patReadChoiceSetFromKML.cc
     patSampleChoiceSetForObservations.cc
-                patSampleChoiceSetWithObservations.cc
+  #              patSampleChoiceSetWithObservations.cc
                 patSimulation.cc
                 patWriteBiogemeData.cc
                 patReadPathsFromKML.cc
@@ -23,6 +23,6 @@ patGetPathProbasFromObservations.cc
                 patObservation.cc
                 patUtilityFunction.cc
                 patReadObservationFromKML.cc
-                patSampleChoiceSetWithRandomWalk.cc
+       #         patSampleChoiceSetWithRandomWalk.cc
 )
 target_link_libraries (RouteChoice ShortestPath MHPath  RandomWalk ${LIB_EXTRA})

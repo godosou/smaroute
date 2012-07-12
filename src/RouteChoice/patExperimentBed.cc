@@ -159,7 +159,7 @@ void patExperimentBed::sampleChoiceSet() {
 	if (m_algorithm == "MH" && m_mh_path_generator != NULL) {
 		sample_choice_set.sampleChoiceSet(m_observations, m_mh_path_generator,
 				m_choice_set_foler);
-	} else if (m_algorithm == "RW" && m_mh_path_generator != NULL) {
+	} else if (m_algorithm == "RW" && m_rw_path_generator != NULL) {
 
 		sample_choice_set.sampleChoiceSet(m_observations, m_rw_path_generator,
 				m_choice_set_foler);
@@ -227,7 +227,7 @@ void patExperimentBed::initCostFunctions() {
 
 		}
 		m_mh_path_generator = new MHPathGenerator(
-				patNBParameters::the()->randomSeed);
+				m_rnd);
 		m_mh_path_generator->setRouterLinkCost(m_mh_router_link_cost);
 		m_mh_path_generator->setNetwork(
 				m_network_environment->getNetwork(m_transport_mode));
@@ -238,7 +238,7 @@ void patExperimentBed::initCostFunctions() {
 		m_rw_router_link_cost = new patLinkAndPathCost(1.0, 1.0, 0.0, 0.0);
 
 		m_rw_path_generator = new RWPathGenerator(
-				patNBParameters::the()->randomSeed,
+				m_rnd,
 				patNBParameters::the()->kumaA, patNBParameters::the()->kumaB,
 				m_rw_router_link_cost);
 		m_rw_path_generator->setNetwork(

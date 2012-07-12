@@ -47,18 +47,14 @@ void patSampleChoiceSetForObservations::sampleChoiceSet(
 #pragma omp for
 
 		for (int j = 0; j < m_observations.size(); ++j) {
-			patNetworkBase* cloned_network =
-					path_generator->getNetwork()->clone();
+
 
 			patPathGenerator* generator_clone = path_generator->clone();
-			generator_clone->setNetwork(cloned_network);
 
 			m_observations.at(j).sampleChoiceSet(generator_clone,
 					choice_set_folder);
 			delete generator_clone;
 			generator_clone = NULL;
-			delete cloned_network;
-			cloned_network = NULL;
 		}
 	}
 }
