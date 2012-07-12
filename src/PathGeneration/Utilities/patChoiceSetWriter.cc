@@ -55,6 +55,7 @@ void patChoiceSetWriter::processState(const patMultiModalPath& path, const doubl
 		m_sampled_set.insert(pair<patMultiModalPath, pair<int, double> >(path, d));
 	} else {
 		find_path->second.first += 1;
+		cout<<(int)sampled_count/ m_sample_interval<<"paths, unique: "<<m_sampled_set.size()<<endl;
 	}
 
 }

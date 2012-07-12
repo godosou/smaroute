@@ -27,6 +27,9 @@ public:
 			double sb_coef=patNBParameters::the()->mh_sb_coef);
 	MHWeightFunction(map<ARC_ATTRIBUTES_TYPES, double>& link_coef, double &link_scale, double &ps_scale, double obs_scale);
 
+
+	virtual MHWeightFunction* clone() const;
+	MHWeightFunction(const MHWeightFunction& another);
 	/**
 	 * Deconstructor.
 	 */

@@ -23,7 +23,6 @@ class RWPathGenerator: public patPathGenerator {
 public:
 	RWPathGenerator(unsigned long rng, double kumaA, double kumaB,
 			const patLinkAndPathCost* link_cost);
-	void setNetwork(const patNetworkBase* network);
 	void setPathWriter(patPathWriter* path_writer);
 	void setLinkCost(const patLinkAndPathCost* link_cost);
 	RWPathGenerator* clone() const {
@@ -40,9 +39,6 @@ public:
 	double calculatePathLogWeight(const patMultiModalPath& path) const;
 	void run(const patNode* origin, const patNode* destination) ;
 
-	const patNetworkBase* getNetwork() const{
-		return m_network;
-	}
 	virtual ~RWPathGenerator();
 protected:
 
@@ -54,7 +50,6 @@ protected:
 
 	patRandomNumber m_rnd;
 
-	const patNetworkBase* m_network;
 
 	const patLinkAndPathCost* m_link_cost;
 	patPathWriter* m_path_writer;

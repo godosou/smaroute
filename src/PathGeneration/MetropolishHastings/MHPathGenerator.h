@@ -29,11 +29,7 @@ public:
 		return new MHPathGenerator(*this);
 	}
 
-	const patNetworkBase* getNetwork(){
-		return m_network;
-	}
 	virtual ~MHPathGenerator();
-	void setNetwork(const patNetworkBase* network_base);
 	void run(const patNode* origin, const patNode* destination);
 	void setPathWriter( patPathWriter* path_writer);
 	void setWritterWrapper(MHStateProcessor<MHPath>* writter_wrapper);
@@ -62,8 +58,6 @@ protected:
 	// RUNTIME
 
 	patRandomNumber m_rnd;
-
-	 patNetworkBase* m_network;
 
 	const patLinkAndPathCost* m_linkAndPathCost;
 	const MHWeightFunction* m_MHWeight;

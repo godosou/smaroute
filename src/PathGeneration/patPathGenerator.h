@@ -12,7 +12,9 @@
 #include "patPathWriter.h"
 class patPathGenerator {
 public:
-	//patPathGenerator();
+	patPathGenerator():m_network(NULL){
+
+	};
 
 	/**
 	 * Sets the network. It is called after <code>configure</code> (inherited
@@ -21,7 +23,6 @@ public:
 	 * @param network
 	 *            the network
 	 */
-	virtual void setNetwork(const patNetworkBase* network) =0;
 	virtual void setPathWriter(patPathWriter* path_writer) =0;
 
 	virtual patPathGenerator* clone() const = 0;
@@ -49,7 +50,25 @@ public:
 	 *            the destination
 	 */
 	virtual void run(const patNode* origin, const patNode* destination)=0;
-	//virtual ~patPathGenerator();
+	virtual ~patPathGenerator(){
+		if(m_network!=NULL){
+			delete m_network;
+			m_network=NULL;
+		}
+	}
+
+	 patNetworkBase* getNetwork() const{
+		return m_network;
+	}
+	void setNetwork( const patNetworkBase* network){
+		if(m_network!=NULL){
+			delete m_network;
+			m_network = NULL;
+		}
+		m_network=network->clone();
+	}
+protected:
+	 patNetworkBase* m_network;
 };
 
 #endif /* PATHGENERATOR_H_ */

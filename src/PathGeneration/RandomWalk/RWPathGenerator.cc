@@ -20,6 +20,7 @@
 
 RWPathGenerator::RWPathGenerator(unsigned long rng, double kumaA, double kumaB,
 		const patLinkAndPathCost* link_cost) :
+		patPathGenerator::patPathGenerator(),
 		m_rnd(rng), m_kumaA(kumaA), m_kumaB(kumaB), m_link_cost(link_cost) {
 
 	m_msgInterval = patNBParameters::the()->MSGINTERVAL_ELEMENT;
@@ -31,9 +32,6 @@ RWPathGenerator::~RWPathGenerator() {
 	// TODO Auto-generated destructor stub
 }
 
-void RWPathGenerator::setNetwork(const patNetworkBase* network_environment) {
-	m_network = network_environment;
-}
 
 void RWPathGenerator::setPathWriter(patPathWriter* path_writer) {
 	m_path_writer = path_writer;
