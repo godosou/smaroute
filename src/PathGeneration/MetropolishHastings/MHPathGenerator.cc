@@ -11,8 +11,8 @@
 #include "MHPathWriterWrapper.h"
 #include "patNetworkReducer.h"
 #include "patNetworkCar.h"
-MHPathGenerator::MHPathGenerator(unsigned long rng) :
-		patPathGenerator::patPathGenerator(), m_rnd(rng), m_writter_wrapper(
+MHPathGenerator::MHPathGenerator(const patRandomNumber& rnd) :
+		patPathGenerator::patPathGenerator(), m_rnd(rnd), m_writter_wrapper(
 				NULL), m_path_writer(NULL) {
 	m_msgInterval = patNBParameters::the()->MSGINTERVAL_ELEMENT;
 	m_randomSeed = patNBParameters::the()->RANDOMSEED_ELEMENT;

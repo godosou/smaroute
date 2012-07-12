@@ -22,7 +22,7 @@ public:
 
 	// CONFIG ELEMENTS
 
-	MHPathGenerator(unsigned long rng);
+	MHPathGenerator(const patRandomNumber& rnd);
 	MHPathGenerator(MHPathGenerator const& other);
 
 	MHPathGenerator* clone() const{
@@ -55,9 +55,7 @@ protected:
 
 	double m_cutOffProbability;
 
-	// RUNTIME
-
-	patRandomNumber m_rnd;
+	const patRandomNumber& m_rnd;
 
 	const patLinkAndPathCost* m_linkAndPathCost;
 	const MHWeightFunction* m_MHWeight;
