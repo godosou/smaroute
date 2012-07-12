@@ -11,11 +11,15 @@
 #include "patException.h"
 
 patLinkAndPathCost::~patLinkAndPathCost() {
-	// TODO Auto-generated destructor stub
+	if(m_ps_computer!=NULL){
+		delete m_ps_computer;
+		m_ps_computer=NULL;
+	}
+
 }
 patLinkAndPathCost::patLinkAndPathCost(double link_scale, double length_coef,
 		double ps_coef, double sb_coef) :
-		m_pathsize(NULL) {
+		m_ps_computer(NULL) {
 	m_link_coefficients[ENUM_LENGTH] = length_coef;
 
 	m_link_coefficients[ENUM_SPEED_BUMP] = sb_coef;
@@ -27,10 +31,13 @@ patLinkAndPathCost::patLinkAndPathCost(double link_scale, double length_coef,
 
 }
 
+patLinkAndPathCost*  patLinkAndPathCost::clone() const{
+	return new patLinkAndPathCost(*this);
+}
 patLinkAndPathCost::patLinkAndPathCost(
-		map<ARC_ATTRIBUTES_TYPES, double>& link_coef, double &link_scale
-		, double &ps_scale) :
-		m_pathsize(NULL) {
+		map<ARC_ATTRIBUTES_TYPES, double>& link_coef, double &link_scale,
+		double &ps_scale) :
+		m_ps_computer(NULL) {
 	m_link_coefficients = link_coef;
 	m_link_cost_scale = link_scale;
 	m_pathsize_coefficient = ps_scale;
@@ -63,16 +70,19 @@ double patLinkAndPathCost::getCost(const patMultiModalPath& path) const {
 			arc_iter != arcs.end(); ++arc_iter) {
 		pathCost += getCost(*arc_iter);
 	}
-	if (m_pathsize != NULL && m_pathsize_coefficient > 0.0) {
-		map<patMultiModalPath, double>::const_iterator find_path =
-				m_pathsize->find(path);
-		if (find_path == m_pathsize->end()) {
-			throw RuntimeException(
-					"path size coefficient is specified, but not find");
-		} else {
-			pathCost += m_link_cost_scale * m_pathsize_coefficient
-					* log(find_path->second);
-		}
+	if (m_ps_computer != NULL && m_pathsize_coefficient > 0.0) {
+		double ps_value = m_ps_computer->getPS(path);
+		pathCost += m_link_cost_scale * m_pathsize_coefficient * log(ps_value);
+
+//		map<patMultiModalPath, double>::const_iterator find_path =
+//				m_pathsize->find(path);
+//		if (find_path == m_pathsize->end()) {
+//			throw RuntimeException(
+//					"path size coefficient is specified, but not find");
+//		} else {
+//			pathCost += m_link_cost_scale * m_pathsize_coefficient
+//					* log(find_path->second);
+//		}
 	}
 	return pathCost;
 }
@@ -101,7 +111,7 @@ double patLinkAndPathCost::getPathSizeCoefficient() const {
 	return m_pathsize_coefficient;
 }
 
-void patLinkAndPathCost::setPathSize(
-		const map<const patMultiModalPath, double>* pathsize) {
-	m_pathsize = pathsize;
+void patLinkAndPathCost::setPathSizeComputer(
+		patPathSizeComputer* pathsize) {
+	m_ps_computer = pathsize->clone();
 }

@@ -3,7 +3,8 @@ include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
 include_directories("${NewBioroute_SOURCE_DIR}/NetworkHandler")
 include_directories("${NewBioroute_SOURCE_DIR}/MapMatching")
 add_library(ShortestPath
-                patNetworkReducer.cc
+    patPathSizeComputer.cc
+               patNetworkReducer.cc
                 patShortestPathGeneral.cc
                 patShortestPathTreeGeneral.cc
                 patAbstractCost.cc
