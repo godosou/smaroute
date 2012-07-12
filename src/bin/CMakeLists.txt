@@ -24,10 +24,10 @@ include_directories("${NewBioroute_SOURCE_DIR}/RouteChoice")
 
 #add_executable(osm2kml osm2kml.cc)
 #target_link_libraries (osm2kml   NetworkHandler  Utilities   ${LIB_EXTRA})
-add_executable(pathGenerationWithOd pathGenerationWithOd.cc)
-target_link_libraries (pathGenerationWithOd RandomWalk MHPath PGUtilities ShortestPath RouteChoice NetworkHandler  Utilities Math  ${LIB_EXTRA})
-add_executable(writeBiogeme writeBiogeme.cc)
-target_link_libraries (writeBiogeme RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+#add_executable(pathGenerationWithOd pathGenerationWithOd.cc)
+#target_link_libraries (pathGenerationWithOd RandomWalk MHPath PGUtilities ShortestPath RouteChoice NetworkHandler  Utilities Math  ${LIB_EXTRA})
+#add_executable(writeBiogeme writeBiogeme.cc)
+#target_link_libraries (writeBiogeme RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 
 add_executable(bioroute bioroute.cc)
 target_link_libraries (bioroute RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
@@ -38,8 +38,8 @@ target_link_libraries (bioroute RandomWalk RouteChoice MHPath MapMatching Networ
 #add_executable(synSimulatePath synSimulatePath.cc)
 #target_link_libraries (synSimulatePath PGUtilities MHPath ShortestPath RouteChoice NetworkHandler  Utilities Math  ${LIB_EXTRA})
 
-add_executable(synPathGeneration synPathGeneration.cc)
-target_link_libraries (synPathGeneration RandomWalk MHPath PGUtilities ShortestPath RouteChoice NetworkHandler  Utilities Math  ${LIB_EXTRA})
+#add_executable(synPathGeneration synPathGeneration.cc)
+#target_link_libraries (synPathGeneration RandomWalk MHPath PGUtilities ShortestPath RouteChoice NetworkHandler  Utilities Math  ${LIB_EXTRA})
 #
 #add_executable(synWriteBiogeme synWriteBiogeme.cc)
 #target_link_libraries (synWriteBiogeme RandomWalk PGUtilities RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
