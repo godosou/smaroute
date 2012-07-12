@@ -305,6 +305,7 @@ void patNBParameters::init(patError*& err) {
 	intParams["syntheticObservations"] = &syntheticObservations;
 
 
+	intParams["exportReducedNetwork"] = &exportReducedNetwork;
 
 	strParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
 

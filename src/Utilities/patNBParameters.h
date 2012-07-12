@@ -275,6 +275,8 @@ double discardGPSGap;
 	unsigned long DestinationId;
 
 	unsigned long syntheticObservations;
+
+	unsigned long exportReducedNetwork;
 private:
 
 	map<patString, pair<patString, patString> > params;
