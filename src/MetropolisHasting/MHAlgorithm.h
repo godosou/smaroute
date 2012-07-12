@@ -24,7 +24,7 @@ public:
 	// -------------------- CONSTRUCTION --------------------
 
 	MHAlgorithm(MHProposal<S>* proposal, const MHWeight<S>* weight,
-			patRandomNumber* rnd) :
+			const patRandomNumber* rnd) :
 			m_msgInterval(1), m_lastCompTime_ms(0.0), m_initialState(NULL), m_proposal(
 					proposal), m_weight(weight), m_rnd(rnd) {
 		if (proposal == NULL) {
@@ -165,7 +165,7 @@ protected:
 
 	const MHWeight<S>* m_weight;
 
-	patRandomNumber* m_rnd;
+	const patRandomNumber* m_rnd;
 	S* m_initialState;
 
 	vector<MHStateProcessor<S>*> m_state_processors;
