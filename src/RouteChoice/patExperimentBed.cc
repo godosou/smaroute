@@ -65,6 +65,15 @@ void patExperimentBed::initiateNetworks() {
 
 }
 
+void patExperimentBed::exportNetwork() {
+
+	m_network_environment->getNetwork(m_transport_mode)->exportKML(
+			patNBParameters::the()->OsmNetworkFileName);
+	m_network_environment->getNetwork(m_transport_mode)->exportShpFiles(
+			patNBParameters::the()->OsmNetworkFileName);
+	cout << "network exported" << endl;
+}
+
 void patExperimentBed::enumerateMHPaths() {
 	const patNode* origin = m_network_environment->getNetworkElements().getNode(
 			patNBParameters::the()->OriginId);
@@ -194,32 +203,50 @@ void patExperimentBed::initCostFunctions() {
 
 	if (m_algorithm == "MH") {
 		cout << "Use MH algorithm" << endl;
-		m_mh_router_link_cost = new patLinkAndPathCost(
-				patNBParameters::the()->mh_link_scale,
-				-patNBParameters::the()->mh_length_coef, 0.0, 0.0); //FIXME
 
 		map<ARC_ATTRIBUTES_TYPES, double> link_coef;
+		map<ARC_ATTRIBUTES_TYPES, double> router_link_coef;
+
 		link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_length_coef;
+		router_link_coef[ENUM_LENGTH] = -patNBParameters::the()->mh_length_coef;
+
 		if (m_network_real) {
 			cout << "\tReal network" << endl;
 			link_coef[ENUM_TRAFFIC_SIGNAL] = patNBParameters::the()->mh_sb_coef;
+			router_link_coef[ENUM_TRAFFIC_SIGNAL] =
+					-patNBParameters::the()->mh_sb_coef;
 		} else {
 			cout << "\tSynthetic network" << endl;
 			link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
+			router_link_coef[ENUM_SPEED_BUMP] =
+					-patNBParameters::the()->mh_sb_coef;
 		}
+
+		double router_ps_coef = 0.0;
+		m_mh_router_link_cost = new patLinkAndPathCost(router_link_coef,
+				patNBParameters::the()->router_cost_link_scale, router_ps_coef);
+
 		m_mh_weight_function = new MHWeightFunction(link_coef,
 				patNBParameters::the()->mh_link_scale,
 				patNBParameters::the()->mh_ps_coef,
 				patNBParameters::the()->mh_obs_scale);
+		cout << "MH params:" << endl;
+		cout << "\tmu\t " << patNBParameters::the()->mh_link_scale << endl;
+		cout << "\tlength\t " << patNBParameters::the()->mh_length_coef << endl;
+		cout << "\tsb\t " << patNBParameters::the()->mh_sb_coef << endl;
+		cout << "\tps\t " << patNBParameters::the()->mh_ps_coef << endl;
+		cout << "\tobs\t " << patNBParameters::the()->mh_obs_scale << endl;
 		if (patNBParameters::the()->mh_ps_coef > 0.0) {
 
 			cout << "\tUse path size for sampling algorithm" << endl;
 			readUniversalChoiceSet();
 
-			if(m_universal_choice_set.empty()){
-				throw RuntimeException("ps coef is specified but universal choice set not found");
+			if (m_universal_choice_set.empty()) {
+				throw RuntimeException(
+						"ps coef is specified but universal choice set not found");
 			}
-			patPathSizeComputer ps_computer(m_universal_choice_set.getChoiceSet());
+			patPathSizeComputer ps_computer(
+					m_universal_choice_set.getChoiceSet());
 			m_mh_weight_function->setPathSizeComputer(&ps_computer);
 		}
 		int sample_with_obs = patNBParameters::the()->samplingWithObs;

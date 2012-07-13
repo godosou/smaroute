@@ -36,6 +36,12 @@ public:
 	 */
 	void initiateNetworks();
 
+	/**
+	 * Export network to kml and shp formats.
+	 */
+
+	void exportNetwork();
+
 
 	/**
 	 * Initiate functions for MH and RW
