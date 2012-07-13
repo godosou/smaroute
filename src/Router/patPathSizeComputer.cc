@@ -22,9 +22,8 @@ patPathSizeComputer::patPathSizeComputer(
 	initiatePS(choice_set);
 }
 
-
-patPathSizeComputer::patPathSizeComputer(const patPathSizeComputer& another){
-	m_arc_overlap=another.m_arc_overlap;
+patPathSizeComputer::patPathSizeComputer(const patPathSizeComputer& another) {
+	m_arc_overlap = another.m_arc_overlap;
 	m_path_size = another.m_path_size;
 }
 patPathSizeComputer::patPathSizeComputer(
@@ -38,8 +37,7 @@ patPathSizeComputer::patPathSizeComputer(
 	initiatePS(choice_set_copy);
 }
 
-
-patPathSizeComputer* patPathSizeComputer::clone() const{
+patPathSizeComputer* patPathSizeComputer::clone() const {
 	return new patPathSizeComputer(*this);
 }
 
@@ -72,7 +70,7 @@ void patPathSizeComputer::initiatePS(const set<patMultiModalPath>& choice_set) {
 	}
 }
 
-double patPathSizeComputer::computePS(const patMultiModalPath& path){
+double patPathSizeComputer::computePS(const patMultiModalPath& path) {
 
 	vector<const patArc*> arc_list = path.getArcList();
 	double ps = 0;
@@ -83,29 +81,33 @@ double patPathSizeComputer::computePS(const patMultiModalPath& path){
 		unordered_map<const patArc*, int>::const_iterator find_arc_overlap =
 				m_arc_overlap.find(*arc_iter);
 		if (find_arc_overlap != m_arc_overlap.end()) {
-			continue;
-//			throw RuntimeException("an arc not in path set");
-		} else {
+
 			ps += (*arc_iter)->getLength()
 					/ (pL * (double) find_arc_overlap->second);
+		} else {
+			continue;
+			//			throw RuntimeException("an arc not in path set");
 
 		}
+	}
+	if (ps==0.0){
+		cout<<"!!!!!!!!WRONG PS SPECIFICATION!!!!!!!!!";
 	}
 	m_path_size[path] = ps;
 	return ps;
 }
 
-double patPathSizeComputer::getPS(const patMultiModalPath& path){
-	if(m_path_size.empty()){
+double patPathSizeComputer::getPS(const patMultiModalPath& path) {
+	if (m_path_size.empty()) {
 		throw RuntimeException("No path to calculate the ps");
 	}
-	map<const patMultiModalPath, double>::const_iterator find_path= m_path_size.find(path);
+	map<const patMultiModalPath, double>::const_iterator find_path =
+			m_path_size.find(path);
 
-	if(find_path==m_path_size.end()){
-		cout<<"\t\t path not found in ps, compute it."<<endl;
+	if (find_path == m_path_size.end()) {
+		cout << "\t\t path not found in ps, compute it." << endl;
 		return computePS(path);
-	}
-	else{
+	} else {
 		return find_path->second;
 	}
 }
