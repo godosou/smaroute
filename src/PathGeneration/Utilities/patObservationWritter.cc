@@ -46,6 +46,12 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 	 * (1) check if this path should be written
 	 */
 	m_path_count++;
+
+	string stop_file = m_folder+"/"+"stop";
+	if (ifstream(stop_file.c_str())) {
+		end();
+		exit(0);
+	}
 	int sampled_count = m_path_count-m_warmup_iterations;
 	if (sampled_count<=0 || sampled_count% m_sample_interval != 0) {
 
@@ -70,6 +76,7 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 			1.0 - patNBParameters::the()->errorInSimulatedObservations);
 	kml_writer.writePath(path, attrs_true);
 	kml_writer.close();
+
 }
 
 void patObservationWritter::end() {
