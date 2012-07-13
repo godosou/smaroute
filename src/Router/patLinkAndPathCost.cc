@@ -26,8 +26,8 @@ patLinkAndPathCost::patLinkAndPathCost(double link_scale, double length_coef,
 	m_link_cost_scale = link_scale;
 	m_pathsize_coefficient = ps_coef;
 
-	DEBUG_MESSAGE(
-			"length coef: "<<m_link_coefficients[ENUM_LENGTH]<< ", sb coef: "<<m_link_coefficients[ENUM_SPEED_BUMP]<<", link cost scale: "<<m_link_cost_scale<<", path size coef"<<m_pathsize_coefficient);
+//	DEBUG_MESSAGE(
+//			"length coef: "<<m_link_coefficients[ENUM_LENGTH]<< ", sb coef: "<<m_link_coefficients[ENUM_SPEED_BUMP]<<", link cost scale: "<<m_link_cost_scale<<", path size coef"<<m_pathsize_coefficient);
 
 }
 
