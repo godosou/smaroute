@@ -67,7 +67,11 @@ int main(int argc, char *argv[]) {
 		run.writeBiogeme();
 	} else if (command_str == "SimulateObservations") {
 		run.simulateObservations();
-	} else {
+	}
+	else if (command_str == "ExportNetwork"){
+		run.exportNetwork();
+	}
+	else {
 		cout << "Wrong command: " << command_str << endl;
 		cout <<"Options are:"<<endl;
 		cout << "\t"<<"SampleWithOd"<<endl;
