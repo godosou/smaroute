@@ -57,6 +57,7 @@ public:
 		return m_log_weight;
 	}
 
+	bool empty() const;
 protected:
 	patOd m_od;
 	set<patMultiModalPath> m_paths;

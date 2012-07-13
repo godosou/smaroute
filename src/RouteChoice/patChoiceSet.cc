@@ -158,7 +158,7 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 			chosen_path);
 	patPathSizeComputer* ps_computer_u = NULL;
 
-	if (universal_choiceset == NULL) {
+	if (universal_choiceset == NULL||universal_choiceset->empty()) {
 		ps_computer_u = ps_computer->clone();
 	} else {
 		ps_computer_u = new patPathSizeComputer(universal_choiceset->getChoiceSet());
@@ -491,4 +491,7 @@ patChoiceSet patChoiceSet::sampleSubSet(const unsigned choice_set_size,
 	} else {
 		return *this;
 	}
+}
+bool patChoiceSet::empty() const{
+	return m_paths.empty();
 }

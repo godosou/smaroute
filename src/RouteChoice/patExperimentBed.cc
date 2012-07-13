@@ -61,7 +61,7 @@ void patExperimentBed::initiateNetworks() {
 		exit(-1);
 	}
 //	DEBUG_MESSAGE("network with nodes: "<<m_network_environment->getNetwork(CAR)->getNodeSize());
-	cout<<"network loaded"<<endl;
+	cout << "network loaded" << endl;
 
 }
 
@@ -170,11 +170,30 @@ void patExperimentBed::sampleChoiceSet() {
 		throw RuntimeException("Wrong sampling algorithm");
 	}
 }
+
+void patExperimentBed::readUniversalChoiceSet() {
+
+	if (m_universal_choice_set.empty()) {
+		string choiceset_file = m_experiment_folder
+				+ "universal_choice_set.kml";
+		if (!ifstream(choiceset_file.c_str())) {
+			return;
+//		throw RuntimeException("universal choice set not found");
+//		exit(-1);
+		}
+		patReadChoiceSetFromKML rc(
+				&m_network_environment->getNetworkElements());
+		//update the way to calculate path size. the universal choice set may not contain a path.
+
+		map<patOd, patChoiceSet> od_choice_set = rc.read(choiceset_file, m_rnd);
+		patOd od = od_choice_set.begin()->first;
+		m_universal_choice_set = od_choice_set.begin()->second;
+	}
+}
 void patExperimentBed::initCostFunctions() {
 
-//	DEBUG_MESSAGE("network with nodes: "<<m_network_environment->getNetwork(m_transport_mode)->getNodeSize());
 	if (m_algorithm == "MH") {
-		cout<<"Use MH algorithm"<<endl;
+		cout << "Use MH algorithm" << endl;
 		m_mh_router_link_cost = new patLinkAndPathCost(
 				patNBParameters::the()->mh_link_scale,
 				-patNBParameters::the()->mh_length_coef, 0.0, 0.0); //FIXME
@@ -182,10 +201,10 @@ void patExperimentBed::initCostFunctions() {
 		map<ARC_ATTRIBUTES_TYPES, double> link_coef;
 		link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_length_coef;
 		if (m_network_real) {
-			cout<<"\tReal network"<<endl;
+			cout << "\tReal network" << endl;
 			link_coef[ENUM_TRAFFIC_SIGNAL] = patNBParameters::the()->mh_sb_coef;
 		} else {
-			cout<<"\tSynthetic network"<<endl;
+			cout << "\tSynthetic network" << endl;
 			link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
 		}
 		m_mh_weight_function = new MHWeightFunction(link_coef,
@@ -194,28 +213,18 @@ void patExperimentBed::initCostFunctions() {
 				patNBParameters::the()->mh_obs_scale);
 		if (patNBParameters::the()->mh_ps_coef > 0.0) {
 
-			cout<<"\tUse path size for sampling algorithm"<<endl;
-			string choiceset_file = m_experiment_folder
-					+ "universal_choice_set.kml";
-			if (!ifstream(choiceset_file.c_str())) {
-				throw RuntimeException("universal choice set not found");
-				exit(-1);
+			cout << "\tUse path size for sampling algorithm" << endl;
+			readUniversalChoiceSet();
+
+			if(m_universal_choice_set.empty()){
+				throw RuntimeException("ps coef is specified but universal choice set not found");
 			}
-			patReadChoiceSetFromKML rc(
-					&m_network_environment->getNetworkElements());
-			//update the way to calculate path size. the universal choice set may not contain a path.
-
-			map<patOd, patChoiceSet> od_choice_set = rc.read(choiceset_file,
-					m_rnd);
-			patOd od = od_choice_set.begin()->first;
-			patChoiceSet choice_set = od_choice_set.begin()->second;
-
-			patPathSizeComputer ps_computer(choice_set.getChoiceSet());
+			patPathSizeComputer ps_computer(m_universal_choice_set.getChoiceSet());
 			m_mh_weight_function->setPathSizeComputer(&ps_computer);
 		}
 		int sample_with_obs = patNBParameters::the()->samplingWithObs;
 		if (patNBParameters::the()->mh_obs_scale > 0.0) {
-			cout<<"\tUse mh observations for sampling algorithm"<<endl;
+			cout << "\tUse mh observations for sampling algorithm" << endl;
 			readObservations();
 			patGetPathProbasFromObservations ppfo;
 			m_obs_path_probas = ppfo.getPathProbas(m_observations);
@@ -226,19 +235,17 @@ void patExperimentBed::initCostFunctions() {
 			m_mh_weight_function->setPathProbas(NULL);
 
 		}
-		m_mh_path_generator = new MHPathGenerator(
-				m_rnd);
+		m_mh_path_generator = new MHPathGenerator(m_rnd);
 		m_mh_path_generator->setRouterLinkCost(m_mh_router_link_cost);
 		m_mh_path_generator->setNetwork(
 				m_network_environment->getNetwork(m_transport_mode));
 
 		m_mh_path_generator->setMHWeight(m_mh_weight_function);
 	} else if (m_algorithm == "RW") {
-		cout<<"Use RW algorithm"<<endl;
+		cout << "Use RW algorithm" << endl;
 		m_rw_router_link_cost = new patLinkAndPathCost(1.0, 1.0, 0.0, 0.0);
 
-		m_rw_path_generator = new RWPathGenerator(
-				m_rnd,
+		m_rw_path_generator = new RWPathGenerator(m_rnd,
 				patNBParameters::the()->kumaA, patNBParameters::the()->kumaB,
 				m_rw_router_link_cost);
 		m_rw_path_generator->setNetwork(
@@ -448,8 +455,9 @@ void patExperimentBed::writeBiogeme() {
 	}
 
 	readChoiceSetForObservations();
+	readUniversalChoiceSet();
 	patWriteBiogemeData wbd(m_observations, m_utility_function, sampling_pg,
-			NULL, m_rnd);
+			&m_universal_choice_set, m_rnd);
 
 	wbd.writeSampleFile(m_choice_set_foler);
 
@@ -460,88 +468,97 @@ void patExperimentBed::readChoiceSetForObservations() {
 	int not_sampled = 0;
 	vector<int> uppod;
 	vector<pair<int, int> > od_paths;
-	for (unsigned int i = 0; i < m_observations.size(); ++i) {
-		string sample_file = m_choice_set_foler + "/"
-				+ m_observations[i].getId() + "_sample.kml";
 
-		std::map<patOd, patChoiceSet> css;
-		patReadChoiceSetFromKML rc(
-				&m_network_environment->getNetworkElements());
+#pragma omp parallel num_threads( patNBParameters::the()->nbrOfThreads)
 
-		if (ifstream(sample_file.c_str())) {
-			css = rc.read(sample_file, m_rnd);
-			cout << "\t read sample file "
-					<< m_observations[i].getId() + "_sample.kml" << endl;
+	{
+#pragma omp for
+		for (unsigned int i = 0; i < m_observations.size(); ++i) {
+			string sample_file = m_choice_set_foler + "/"
+					+ m_observations[i].getId() + "_sample.kml";
 
-		} else {
+			std::map<patOd, patChoiceSet> css;
+			patReadChoiceSetFromKML rc(
+					&m_network_environment->getNetworkElements());
 
-			unsigned file_index = 0;
-			unsigned biggest_file_index = file_index;
-			while (true) {
-				++file_index;
+			if (ifstream(sample_file.c_str())) {
+				css = rc.read(sample_file, m_rnd);
+				cout << "\t read sample file "
+						<< m_observations[i].getId() + "_sample.kml" << endl;
 
-				sample_file = m_choice_set_foler + "/"
-						+ m_observations[i].getId() + "_"
-						+ boost::lexical_cast<string>(file_index)
-						+ "_sample.kml";
-				if (!ifstream(sample_file.c_str())) {
+			} else {
 
-					break;
+				unsigned file_index = 0;
+				unsigned biggest_file_index = file_index;
+				while (true) {
+					++file_index;
+
+					sample_file = m_choice_set_foler + "/"
+							+ m_observations[i].getId() + "_"
+							+ boost::lexical_cast<string>(file_index)
+							+ "_sample.kml";
+					if (!ifstream(sample_file.c_str())) {
+
+						break;
+					}
+
+					biggest_file_index = file_index;
+
 				}
 
-				biggest_file_index = file_index;
-
-			}
-
-			if (biggest_file_index == 0) {
-				WARNING(
-						" The choice set for"<< m_observations[i].getId()<<" does not exist");
-				throw RuntimeException(" The choice set for does not exist");
-			}
-			for (unsigned file_index = 1; file_index <= biggest_file_index;
-					++file_index) {
-
-				const string ind_sample_file = m_choice_set_foler + "/"
-						+ m_observations[i].getId() + "_"
-						+ boost::lexical_cast<string>(file_index)
-						+ "_sample.kml";
-				if (!ifstream(ind_sample_file.c_str())) {
-					cout << "file " << ind_sample_file << " does not exist"
-							<< endl;
-					throw RuntimeException("File does not exist");
+				if (biggest_file_index == 0) {
+					WARNING(
+							" The choice set for"<< m_observations[i].getId()<<" does not exist");
+					throw RuntimeException(
+							" The choice set for does not exist");
 				}
-				std::map<patOd, patChoiceSet> new_css = rc.read(ind_sample_file,
-						m_rnd);
+				for (unsigned file_index = 1; file_index <= biggest_file_index;
+						++file_index) {
 
-				css.insert(new_css.begin(), new_css.end());
-				cout << "\t read sample file " << ind_sample_file << endl;
+					const string ind_sample_file = m_choice_set_foler + "/"
+							+ m_observations[i].getId() + "_"
+							+ boost::lexical_cast<string>(file_index)
+							+ "_sample.kml";
+					if (!ifstream(ind_sample_file.c_str())) {
+						cout << "file " << ind_sample_file << " does not exist"
+								<< endl;
+						throw RuntimeException("File does not exist");
+					}
+					std::map<patOd, patChoiceSet> new_css = rc.read(
+							ind_sample_file, m_rnd);
+
+					css.insert(new_css.begin(), new_css.end());
+					cout << "\t read sample file " << ind_sample_file << endl;
+				}
+
 			}
 
-		}
-
-		cout << "\t chocie set read with ods: " << css.size() << endl;
-		if (css.size() == 0) {
-			throw RuntimeException("no choice set for an observation.");
-		}
-		m_observations[i].setChoiceSet(css);
+			cout << "\t chocie set read with ods: " << css.size() << endl;
+			if (css.size() == 0) {
+				throw RuntimeException("no choice set for an observation.");
+			}
+			m_observations[i].setChoiceSet(css);
 #pragma omp critical
-		{
+			{
 
-			pair<int, int> ccps = m_observations[i].countChosenPathsSampled();
-			cout << "\t" << m_observations[i].getId() << "sampled: "
-					<< ccps.first << ", not sampled: " << ccps.second << " ("
-					<< (double) ccps.first / (ccps.first + ccps.second) << ")"
-					<< endl;
-			sampled += ccps.first;
-			not_sampled += ccps.second;
+				pair<int, int> ccps =
+						m_observations[i].countChosenPathsSampled();
+				cout << "\t" << m_observations[i].getId() << "sampled: "
+						<< ccps.first << ", not sampled: " << ccps.second
+						<< " ("
+						<< (double) ccps.first / (ccps.first + ccps.second)
+						<< ")" << endl;
+				sampled += ccps.first;
+				not_sampled += ccps.second;
 
-			vector<int> new_uppod = m_observations[i].getUniquePathsPerOD();
-			uppod.insert(uppod.end(), new_uppod.begin(), new_uppod.end());
-			od_paths.push_back(
-					pair<int, int>(m_observations[i].getNbOfOds(),
-							m_observations[i].getNbrOfCandidates()));
+				vector<int> new_uppod = m_observations[i].getUniquePathsPerOD();
+				uppod.insert(uppod.end(), new_uppod.begin(), new_uppod.end());
+				od_paths.push_back(
+						pair<int, int>(m_observations[i].getNbOfOds(),
+								m_observations[i].getNbrOfCandidates()));
+			}
+
 		}
-
 	}
 
 	string scp_txt_fn = m_choice_set_foler + string("/sampledChosenPath_")
@@ -581,7 +598,8 @@ void patExperimentBed::simulateObservations() {
 
 //	generator_clone->setNetwork(cloned_network);
 	cout << "Start simulation" << endl;
-	MHObservationWritterWrapper path_writer(m_observation_folder,patNBParameters::the()->SAMPLEINTERVAL_ELEMENT);
+	MHObservationWritterWrapper path_writer(m_observation_folder,
+			patNBParameters::the()->SAMPLEINTERVAL_ELEMENT);
 	generator_clone->setWritterWrapper(&path_writer);
 	generator_clone->run(origin, destination);
 	cout << "Finish simulation" << endl;
