@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
 	patExperimentBed run(true, false, CAR, nbr_observation);
 
 	if (command_str == "SampleWithOd") {
-		run.sampleChoiceSetWithOd(1000);
+		run.sampleChoiceSetWithOd(300);
 	} else if (command_str == "Sample") {
 		run.sampleChoiceSet();
 	} else if (command_str == "MHEnumeratePaths") {
