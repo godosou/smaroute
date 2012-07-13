@@ -157,7 +157,7 @@ void patNetworkBase::exportKML(const string file_path) const {
 
 	kml_file << kmldom::SerializePretty(kml);
 	kml_file.close();
-	cout<<"\t"<<kml_file_path << " written";
+	cout << "\t" << kml_file_path << " written" << endl;
 }
 void patNetworkBase::exportCadytsOSM(const string file_path) const {
 
@@ -222,9 +222,11 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 	string shape_file_path = file_path + ".shp";
 	string stop_file_path = file_path + "_stops.shp";
 	string traffic_signal_path = file_path + "_signals.shp";
+	string node_file_path = file_path + "_nodes.shp";
 
 	SHPHandle shp_file_handler = SHPCreate(shape_file_path.c_str(), SHPT_ARC);
 	SHPHandle stop_file_handler = SHPCreate(stop_file_path.c_str(), SHPT_POINT);
+	SHPHandle node_file_handler = SHPCreate(node_file_path.c_str(), SHPT_POINT);
 	SHPHandle signals_file_handler = SHPCreate(traffic_signal_path.c_str(),
 			SHPT_POINT);
 
@@ -243,6 +245,21 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 			int stop_number = SHPWriteObject(signals_file_handler, -1,
 					node_shp_object);
 			SHPDestroyObject(node_shp_object);
+		}
+		{
+
+			double node_padfX[1] = {
+					incid_iter->first->getGeoCoord().longitudeInDegrees };
+			double node_padfY[1] = {
+					incid_iter->first->getGeoCoord().latitudeInDegrees };
+			SHPObject* node_shp_object = SHPCreateObject(SHPT_POINT,
+					incid_iter->first->getUserId(), 0, NULL, NULL, 1,
+					node_padfX, node_padfY, NULL, NULL);
+
+			int stop_number = SHPWriteObject(node_file_handler, -1,
+					node_shp_object);
+			SHPDestroyObject(node_shp_object);
+
 		}
 		if (isStop(incid_iter->first)) {
 			double node_padfX[1] = {
@@ -287,9 +304,10 @@ bool patNetworkBase::exportShpFiles(const string file_path) const {
 	}
 
 	SHPClose(shp_file_handler);
+	SHPClose(node_file_handler);
 	SHPClose(signals_file_handler);
 	SHPClose(stop_file_handler);
-	cout<<"\tshape files written";
+	cout << "\tshape files written" << endl;
 	return true;
 }
 
