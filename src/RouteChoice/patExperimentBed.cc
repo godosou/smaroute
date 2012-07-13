@@ -254,6 +254,9 @@ void patExperimentBed::initCostFunctions() {
 			cout << "\tUse mh observations for sampling algorithm" << endl;
 			readObservations();
 			patGetPathProbasFromObservations ppfo;
+			if(m_observations.empty()){
+				throw RuntimeException("No observation is read");
+			}
 			m_obs_path_probas = ppfo.getPathProbas(m_observations);
 			m_mh_weight_function->setPathProbas(&m_obs_path_probas);
 		}
