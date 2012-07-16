@@ -82,6 +82,8 @@ double MHPathGenerator::calculatePathLogWeight(
 		const patMultiModalPath& path) const {
 	return m_MHWeight->logWeigthOriginal(path);
 }
+
+
 void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 
 	//MHLinkAndPathCost::configure();
@@ -127,6 +129,7 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
 	}
 
+	m_MHWeight->calculateObsScale(m_network,origin,destination);
 	patRouter router(m_network, m_linkAndPathCost);
 	/*
 	 * (6) run the algorithm
@@ -188,7 +191,7 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 
 	} else {
 		if (m_path_writer != NULL) {
-			MHPathWriterWrapper pww(m_path_writer, m_sampleInterval);
+			MHPathWriterWrapper pww(m_path_writer, m_sampleInterval,m_MHWeight);
 			algo.addStateProcessor(&pww);
 
 			algo.run(

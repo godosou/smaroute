@@ -272,7 +272,7 @@ void RWPathGenerator::run(const patNode* origin, const patNode* destination) {
 	patRouter router(m_network, m_link_cost);
 	patShortestPathTreeGeneral bwdCost(BWD);
 	router.bwdCost(bwdCost, destination);
-	patChoiceSetWriter csw(m_path_writer, 1);
+	patChoiceSetWriter csw(m_path_writer, 1,m_link_cost);
 	csw.start();
 	for (int iter = 0; iter < m_total_samples; ++iter) {
 		sampleOnePath(origin, destination, &bwdCost, csw);

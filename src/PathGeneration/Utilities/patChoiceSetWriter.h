@@ -9,7 +9,7 @@
 #define PATCHOICESETWRITER_H_
 
 #include "patPathWriter.h"
-
+#include "patLinkAndPathCost.h"
 #include "patMultiModalPath.h"
 #include <set>
 class patChoiceSetWriter {
@@ -20,11 +20,13 @@ public:
 	virtual void end();
 	virtual void processState(const patMultiModalPath& path, const double log_weight);
 	virtual void start();
-	patChoiceSetWriter(patPathWriter* pathWriter, const int sampleInterval);
+	patChoiceSetWriter(patPathWriter* pathWriter, const int sampleInterval, const patLinkAndPathCost* cost_function);
 
 protected:
 	patPathWriter* m_path_writer;
+
 	unsigned long m_warmup_iterations;
+	const patLinkAndPathCost* m_cost_function;
 	int m_sample_interval;
 //	const MHLinkAndPathCost* m_path_cost;
 	map<patMultiModalPath,pair<int, double> > m_sampled_set;

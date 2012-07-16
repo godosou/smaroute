@@ -9,10 +9,11 @@
 #define PATOBSERVATIONWRITTER_H_
 #include <string>
 class patMultiModalPath;
+#include "patLinkAndPathCost.h"
 class patObservationWritter {
 public:
 	patObservationWritter();
-	patObservationWritter(std::string folder, const unsigned long sampleInterval);
+	patObservationWritter(std::string folder, const unsigned long sampleInterval, const patLinkAndPathCost* cost_function);
 	virtual ~patObservationWritter();
 	virtual void end();
 	virtual void processState(const patMultiModalPath& path, const double log_weight);
@@ -20,6 +21,7 @@ public:
 
 protected:
 	std::string m_folder;
+	const patLinkAndPathCost* m_cost_function;
 
 	unsigned long m_sampled_path_count;
 	unsigned long m_warmup_iterations;

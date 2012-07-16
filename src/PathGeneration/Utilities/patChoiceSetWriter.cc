@@ -11,16 +11,17 @@
 #include <boost/lexical_cast.hpp>
 using namespace boost;
 
-patChoiceSetWriter::patChoiceSetWriter() {
+patChoiceSetWriter::patChoiceSetWriter() :
+		m_cost_function(NULL) {
 	// TODO Auto-generated destructor stub
 }
 patChoiceSetWriter::~patChoiceSetWriter() {
 	// TODO Auto-generated destructor stub
 }
 patChoiceSetWriter::patChoiceSetWriter(patPathWriter* pathWriter,
-		const int sampleInterval) :
+		const int sampleInterval, const patLinkAndPathCost* cost_function) :
 		m_sample_interval(sampleInterval), m_path_writer(pathWriter), m_path_count(
-				0) {
+				0), m_cost_function(cost_function) {
 	if (pathWriter == NULL) {
 		throw IllegalArgumentException("path writer is null");
 	}
@@ -42,7 +43,6 @@ void patChoiceSetWriter::processState(const patMultiModalPath& path,
 	 * (1) check if this path should be written
 	 */
 	m_path_count++;
-
 
 	string kml_file_name = m_path_writer->getFileName();
 	int slash_position = kml_file_name.rfind("/");
@@ -83,6 +83,17 @@ void patChoiceSetWriter::end() {
 			++path_iter) {
 		total_count += path_iter->second.first;
 		map<string, string> attrs;
+		if (m_cost_function != NULL) {
+			map<string, double> cf_attrs = m_cost_function->getAttributes(
+					path_iter->first);
+
+			for (map<string, double>::const_iterator attr_iter =
+					cf_attrs.begin(); attr_iter != cf_attrs.end();
+					++attr_iter) {
+				attrs[attr_iter->first] = lexical_cast<string>(
+						attr_iter->second);
+			}
+		}
 //		double log_weight = m_path_cost->logWeightWithoutCorrection(path_iter->first);
 //		DEBUG_MESSAGE("write a path "<<log_weight);
 		attrs["logweight"] = lexical_cast<std::string>(

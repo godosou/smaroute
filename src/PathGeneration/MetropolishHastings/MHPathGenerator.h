@@ -58,7 +58,7 @@ protected:
 	const patRandomNumber& m_rnd;
 
 	const patLinkAndPathCost* m_linkAndPathCost;
-	const MHWeightFunction* m_MHWeight;
+	 MHWeightFunction* m_MHWeight;
 	patPathWriter* m_path_writer;
 	MHStateProcessor<MHPath>* m_writter_wrapper;
 };

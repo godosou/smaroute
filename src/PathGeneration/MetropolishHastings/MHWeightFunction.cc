@@ -8,7 +8,10 @@
 #include "MHWeightFunction.h"
 #include "patNBParameters.h"
 #include <boost/algorithm/string.hpp>
-
+#include "patNetworkBase.h"
+#include "patRouter.h"
+#include "patNode.h"
+#include "patShortestPathTreeGeneral.h"
 using namespace boost::algorithm;
 
 MHWeightFunction::MHWeightFunction(double link_scale, double length_coef,
@@ -51,6 +54,7 @@ double MHWeightFunction::logWeigthOriginal(
 //		DEBUG_MESSAGE(m_obs_scale<<"*"<<find_path->second);
 //			pathCost = log(exp(pathCost) + m_obs_scale * find_path->second);
 			pathCost += log(1.0 + m_obs_scale * find_path->second);
+//			pathCost *= log(1.0 + m_obs_scale * find_path->second);
 		}
 	}
 	return pathCost; // - this.nodeLoopScale * nodeLoopCnt);
@@ -68,4 +72,45 @@ void MHWeightFunction::setPathProbas(
 
 double MHWeightFunction::getObsWeightScale() const {
 	return m_obs_scale;
+}
+
+double MHWeightFunction::calculateObsScale(const patNetworkBase* network,
+		const patNode* origin, const patNode* destination) {
+
+	if (m_path_probas != NULL) {
+
+		patRouter start_router(network, this);
+		patShortestPathTreeGeneral sp_tree(FWD);
+		start_router.fwdCost(sp_tree, origin, destination);
+
+		list<const patRoadBase*> list_of_roads;
+		sp_tree.getShortestPathTo(list_of_roads, destination);
+
+		patMultiModalPath sp_path(list_of_roads);
+		double sp_proba = 0.0;
+		map<patMultiModalPath, double>::const_iterator find_path =
+				m_path_probas->find(sp_path);
+		if (find_path != m_path_probas->end()) {
+			sp_proba = find_path->second;
+		}
+
+		double highest_proba = 0.0;
+		patMultiModalPath highest_path;
+		for (map<patMultiModalPath, double>::const_iterator path_iter =
+				m_path_probas->begin(); path_iter != m_path_probas->end();
+				++path_iter) {
+			if(path_iter->second> highest_proba){
+				highest_proba = path_iter->second;
+				highest_path = path_iter->first;
+			}
+		}
+
+		double sp_utility = getCost(sp_path);
+		double highest_utility = getCost(highest_path);
+
+//		m_obs_scale = exp(sp_utility/highest_utility)/(highest_proba-sp_proba);
+		m_obs_scale = (exp(sp_utility-highest_utility)-1.0)/highest_proba;
+		cout<<m_obs_scale<<endl;
+	}
+
 }
