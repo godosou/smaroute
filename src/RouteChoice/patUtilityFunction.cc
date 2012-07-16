@@ -24,20 +24,3 @@ patUtilityFunction::patUtilityFunction(double link_scale, double length_coef,
 
 }
 
-map<ARC_ATTRIBUTES_TYPES, double> patUtilityFunction::getAttributes(
-		const patMultiModalPath& path) const {
-	map<ARC_ATTRIBUTES_TYPES, double> attributes;
-	for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator a_iter =
-			m_link_coefficients.begin(); a_iter != m_link_coefficients.end();
-			++a_iter) {
-		//DEBUG_MESSAGE(a_iter->second<<"*"<<arc->getAttribute(a_iter->first));
-		double cost = 0.0;
-		vector<const patArc*> arcs = path.getArcList();
-		for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
-				arc_iter != arcs.end(); ++arc_iter) {
-			cost += ((double) (*arc_iter)->getAttribute(a_iter->first));
-		}
-		attributes[a_iter->first] = cost; //FIXME scale parameter
-	}
-	return attributes;
-}

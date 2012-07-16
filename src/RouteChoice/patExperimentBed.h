@@ -31,6 +31,10 @@ public:
 			bool observation_real, TransportMode transport_mode, unsigned nbr_observations=INT_MAX);
 
 
+	void checkExperimentFolder() const;
+	void checkChoiceSetFolder() const;
+	void checkObservationFolder() const;
+
 	/**
 	 * Init the network environment m_network_environment.
 	 */

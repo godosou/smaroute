@@ -34,6 +34,21 @@
 #include <dirent.h>
 using namespace std;
 
+void patExperimentBed::checkExperimentFolder() const {
+	if (!ifstream(m_experiment_folder.c_str())) {
+		throw RuntimeException("Experiment folder does not exist");
+	}
+}
+void patExperimentBed::checkChoiceSetFolder() const{
+	if (!ifstream(m_choice_set_foler.c_str())) {
+		throw RuntimeException("Choiceset folder does not exist");
+	}
+}
+void patExperimentBed::checkObservationFolder() const {
+	if (!ifstream(m_observation_folder.c_str())) {
+		throw RuntimeException("observation folder does not exist");
+	}
+}
 void patExperimentBed::initiateNetworks() {
 
 	patError* err(NULL);
@@ -75,6 +90,7 @@ void patExperimentBed::exportNetwork() {
 }
 
 void patExperimentBed::enumerateMHPaths() {
+	checkExperimentFolder();
 	const patNode* origin = m_network_environment->getNetworkElements().getNode(
 			patNBParameters::the()->OriginId);
 	const patNode* destination =
@@ -102,7 +118,7 @@ void patExperimentBed::enumerateMHPaths() {
 
 }
 void patExperimentBed::sampleChoiceSetWithOd(const unsigned count) {
-
+	checkChoiceSetFolder();
 	const patNode* origin = m_network_environment->getNetworkElements().getNode(
 			patNBParameters::the()->OriginId);
 	const patNode* destination =
@@ -160,6 +176,8 @@ void patExperimentBed::sampleChoiceSetWithOd(const unsigned count) {
 }
 
 void patExperimentBed::sampleChoiceSet() {
+	checkChoiceSetFolder();
+	checkObservationFolder();
 	readObservations();
 	patSampleChoiceSetForObservations sample_choice_set;
 
@@ -254,7 +272,7 @@ void patExperimentBed::initCostFunctions() {
 			cout << "\tUse mh observations for sampling algorithm" << endl;
 			readObservations();
 			patGetPathProbasFromObservations ppfo;
-			if(m_observations.empty()){
+			if (m_observations.empty()) {
 				throw RuntimeException("No observation is read");
 			}
 			m_obs_path_probas = ppfo.getPathProbas(m_observations);
@@ -470,7 +488,8 @@ patExperimentBed::~patExperimentBed() {
 
 }
 void patExperimentBed::writeBiogeme() {
-
+	checkObservationFolder();
+	checkChoiceSetFolder();
 	readObservations();
 	patPathGenerator* sampling_pg(NULL);
 
@@ -612,7 +631,7 @@ void patExperimentBed::readChoiceSetForObservations() {
 }
 
 void patExperimentBed::simulateObservations() {
-
+	checkObservationFolder();
 	const patNode* origin = m_network_environment->getNetworkElements().getNode(
 			patNBParameters::the()->OriginId);
 	const patNode* destination =
@@ -629,7 +648,7 @@ void patExperimentBed::simulateObservations() {
 //	generator_clone->setNetwork(cloned_network);
 	cout << "Start simulation" << endl;
 	MHObservationWritterWrapper path_writer(m_observation_folder,
-			patNBParameters::the()->SAMPLEINTERVAL_ELEMENT);
+			patNBParameters::the()->SAMPLEINTERVAL_ELEMENT,m_mh_weight_function);
 	generator_clone->setWritterWrapper(&path_writer);
 	generator_clone->run(origin, destination);
 	cout << "Finish simulation" << endl;

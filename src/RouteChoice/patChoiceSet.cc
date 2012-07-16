@@ -169,12 +169,12 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 	set<patMultiModalPath>::const_iterator find_chosen = m_paths.find(
 			chosen_path);
 
-	map<ARC_ATTRIBUTES_TYPES, double> chosen_cost;
+	map<string, double> chosen_cost;
 	int i = 0;
 //	DEBUG_MESSAGE(m_paths.size());
 	if (find_chosen == m_paths.end()) {
 //		DEBUG_MESSAGE("chosen not smapled");
-		map<ARC_ATTRIBUTES_TYPES, double> path_cost =
+		map<string, double> path_cost =
 				utility_function->getAttributes(chosen_path);
 		chosen_cost = path_cost;
 		map<const patMultiModalPath, double>::const_iterator find_sc = sc.find(
@@ -182,10 +182,10 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 		if (find_sc == sc.end()) {
 			throw RuntimeException("no sc found");
 		}
-		for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator coef_iter =
+		for (map<string, double>::const_iterator coef_iter =
 				path_cost.begin(); coef_iter != path_cost.end(); ++coef_iter) {
 			stringstream ss;
-			ss << patArc::getAttributeTypeString(coef_iter->first) << i;
+			ss << (coef_iter->first) << i;
 			attributes[ss.str()] = coef_iter->second;
 		}
 		{
@@ -224,7 +224,7 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 	for (set<patMultiModalPath>::const_iterator path_iter = m_paths.begin();
 			path_iter != m_paths.end(); ++path_iter) {
 //		DEBUG_MESSAGE(i);
-		map<ARC_ATTRIBUTES_TYPES, double> path_cost =
+		map<string, double> path_cost =
 				utility_function->getAttributes(*path_iter);
 		chosen_cost = path_cost;
 		map<const patMultiModalPath, double>::const_iterator find_sc = sc.find(
@@ -256,10 +256,10 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 			attributes["choiceRP"] = i;
 		}
 
-		for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator coef_iter =
+		for (map<string, double>::const_iterator coef_iter =
 				path_cost.begin(); coef_iter != path_cost.end(); ++coef_iter) {
 			stringstream ss;
-			ss << patArc::getAttributeTypeString(coef_iter->first) << i;
+			ss <<coef_iter->first << i;
 			attributes[ss.str()] = coef_iter->second;
 		}
 		{
@@ -300,11 +300,11 @@ unordered_map<string, double> patChoiceSet::genAttributes(
 			attributes[ss.str()] = 9999;
 		}
 
-		for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator coef_iter =
+		for (map<string, double>::const_iterator coef_iter =
 				chosen_cost.begin(); coef_iter != chosen_cost.end();
 				++coef_iter) {
 			stringstream ss;
-			ss << patArc::getAttributeTypeString(coef_iter->first) << i;
+			ss <<coef_iter->first << i;
 			attributes[ss.str()] = 9999;
 		}
 	}

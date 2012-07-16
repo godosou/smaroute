@@ -17,13 +17,6 @@ public:
 			double length_coef = patNBParameters::the()->utility_length_coef,
 			double ps_coef = patNBParameters::the()->utility_ps_coef,
 			double sb_coef = patNBParameters::the()->utility_sb_coef);
-	/*
-	 * Get attributes of a path for the utility function.
-	 * @param path: the path.
-	 * @return: hashed map with key and value.
-	 */
-	map<ARC_ATTRIBUTES_TYPES, double> getAttributes(
-			const patMultiModalPath& path) const;
 
 	virtual ~patUtilityFunction();
 };
