@@ -104,6 +104,9 @@ double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path,
 		m_obs_scale = (exp(sp_utility-highest_utility)-1.0)/highest_proba;
 		cout<<sp_utility<<","<<highest_utility<<","<<highest_proba;
 		cout<<"obs scale:"<<m_obs_scale<<endl;
+		if(m_obs_scale<0.0){
+			m_obs_scale=0.0;
+		}
 	}
 
 }
