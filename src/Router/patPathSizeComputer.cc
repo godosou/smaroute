@@ -12,24 +12,26 @@
 
 using namespace std;
 patPathSizeComputer::~patPathSizeComputer() {
+	cout<<" ps no found: "<<m_ps_not_found<<endl;
 	// TODO Auto-generated destructor stub
 }
 
 patPathSizeComputer::patPathSizeComputer(
 		const set<patMultiModalPath>& choice_set) {
-
+	m_ps_not_found = 0.0;
 	buildOverlap(choice_set);
 	initiatePS(choice_set);
 }
 
 patPathSizeComputer::patPathSizeComputer(const patPathSizeComputer& another) {
+	m_ps_not_found = 0.0;
 	m_arc_overlap = another.m_arc_overlap;
 	m_path_size = another.m_path_size;
 }
 patPathSizeComputer::patPathSizeComputer(
 		const set<patMultiModalPath>& choice_set,
 		const patMultiModalPath& chosen_alternative) {
-
+	m_ps_not_found=0.0;
 	set<patMultiModalPath> choice_set_copy = choice_set;
 	choice_set_copy.insert(chosen_alternative);
 
@@ -106,6 +108,7 @@ double patPathSizeComputer::getPS(const patMultiModalPath& path) {
 
 	if (find_path == m_path_size.end()) {
 		cout << "\t\t path not found in ps, compute it." << endl;
+		m_ps_not_found++;
 		return computePS(path);
 	} else {
 		return find_path->second;

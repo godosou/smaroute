@@ -11,9 +11,9 @@
 #include "patException.h"
 
 patLinkAndPathCost::~patLinkAndPathCost() {
-	if(m_ps_computer!=NULL){
+	if (m_ps_computer != NULL) {
 		delete m_ps_computer;
-		m_ps_computer=NULL;
+		m_ps_computer = NULL;
 	}
 
 }
@@ -31,7 +31,7 @@ patLinkAndPathCost::patLinkAndPathCost(double link_scale, double length_coef,
 
 }
 
-patLinkAndPathCost*  patLinkAndPathCost::clone() const{
+patLinkAndPathCost* patLinkAndPathCost::clone() const {
 	return new patLinkAndPathCost(*this);
 }
 patLinkAndPathCost::patLinkAndPathCost(
@@ -111,7 +111,33 @@ double patLinkAndPathCost::getPathSizeCoefficient() const {
 	return m_pathsize_coefficient;
 }
 
-void patLinkAndPathCost::setPathSizeComputer(
-		patPathSizeComputer* pathsize) {
+void patLinkAndPathCost::setPathSizeComputer(patPathSizeComputer* pathsize) {
 	m_ps_computer = pathsize->clone();
+}
+/*
+ * Get attributes of a path for the utility function.
+ * @param path: the path.
+ * @return: hashed map with key and value.
+ */
+map<string, double> patLinkAndPathCost::getAttributes(
+		const patMultiModalPath& path) const {
+	map<string, double> attributes;
+	for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator a_iter =
+			m_link_coefficients.begin(); a_iter != m_link_coefficients.end();
+			++a_iter) {
+		//DEBUG_MESSAGE(a_iter->second<<"*"<<arc->getAttribute(a_iter->first));
+		double cost = 0.0;
+		vector<const patArc*> arcs = path.getArcList();
+		for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
+				arc_iter != arcs.end(); ++arc_iter) {
+			cost += ((double) (*arc_iter)->getAttribute(a_iter->first));
+		}
+		attributes[patArc::getAttributeTypeString(a_iter->first)] = cost; //FIXME scale parameter
+	}
+	if (m_ps_computer != NULL) {
+		double ps_value = m_ps_computer->getPS(path);
+		attributes["path_size"] = m_ps_computer->getPS(path);
+	}
+	return attributes;
+
 }

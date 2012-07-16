@@ -31,9 +31,8 @@ public:
 		m_pathsize_coefficient = another.m_pathsize_coefficient;
 		if (another.m_ps_computer != NULL) {
 			m_ps_computer = another.m_ps_computer->clone();
-		}
-		else{
-			m_ps_computer=NULL;
+		} else {
+			m_ps_computer = NULL;
 		}
 	}
 
@@ -64,6 +63,9 @@ public:
 	 */
 	const unordered_map<const char*, double>& getPathCoefficients() const;
 	virtual ~patLinkAndPathCost();
+
+	map<string, double> getAttributes(
+			const patMultiModalPath& path) const;
 protected:
 	map<ARC_ATTRIBUTES_TYPES, double> m_link_coefficients;
 	unordered_map<const char*, double> m_path_coefficients;

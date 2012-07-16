@@ -32,6 +32,7 @@ protected:
 	std::tr1::unordered_map<const patArc*, int> m_arc_overlap;
 
 	std::map<const patMultiModalPath, double> m_path_size;
+	unsigned m_ps_not_found;
 };
 
 #endif /* PATPATHSIZECOMPUTER_H_ */
