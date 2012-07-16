@@ -35,7 +35,6 @@ MHWeightFunction* MHWeightFunction::clone() const {
 MHWeightFunction::MHWeightFunction(const MHWeightFunction& another) :
 		patLinkAndPathCost::patLinkAndPathCost(another) {
 	m_path_probas = another.m_path_probas;
-	cout<<m_path_probas->size()<<endl;
 	m_obs_scale = another.m_obs_scale;
 }
 MHWeightFunction::~MHWeightFunction() {
