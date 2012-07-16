@@ -11,7 +11,7 @@
 #include "patNetworkBase.h"
 #include "patRouter.h"
 #include "patNode.h"
-#include "patShortestPathTreeGeneral.h"
+#include "patMultiModalPath.h"
 using namespace boost::algorithm;
 
 MHWeightFunction::MHWeightFunction(double link_scale, double length_coef,
@@ -74,19 +74,11 @@ double MHWeightFunction::getObsWeightScale() const {
 	return m_obs_scale;
 }
 
-double MHWeightFunction::calculateObsScale(const patNetworkBase* network,
+double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path,
 		const patNode* origin, const patNode* destination) {
 
 	if (m_path_probas != NULL) {
 
-		patRouter start_router(network, this);
-		patShortestPathTreeGeneral sp_tree(FWD);
-		start_router.fwdCost(sp_tree, origin, destination);
-
-		list<const patRoadBase*> list_of_roads;
-		sp_tree.getShortestPathTo(list_of_roads, destination);
-
-		patMultiModalPath sp_path(list_of_roads);
 		double sp_proba = 0.0;
 		map<patMultiModalPath, double>::const_iterator find_path =
 				m_path_probas->find(sp_path);

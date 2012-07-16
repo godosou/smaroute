@@ -14,7 +14,7 @@
 #include "patRoadBase.h"
 #include "patWeightFunction.h"
 #include <tr1/unordered_map>
-class patNetworkBase;
+class patMultiModalPath;
 class patNode;
 using namespace std::tr1;
 class MHWeightFunction: public patLinkAndPathCost, public MHWeight<MHPath> ,public patWeightFunction{
@@ -56,7 +56,7 @@ public:
 
 	void setPathProbas(const map<const patMultiModalPath, double>* path_probas);
 
-	double calculateObsScale(const patNetworkBase* network,const patNode* origin, const patNode* destination);
+	double calculateObsScale(const patMultiModalPath& sp_path,const patNode* origin, const patNode* destination);
 	protected:
 	// CONFIGURATION
 
