@@ -12,6 +12,7 @@
 #include "patRouter.h"
 #include "patNode.h"
 #include "patMultiModalPath.h"
+#include  <math.h>
 using namespace boost::algorithm;
 
 MHWeightFunction::MHWeightFunction(double link_scale, double length_coef,
@@ -34,6 +35,7 @@ MHWeightFunction* MHWeightFunction::clone() const {
 MHWeightFunction::MHWeightFunction(const MHWeightFunction& another) :
 		patLinkAndPathCost::patLinkAndPathCost(another) {
 	m_path_probas = another.m_path_probas;
+	cout<<m_path_probas->size()<<endl;
 	m_obs_scale = another.m_obs_scale;
 }
 MHWeightFunction::~MHWeightFunction() {
@@ -74,11 +76,11 @@ double MHWeightFunction::getObsWeightScale() const {
 	return m_obs_scale;
 }
 
-double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path,
-		const patNode* origin, const patNode* destination) {
+double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path) {
 
 	if (m_path_probas != NULL) {
 
+		cout<<"path proba size"<<m_path_probas->size()<<endl;
 		double sp_proba = 0.0;
 		map<patMultiModalPath, double>::const_iterator find_path =
 				m_path_probas->find(sp_path);
@@ -89,9 +91,11 @@ double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path,
 		double highest_proba = 0.0;
 		patMultiModalPath highest_path;
 		for (map<patMultiModalPath, double>::const_iterator path_iter =
-				m_path_probas->begin(); path_iter != m_path_probas->end();
+				m_path_probas->begin();
+				path_iter != m_path_probas->end();
 				++path_iter) {
-			if(path_iter->second> highest_proba){
+//			cout<<"path proba: "<<path_iter->second<<endl;
+			if(path_iter->second> highest_proba){//FIXME check oD
 				highest_proba = path_iter->second;
 				highest_path = path_iter->first;
 			}
@@ -102,8 +106,11 @@ double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path,
 
 //		m_obs_scale = exp(sp_utility/highest_utility)/(highest_proba-sp_proba);
 		m_obs_scale = (exp(sp_utility-highest_utility)-1.0)/highest_proba;
-		cout<<sp_utility<<","<<highest_utility<<","<<highest_proba;
+		cout<<sp_utility<<","<<highest_utility<<","<<highest_proba<<","<<sp_proba<<endl;
 		cout<<"obs scale:"<<m_obs_scale<<endl;
+		if(!isfinite(m_obs_scale)){
+			throw RuntimeException("inifinit obs scale");
+		}
 		if(m_obs_scale<0.0){
 			m_obs_scale=0.0;
 		}

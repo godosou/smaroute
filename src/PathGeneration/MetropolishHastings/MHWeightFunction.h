@@ -56,7 +56,7 @@ public:
 
 	void setPathProbas(const map<const patMultiModalPath, double>* path_probas);
 
-	double calculateObsScale(const patMultiModalPath& sp_path,const patNode* origin, const patNode* destination);
+	double calculateObsScale(const patMultiModalPath& sp_path);
 	protected:
 	// CONFIGURATION
 

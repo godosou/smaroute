@@ -134,7 +134,7 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
 	}
 
-	m_MHWeight->calculateObsScale(sp_path,origin,destination);
+	m_MHWeight->calculateObsScale(sp_path);
 	patRouter router(m_network, m_linkAndPathCost);
 	/*
 	 * (6) run the algorithm
