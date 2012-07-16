@@ -7,6 +7,7 @@
 
 #include "patGetPathProbasFromObservations.h"
 #include <set>
+#include "patDisplay.h"
 using namespace std;
 patGetPathProbasFromObservations::patGetPathProbasFromObservations() {
 	// TODO Auto-generated constructor stub
@@ -34,6 +35,7 @@ const map<const patMultiModalPath, double> patGetPathProbasFromObservations::get
 		for (map<const patMultiModalPath, double>::const_iterator path_iter =
 				path_probas.begin(); path_iter != path_probas.end();
 				++path_iter) {
+//			DEBUG_MESSAGE(path_iter->second);
 			patOd the_od(path_iter->first.getUpNode(),
 					path_iter->first.getDownNode());
 			od_set.insert(the_od);
@@ -41,13 +43,13 @@ const map<const patMultiModalPath, double> patGetPathProbasFromObservations::get
 					od_path_probas.find(the_od);
 			if (find_od == od_path_probas.end()) {
 				od_path_probas[the_od];
-				od_path_probas[the_od][path_iter->first] = 0.0;
+				od_path_probas[the_od][path_iter->first] = path_iter->second;
 			} else {
 				map<const patMultiModalPath, double>::iterator find_path =
 						find_od->second.find(path_iter->first);
 
 				if (find_path == find_od->second.end()) {
-					find_path->second = path_iter->second;
+					od_path_probas[the_od][path_iter->first] = path_iter->second;
 				} else {
 
 					find_path->second += path_iter->second;
@@ -70,8 +72,8 @@ const map<const patMultiModalPath, double> patGetPathProbasFromObservations::get
 		for (map<const patMultiModalPath, double>::const_iterator path_iter =
 				od_iter->second.begin(); path_iter != od_iter->second.end();
 				++path_iter) {
-			map<const patOd, int>::const_iterator find_od_count =
-					od_count.find(od_iter->first);
+			map<const patOd, int>::const_iterator find_od_count = od_count.find(
+					od_iter->first);
 			if (find_od_count == od_count.end()) {
 				throw RuntimeException("not od count found");
 			} else {
@@ -79,7 +81,9 @@ const map<const patMultiModalPath, double> patGetPathProbasFromObservations::get
 				path_obs_proba[path_iter->first] = path_iter->second
 						/ (double) find_od_count->second;
 			}
+//			DEBUG_MESSAGE( path_obs_proba[path_iter->first]);
 		}
 	}
+	DEBUG_MESSAGE("Path proba size"<<path_obs_proba.size());
 	return path_obs_proba;
 }
