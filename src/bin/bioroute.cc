@@ -58,9 +58,10 @@ int main(int argc, char *argv[]) {
 	patExperimentBed run(true, false, CAR, nbr_observation);
 
 	if (command_str == "SampleWithOd") {
-		run.sampleChoiceSetWithOd(300);
+		run.sampleChoiceSetWithOd(nbr_observation);
 	} else if (command_str == "Sample") {
 		run.sampleChoiceSet();
+		run.writeBiogeme();
 	} else if (command_str == "MHEnumeratePaths") {
 		run.enumerateMHPaths();
 	} else if (command_str == "WriteBiogeme") {
