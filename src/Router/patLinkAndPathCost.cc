@@ -20,11 +20,18 @@ patLinkAndPathCost::~patLinkAndPathCost() {
 patLinkAndPathCost::patLinkAndPathCost(double link_scale, double length_coef,
 		double ps_coef, double sb_coef) :
 		m_ps_computer(NULL) {
-	if (length_coef > 0.0) {
+	if (length_coef != 0.0) {
 		m_link_coefficients[ENUM_LENGTH] = length_coef;
 	}
-	if (sb_coef > 0.0) {
+	if (sb_coef != 0.0) {
 		m_link_coefficients[ENUM_SPEED_BUMP] = sb_coef;
+	}
+	for (map<ARC_ATTRIBUTES_TYPES, double>::iterator a_iter =
+			m_link_coefficients.begin(); a_iter != m_link_coefficients.end();
+			++a_iter) {
+		if (a_iter->second > 0.0) {
+			cout << "param: " << a_iter->first << "," << a_iter->second << endl;
+		}
 	}
 	m_link_cost_scale = link_scale;
 	m_pathsize_coefficient = ps_coef;
@@ -42,10 +49,11 @@ patLinkAndPathCost::patLinkAndPathCost(
 		double &ps_scale) :
 		m_ps_computer(NULL) {
 	m_link_coefficients.clear();
-	for(map<ARC_ATTRIBUTES_TYPES, double>::iterator a_iter = link_coef.begin();a_iter!=link_coef.end();++a_iter){
-		if (a_iter->second>0.0){
-			cout<<a_iter->first<<","<<a_iter->second<<endl;
-			m_link_coefficients[a_iter->first]=a_iter->second;
+	for (map<ARC_ATTRIBUTES_TYPES, double>::iterator a_iter = link_coef.begin();
+			a_iter != link_coef.end(); ++a_iter) {
+		if (a_iter->second != 0.0) {
+			cout << "param: " << a_iter->first << "," << a_iter->second << endl;
+			m_link_coefficients[a_iter->first] = a_iter->second;
 		}
 	}
 //	m_link_coefficients = link_coef;
