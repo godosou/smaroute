@@ -125,9 +125,10 @@ public:
 			double logAlpha = (proposalLogWeight - currentLogWeight)
 					+ (proposalTransition.getBwdLogProb()
 							- proposalTransition.getFwdLogProb());
-//            DEBUG_MESSAGE(proposalLogWeight <<","<<currentLogWeight<<","<<proposalTransition.getBwdLogProb()<<","<< proposalTransition.getFwdLogProb());
 			double r_number = m_rnd->nextDouble();
 //			double r_number = 0.0;
+//			DEBUG_MESSAGE(m_weight->logWeightWithoutCorrection(currentState)<<","<<m_weight->logWeightWithoutCorrection(proposalState));
+//            DEBUG_MESSAGE(proposalLogWeight <<","<<currentLogWeight<<","<<proposalTransition.getBwdLogProb()<<","<< proposalTransition.getFwdLogProb());
 //			DEBUG_MESSAGE(log(r_number)<<","<<logAlpha);
 			if (log(r_number) < logAlpha) {
 				accept_transition++;

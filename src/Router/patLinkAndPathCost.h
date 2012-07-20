@@ -18,17 +18,15 @@ class patRoadBase;
 class patPathSizeComputer;
 class patLinkAndPathCost {
 public:
-//	patLinkAndPathCost();
-	patLinkAndPathCost(double link_scale, double length_coef, double ps_coef,
-			double sb_coef);
-	patLinkAndPathCost(map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
-			double &link_scale, double &ps_scale);
-	patLinkAndPathCost(const patLinkAndPathCost& another) {
-		m_link_coefficients = another.m_link_coefficients;
-		m_path_coefficients = another.m_path_coefficients;
-		m_link_cost_scale = another.m_link_cost_scale;
-		m_path_cost_scale = another.m_path_cost_scale;
-		m_pathsize_coefficient = another.m_pathsize_coefficient;
+
+	patLinkAndPathCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
+			const double &link_scale, const double &ps_scale);
+	patLinkAndPathCost(const patLinkAndPathCost& another) :
+			m_link_cost_scale(another.m_link_cost_scale), m_link_coefficients(
+					another.m_link_coefficients), m_pathsize_coefficient(
+					another.m_pathsize_coefficient)
+
+	{
 		if (another.m_ps_computer != NULL) {
 			m_ps_computer = another.m_ps_computer->clone();
 		} else {
@@ -37,10 +35,10 @@ public:
 	}
 
 	virtual patLinkAndPathCost* clone() const;
-	virtual double getCost(const patRoadBase* road) const;
-	virtual double getCost(const patMultiModalPath& path) const;
+	double getCost(const patRoadBase* road) const;
+	double getCost(const patMultiModalPath& path) const;
 
-	virtual double getCostWithPathSize(const patMultiModalPath& path,
+	double getCostWithPathSize(const patMultiModalPath& path,
 			double path_size) const;
 	void setLinkCostScale(const double linkCostScale);
 	void setPathSizeComputer(patPathSizeComputer* pathsize);
@@ -64,15 +62,12 @@ public:
 	const unordered_map<const char*, double>& getPathCoefficients() const;
 	virtual ~patLinkAndPathCost();
 
-	map<string, double> getAttributes(
-			const patMultiModalPath& path) const;
+	map<string, double> getAttributes(const patMultiModalPath& path) const;
 protected:
-	map<ARC_ATTRIBUTES_TYPES, double> m_link_coefficients;
-	unordered_map<const char*, double> m_path_coefficients;
+	const map<ARC_ATTRIBUTES_TYPES, double> m_link_coefficients;
+	const double m_pathsize_coefficient;
+	const double m_link_cost_scale;
 	patPathSizeComputer* m_ps_computer;
-	double m_link_cost_scale;
-	double m_path_cost_scale;
-	double m_pathsize_coefficient;
 };
 
 #endif /* PATPATHCOST_H_ */

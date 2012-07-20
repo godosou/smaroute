@@ -26,6 +26,8 @@ class patArc;
 #include "patIterator.h"
 
 class patOd;
+enum NODE_STATUS{NORMAL, INTERMEDIATE, DEADEND};
+
 class patNode {
 
 	friend class patDisconnectedNode;

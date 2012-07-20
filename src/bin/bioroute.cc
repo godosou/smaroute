@@ -18,12 +18,15 @@ int main(int argc, char *argv[]) {
 	char *param_file = NULL;
 	char *command = NULL;
 	int nbr_observation = INT_MAX;
-
+	bool synthetic_network = false;
 	int c;
-	while ((c = getopt(argc, argv, "c:f:n:")) != -1) {
+	while ((c = getopt(argc, argv, "c:f:n:s")) != -1) {
 		switch (c) {
 		case 'c':
 			command = optarg;
+			break;
+		case 's':
+			synthetic_network=true;
 			break;
 		case 'f':
 			param_file = optarg;
@@ -55,7 +58,7 @@ int main(int argc, char *argv[]) {
 	cout <<command_str<<endl;
 	initParameters(param_file);
 
-	patExperimentBed run(true, false, CAR, nbr_observation);
+	patExperimentBed run(!synthetic_network, false, CAR, nbr_observation);
 
 	if (command_str == "SampleWithOd") {
 		run.sampleChoiceSetWithOd(nbr_observation);
@@ -71,6 +74,12 @@ int main(int argc, char *argv[]) {
 	}
 	else if (command_str == "ExportNetwork"){
 		run.exportNetwork();
+	}
+	else if (command_str == "TestNetwork"){
+		run.testNetwork();
+	}
+	else if (command_str == "Verify"){
+		run.verifySamplingResult();
 	}
 	else {
 		cout << "Wrong command: " << command_str << endl;

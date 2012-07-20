@@ -103,7 +103,6 @@ void patNetworkBase::finalizeNetwork() {
 		for (set<const patRoadBase*>::const_iterator road_iter =
 				n_iter->second.begin(); road_iter != n_iter->second.end();
 				++road_iter) {
-
 			m_nodes.insert((*road_iter)->getUpNode());
 			m_nodes.insert((*road_iter)->getDownNode());
 		}
@@ -353,4 +352,56 @@ const set<const patRoadBase*> patNetworkBase::getOutgoingRoads(
 		return find_outgoing->second;
 	}
 
+}
+
+/**
+ * 0 normal status
+ * 1 intermediate node
+ * 2 deadend
+ */
+NODE_STATUS patNetworkBase::checkNodeStatus(const patNode* node) const {
+
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_outgoing =
+			m_outgoing_incidents.find(node);
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_incoming =
+			m_incoming_incidents.find(node);
+
+	if (find_outgoing == m_outgoing_incidents.end()
+			|| find_outgoing->second.empty()
+			|| find_incoming == m_incoming_incidents.end()
+			|| find_incoming->second.empty()) {
+		return DEADEND;
+	}
+
+	set<const patNode*> outgoing_nodes;
+	set<const patNode*> incoming_nodes;
+
+	for (set<const patRoadBase*>::const_iterator arc_iter =
+			find_outgoing->second.begin();
+			arc_iter != find_outgoing->second.end(); ++arc_iter) {
+		outgoing_nodes.insert((*arc_iter)->getDownNode());
+	}
+	short incidents = 0;
+	short duplicate_incoming=0;
+	for (set<const patRoadBase*>::const_iterator arc_iter =
+			find_incoming->second.begin();
+			arc_iter != find_incoming->second.end(); ++arc_iter) {
+		const patNode* new_node =(*arc_iter)->getUpNode();
+		++incidents;
+		if (outgoing_nodes.find(new_node)!=outgoing_nodes.end()){
+			++duplicate_incoming;
+		}
+	}
+
+	short valid_incidents = incidents+ outgoing_nodes.size()-duplicate_incoming;
+
+	if(valid_incidents<=1){
+		return DEADEND;
+	}
+	else if(valid_incidents==2){
+		return INTERMEDIATE;
+	}
+	else{
+		return NORMAL;
+	}
 }

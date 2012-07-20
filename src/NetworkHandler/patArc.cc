@@ -325,3 +325,19 @@ return "traffic_signal";
 
 
 }
+
+
+double patArc::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef){
+	m_generalized_cost = 0.0;
+	for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator a_iter =
+			link_coef.begin(); a_iter != link_coef.end(); ++a_iter) {
+		if (a_iter->second != 0.0) {
+//			DEBUG_MESSAGE(a_iter->second<<"*"<<getAttribute(a_iter->first));
+			m_generalized_cost += a_iter->second
+					* ((double) getAttribute(a_iter->first));
+		}
+	}
+
+	return m_generalized_cost;
+//	DEBUG_MESSAGE(m_generalized_cost);
+}

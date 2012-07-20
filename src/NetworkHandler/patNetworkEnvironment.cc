@@ -29,8 +29,9 @@ patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb,
 //			<<patNBParameters::the()->enableMetroNetwork
 //			);
 
-	//m_network_elements.readNetworkFromPostGreSQL(bb, err);
-	m_network_elements.readNetworkFromOSMFile(patNBParameters::the()->OsmNetworkFileName,bb, err);
+//m_network_elements.readNetworkFromPostGreSQL(bb, err);
+	m_network_elements.readNetworkFromOSMFile(
+			patNBParameters::the()->OsmNetworkFileName, bb, err);
 	if (err != NULL) {
 		WARNING("Fail to setup network environment");
 	} else {
@@ -63,22 +64,24 @@ patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb,
 			m_networks["metro"] = new patNetworkMetro();
 			m_networks["metro"]->getFromNetwork(&m_network_elements, bb);
 		}
-		if (m_networks.find("walk")!=m_networks.end()){
+		if (m_networks.find("walk") != m_networks.end()) {
 			DEBUG_MESSAGE("Deal with walk connection for networks");
 
 			for (map<string, patNetworkBase*>::iterator network_iter =
 					m_networks.begin(); network_iter != m_networks.end();
 					++network_iter) {
 				/*
-				if(isPublicTransport(network_iter->second->getTransportMode())){
-					network_iter->second->walkFromToStops(&m_network_elements,m_networks["walk"]);
-				}
-				*/
-				if(network_iter->second->getTransportMode()==METRO){
-					if(patNBParameters::the()->walkOnTrack){
-						network_iter->second->walkOnTrack(&m_network_elements,m_networks["walk"]);
+				 if(isPublicTransport(network_iter->second->getTransportMode())){
+				 network_iter->second->walkFromToStops(&m_network_elements,m_networks["walk"]);
+				 }
+				 */
+				if (network_iter->second->getTransportMode() == METRO) {
+					if (patNBParameters::the()->walkOnTrack) {
+						network_iter->second->walkOnTrack(&m_network_elements,
+								m_networks["walk"]);
 					}
-					network_iter->second->walkFromToStops(&m_network_elements,m_networks["walk"]);
+					network_iter->second->walkFromToStops(&m_network_elements,
+							m_networks["walk"]);
 				}
 			}
 		}
@@ -89,8 +92,7 @@ patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb,
 				++network_iter) {
 			network_iter->second->finalizeNetwork();
 			DEBUG_MESSAGE(
-					network_iter->first << " network node size"
-							<< network_iter->second->getNodeSize());
+					network_iter->first << " network node size" << network_iter->second->getNodeSize());
 
 		}
 
@@ -160,16 +162,19 @@ double patNetworkEnvironment::getMinimumTravelTime(const patRoadBase* road,
 	return 3.6 * (road->getLength()) / (getNetwork(mode)->getMaxSpeed());
 }
 
-	bool patNetworkEnvironment::isPTStop(const patNode* stop) const{
+bool patNetworkEnvironment::isPTStop(const patNode* stop) const {
 
 	for (map<string, patNetworkBase*>::const_iterator network_iter =
 			m_networks.begin(); network_iter != m_networks.end();
 			++network_iter) {
-		if (network_iter->second->isPT()){
-			if( network_iter->second->isStop(stop)){
+		if (network_iter->second->isPT()) {
+			if (network_iter->second->isStop(stop)) {
 				return true;
 			}
 		}
 	}
 	return false;
-	}
+}
+void patNetworkEnvironment::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef){
+	m_network_elements.computeGeneralizedCost(link_coef);
+}

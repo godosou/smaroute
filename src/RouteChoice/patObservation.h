@@ -49,6 +49,9 @@ public:
 	unsigned getNbrOfCandidates() const;
 	unsigned getNbOfOds() const;
 	void setChoiceSet(map<patOd, patChoiceSet>& choice_set);
+	const map<patOd, patChoiceSet>& getChoiceSet() const{
+		return m_choice_set;
+	}
 protected:
 	string m_id;
 	double m_start_time;

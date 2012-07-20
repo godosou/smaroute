@@ -7,122 +7,81 @@
 
 #include "patVerifyingSamplingResult.h"
 #include <sstream>
-#include <dirent.h>
 #include "patNetworkElements.h"
-#include "patReadChoiceSetFromKML.h"
+#include "patObservation.h"
 #include "patOd.h"
 #include "patChoiceSet.h"
 #include "patDisplay.h"
 #include "patPathGenerator.h"
-#include "patRandomNumber.h"
-patVerifyingSamplingResult::patVerifyingSamplingResult(string folder_name,
-		const patNetworkElements* network, const patRandomNumber& rnd) :
-		m_folder_name(folder_name), m_network(network), m_rnd(rnd) {
-	getpaths();
-}
+#include <cmath>
 
-list<string> patVerifyingSamplingResult::getFiles() const {
-	DIR * dip;
-	struct dirent *dit;
-	const char* dirName = m_folder_name.c_str();
+patVerifyingSamplingResult::patVerifyingSamplingResult(
+		const vector<patObservation>& observations) {
 
-	DEBUG_MESSAGE("Try to open directory " << dirName);
-	if ((dip = opendir(dirName)) == NULL) {
-		stringstream str;
-		str << "Directory " << dirName
-				<< " doesn't exist or no permission to read.";
-		throw RuntimeException(str.str().c_str());
-		return list<string>();
-	}
+	DEBUG_MESSAGE("===START VERIFYING SAMPLING RESULTS");
+	unsigned i = 0;
 
-	list<string> dirContent;
-	unsigned char isFile = 0x8;
+	m_paths.clear();
+	m_total_nbr_of_paths=0;
+	m_total_probas=0.0;
+	for (vector<patObservation>::const_iterator obs_iter = observations.begin();
+			obs_iter != observations.end(); ++obs_iter) {
+		++i;
+		const map<patOd, patChoiceSet>& obs_choice_sets =
+				(*obs_iter).getChoiceSet();
 
-	while ((dit = readdir(dip)) != NULL) {
-		if (dit->d_type == isFile) {
-			string fileName(dit->d_name);
-			if (fileName.find(".kml") != string::npos) {
-//				DEBUG_MESSAGE("Found file:" << fileName);
-				dirContent.push_back(fileName);
+		for (map<patOd, patChoiceSet>::const_iterator od_iter =
+				obs_choice_sets.begin(); od_iter != obs_choice_sets.end();
+				++od_iter) {
+
+			const map<const patMultiModalPath, int>& count =
+					od_iter->second.getCount();
+			const map<const patMultiModalPath, double>& log_weight =
+					od_iter->second.getLogWeight();
+			if (count.size() != log_weight.size()) {
+				throw RuntimeException("count and logweight not consistent");
 			}
+//			DEBUG_MESSAGE(count.size());
+			for (map<const patMultiModalPath, int>::const_iterator path_iter =
+					count.begin(); path_iter != count.end(); ++path_iter) {
 
-		}
-	}
-
-	closedir(dip);
-	return dirContent;
-}
-
-void patVerifyingSamplingResult::getpaths() {
-	list<string> files = getFiles();
-	m_total_nbr_of_paths = 0;
-	m_total_probas = 0.0;
-	for (list<string>::const_iterator file_iter = files.begin();
-			file_iter != files.end(); ++file_iter) {
-		string file_name = m_folder_name + "/" + *file_iter;
-//		DEBUG_MESSAGE(file_name);
-		patReadChoiceSetFromKML rc(m_network);
-		if (!ifstream((file_name).c_str())) {
-
-			continue;
-		}
-		try {
-			map<patOd, patChoiceSet> css = rc.read(file_name, m_rnd);
-			for (map<patOd, patChoiceSet>::const_iterator od_iter = css.begin();
-					od_iter != css.end(); ++od_iter) {
-
-				const map<const patMultiModalPath, int>& count =
-						od_iter->second.getCount();
-				const map<const patMultiModalPath, double>& log_weight =
-						od_iter->second.getLogWeight();
-				if (count.size() != log_weight.size()) {
-					throw RuntimeException(
-							"count and logweight not consistent");
+				map<patMultiModalPath, pair<int, double> >::iterator find_path =
+						m_paths.find(path_iter->first);
+				m_total_nbr_of_paths += path_iter->second;
+				if (find_path == m_paths.end()) {
+					m_paths[path_iter->first] = pair<int, double>(
+							path_iter->second, 0.0);
+				} else {
+					find_path->second.first += path_iter->second;
 				}
-				for (map<const patMultiModalPath, int>::const_iterator path_iter =
-						count.begin(); path_iter != count.end(); ++path_iter) {
-
-					map<patMultiModalPath, pair<int, double> >::iterator find_path =
-							m_paths.find(path_iter->first);
-					m_total_nbr_of_paths += path_iter->second;
-					if (find_path == m_paths.end()) {
-						m_paths[path_iter->first] = pair<int, double>(
-								path_iter->second, 0.0);
+			}
+			unsigned j = 0;
+			for (map<const patMultiModalPath, double>::const_iterator path_iter =
+					log_weight.begin(); path_iter != log_weight.end();
+					++path_iter) {
+				++j;
+				map<patMultiModalPath, pair<int, double> >::iterator find_path =
+						m_paths.find(path_iter->first);
+				if (find_path == m_paths.end()) {
+					throw RuntimeException("path in log weight not in count");
+				} else {
+					if (find_path->second.second == 0.0) {
+						m_total_probas += exp(path_iter->second);
+						find_path->second.second = path_iter->second;
 					} else {
-						find_path->second.first += path_iter->second;
-					}
-				}
-
-				for (map<const patMultiModalPath, double>::const_iterator path_iter =
-						log_weight.begin(); path_iter != log_weight.end();
-						++path_iter) {
-
-					map<patMultiModalPath, pair<int, double> >::iterator find_path =
-							m_paths.find(path_iter->first);
-					if (find_path == m_paths.end()) {
-						throw RuntimeException(
-								"path in log weight not in count");
-					} else {
-						if (find_path->second.second == 0.0) {
-							m_total_probas += exp(path_iter->second);
-							find_path->second.second = path_iter->second;
-						} else {
-							if (find_path->second.second != path_iter->second) {
-								throw RuntimeException(
-										"log weights for same path are different");
-							}
+						if (find_path->second.second != path_iter->second) {
+							WARNING(
+									"log weights for same path are different "<<i<<","<<j<<":"<<find_path->second.second<<","<<path_iter->second);
+							throw RuntimeException(
+									"log weights for same path are different");
 						}
-
 					}
-				}
 
+				}
 			}
-		} catch (...) {
-			WARNING("fail to open"<<file_name);
-			continue;
+
 		}
 	}
-
 }
 double patVerifyingSamplingResult::verifyProbability(
 		const patChoiceSet& universal_set,
@@ -146,6 +105,7 @@ double patVerifyingSamplingResult::verifyProbability(
 		theo_probas.push_back(exp(theo_proba));
 		if (find_path != m_paths.end()) {
 			log_weight_file = find_path->second.second;
+//			DEBUG_MESSAGE(find_path->second.first<<","<<m_total_nbr_of_paths)
 			empirical_proba = (double) find_path->second.first
 					/ m_total_nbr_of_paths;
 			theo_proba_file = exp(find_path->second.second) / m_total_probas;
@@ -168,7 +128,8 @@ double patVerifyingSamplingResult::verifyProbability(
 		chi2 += m_total_nbr_of_paths * (theo_probas[i] - empirical_probas[i])
 				* (theo_probas[i] - empirical_probas[i]) / theo_probas[i];
 
-	}DEBUG_MESSAGE("CHI2: "<<chi2);
+	}
+	DEBUG_MESSAGE("CHI2: "<<chi2);
 	DEBUG_MESSAGE("done verifying");
 	return chi2;
 //	return true;

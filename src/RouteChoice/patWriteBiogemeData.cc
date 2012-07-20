@@ -79,15 +79,15 @@ void patWriteBiogemeData::genHeader(const unsigned& choiceset_size) {
 			ss << patArc::getAttributeTypeString(link_coef_iter->first) << i;
 			m_header.push_back(ss.str());
 		}
-		for (unordered_map<const char*, double>::const_iterator path_coef_iter =
-				m_utility_function->getPathCoefficients().begin();
-				path_coef_iter
-						!= m_utility_function->getPathCoefficients().end();
-				++path_coef_iter) {
-			stringstream ss;
-			ss << path_coef_iter->first << i;
-			m_header.push_back(ss.str());
-		}
+//		for (unordered_map<const char*, double>::const_iterator path_coef_iter =
+//				m_utility_function->getPathCoefficients().begin();
+//				path_coef_iter
+//						!= m_utility_function->getPathCoefficients().end();
+//				++path_coef_iter) {
+//			stringstream ss;
+//			ss << path_coef_iter->first << i;
+//			m_header.push_back(ss.str());
+//		}
 	}
 }
 void patWriteBiogemeData::writeHeader(const string& fileName) {

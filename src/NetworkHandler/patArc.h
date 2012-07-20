@@ -109,6 +109,8 @@ public:
 	virtual double getAttribute(ARC_ATTRIBUTES_TYPES attribute_name) const;
     static string getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name);
 	void setTags(const unordered_map<string, string>& tags );
+
+	double computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
 protected:
 	double frozenGeneralizedCost;
 	unordered_map<string, string> m_tags;

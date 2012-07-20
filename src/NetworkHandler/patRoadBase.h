@@ -39,6 +39,7 @@ public:
 	 */
 	virtual double computeLength()  = 0;
 
+	 double getGeneralizedCost() const;
 	/**
 	 * Virtual function get the up node.
 	 */
@@ -52,7 +53,7 @@ public:
 	 */
 	virtual vector<const patArc*> getArcList( ) const=0;
 	virtual double getAttribute(ARC_ATTRIBUTES_TYPES attribute) const=0;
-
+	virtual double computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
 	 FolderPtr getKML(string mode) const;
 	virtual bool isValid() const=0;
 	virtual int size() const=0;
@@ -60,6 +61,7 @@ public:
 	virtual ~patRoadBase();
 protected:
 	double m_length;
+	double m_generalized_cost;
 };
 
 #endif /* PATROADBASE_H_ */

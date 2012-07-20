@@ -19,6 +19,7 @@ class patArcSequence: public patRoadBase {
 	friend ostream& operator<<(ostream& str, const patArcSequence& x);
 public:
 	patArcSequence();
+	patArcSequence(const vector<const patRoadBase*>& roads);
 	patArcSequence(const patArcSequence& another);
 	bool isError();
 

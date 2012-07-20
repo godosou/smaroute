@@ -23,6 +23,15 @@ patArcSequence::patArcSequence(const patArcSequence& another) :
 
 }
 
+patArcSequence::patArcSequence(const vector<const patRoadBase*>& roads) {
+	for (vector<const patRoadBase*>::const_iterator road_iter = roads.begin();
+			road_iter != roads.end(); ++road_iter) {
+		if(!addArcsToBack (*road_iter)){
+			throw RuntimeException("Wrong compostion of arc sequence");
+		}
+	}
+}
+
 bool operator==(const patArcSequence& seq_a, const patArcSequence& seq_b) {
 	vector<const patArc*> arc_list_a = seq_a.getArcList();
 	vector<const patArc*> arc_list_b = seq_b.getArcList();

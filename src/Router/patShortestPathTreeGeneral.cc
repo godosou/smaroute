@@ -15,29 +15,48 @@ patShortestPathTreeGeneral::patShortestPathTreeGeneral() :
 //    
 //
 //}
-patShortestPathTreeGeneral::patShortestPathTreeGeneral(Direction direction):m_direction(direction) {
+patShortestPathTreeGeneral::patShortestPathTreeGeneral(Direction direction) :
+		m_direction(direction) {
 
 }
+
+const patNode* patShortestPathTreeGeneral::getPredecessor(const patNode* node,
+		Direction direction) const {
+	unordered_map<const patNode*, const patRoadBase*>::const_iterator find_node =
+			m_predecessors.find(node);
+	if (find_node == m_predecessors.end()) {
+		return false;
+	}
+
+	if (m_direction == FWD) {
+		return find_node->second->getUpNode();
+
+	}
+	else{
+
+		return find_node->second->getDownNode();
+	}
+}
 bool patShortestPathTreeGeneral::getShortestPathTo(
-		list<const patRoadBase*>& list_of_roads, const patNode* dest_node) const {
+		list<const patRoadBase*>& list_of_roads,
+		const patNode* dest_node) const {
 
 	const patNode* current_node = dest_node;
 	unordered_map<const patNode*, const patRoadBase*>::const_iterator find_pred =
 			m_predecessors.find(current_node);
 
 	while (true) {
-        
-        if(find_pred==m_predecessors.end()){
-            return false;
-        }
+
+		if (find_pred == m_predecessors.end()) {
+			return false;
+		}
 		if (m_direction == FWD) {
 			list_of_roads.push_front(find_pred->second);
 			current_node = find_pred->second->getUpNode();
 			if (m_root.find(current_node) != m_root.end()) {
 				break;
 			}
-		}
-		else{
+		} else {
 
 			list_of_roads.push_back(find_pred->second);
 			current_node = find_pred->second->getDownNode();
@@ -70,8 +89,8 @@ void patShortestPathTreeGeneral::insertRoot(const patNode* node) {
  */
 double patShortestPathTreeGeneral::getLabel(const patNode* node) const {
 
-	unordered_map<const patNode*, double>::const_iterator find_node_label = m_labels.find(
-			node);
+	unordered_map<const patNode*, double>::const_iterator find_node_label =
+			m_labels.find(node);
 	if (find_node_label == m_labels.end()) {
 		return DBL_MAX;
 	} else {

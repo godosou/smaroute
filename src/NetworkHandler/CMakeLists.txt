@@ -2,6 +2,7 @@ include_directories("${NewBioroute_SOURCE_DIR}/MapMatching")
 
 include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
 add_library(NetworkHandler
+				patNetworkCompresser.cc
                 patReadNetworkFromOSM.cc
                 patPathWriter.cc
                 patKMLPathWriter.cc

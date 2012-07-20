@@ -16,6 +16,7 @@
 #include "patNode.h"
 #include "patShortestPathTreeGeneral.h"
 #include "patMultiModalPath.h"
+
 using namespace std;
 using namespace std::tr1;
 class patRouter {
@@ -27,7 +28,8 @@ public:
 			const patLinkAndPathCost* link_cost);
 
 	void treeCost(patShortestPathTreeGeneral& tree, const patNode* root,
-			set<const patNode*> targets, const Direction direction) const;
+			set<const patNode*> targets, const Direction direction,
+			const deque<const patNode*>* ordered_nodes=NULL, bool* true_sp=NULL) const;
 
 	void fwdCost(patShortestPathTreeGeneral& tree, const patNode* origin,
 			set<const patNode*> destinations) const;
@@ -41,47 +43,49 @@ public:
 			const patNode* destination) const;
 	void bwdCost(patShortestPathTreeGeneral& tree, const patNode* origin,
 			const patNode* destination) const;
-    
+
 	void costWithoutExcludedNodes(patShortestPathTreeGeneral& tree,
-			const patNode* root,
-			const patNode* destination,
+			const patNode* root, const patNode* destination,
 			const set<const patNode*>& excludedNodes,
 			const patShortestPathTreeGeneral* treeCost,
-			Direction direction) const;
-    
+			Direction direction,
+			const deque<const patNode*>* ordered_nodes=NULL, bool* true_sp=NULL) const;
+
 	void costWithoutExcludedNodes2(patShortestPathTreeGeneral& tree,
-			const patNode* root,
-			const patNode* destination,
-                                   const set<const patNode*>& excludedNodes,
+			const patNode* root, const patNode* destination,
+			const set<const patNode*>& excludedNodes,
 			const patShortestPathTreeGeneral* treeCost,
-			Direction direction) const;
-	void fwdCostWithoutExcludedNodes(patShortestPathTreeGeneral& tree,const patNode* origin,
-			const patNode* destination, set<const patNode*> excludedNodes,
-			const patShortestPathTreeGeneral* fwdCost)const;
+			Direction direction,
+			const deque<const patNode*>* ordered_nodes=NULL, bool* true_sp=NULL) const;
+	void fwdCostWithoutExcludedNodes(patShortestPathTreeGeneral& tree,
+			const patNode* origin, const patNode* destination,
+			set<const patNode*> excludedNodes,
+			const patShortestPathTreeGeneral* fwdCost,
+			const deque<const patNode*>* ordered_nodes=NULL, bool* true_sp=NULL) const;
 	void bwdCostWithoutExcludedNodes(patShortestPathTreeGeneral& tree,
 			const patNode* destination, const patNode* origin,
 			set<const patNode*> excludedNodes,
+			const patShortestPathTreeGeneral* bwdCost,
+			const deque<const patNode*>* ordered_nodes=NULL, bool* true_sp=NULL) const;
+
+	patMultiModalPath bestRoute(const patNode* node,
 			const patShortestPathTreeGeneral* bwdCost) const;
 
-	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
-			set<const patNode*> origins, const patNode* destination,
-			const patShortestPathTreeGeneral* bwdCostTree) const;
-	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
-			const patNode* origin, set<const patNode*> destinations,
-			const patShortestPathTreeGeneral* fwdCostTree) const;
-	patMultiModalPath bestRouteBwd(const patNode*origin,
-			const patNode* destination,
-			const patShortestPathTreeGeneral* bwdCost) const;
 	patMultiModalPath bestRouteFwd(const patNode* origin,
-			const patNode* destination,
-			const patShortestPathTreeGeneral* fwdCost) const;
-	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
-			const patNode* origin, set<const patNode*> destinations) const;
-	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
-			set<const patNode*> origins, const patNode* destination) const;
-	patMultiModalPath bestRoute(const patNode* origin,
+			const patNode* destination) const;
+	patMultiModalPath bestRouteBwd(const patNode* origin,
 			const patNode* destination) const;
 
+	//	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
+	//			set<const patNode*> origins, const patNode* destination,
+	//			const patShortestPathTreeGeneral* bwdCostTree) const;
+	//	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
+	//			const patNode* origin, set<const patNode*> destinations,
+	//			const patShortestPathTreeGeneral* fwdCostTree) const;
+//	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
+//			const patNode* origin, set<const patNode*> destinations) const;
+//	unordered_map<const patNode*, patMultiModalPath> bestRoutes(
+//			set<const patNode*> origins, const patNode* destination) const;
 	const patNetworkBase* getNetwork() const;
 private:
 

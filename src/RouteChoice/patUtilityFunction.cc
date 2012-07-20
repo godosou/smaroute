@@ -13,14 +13,15 @@
 using namespace std;
 using namespace std::tr1;
 
+#include  "patNetworkElements.h"
 patUtilityFunction::~patUtilityFunction() {
 	// TODO Auto-generated destructor stub
 }
 
-patUtilityFunction::patUtilityFunction(double link_scale, double length_coef,
-		double ps_coef, double sb_coef) :
-		patLinkAndPathCost::patLinkAndPathCost(link_scale, length_coef, ps_coef,
-				sb_coef) {
+patUtilityFunction::patUtilityFunction(
+		const map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
+		const double &link_scale, const double &ps_scale) :
+		patLinkAndPathCost::patLinkAndPathCost(link_coef, link_scale, ps_scale) {
 
 }
 

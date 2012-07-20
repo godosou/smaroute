@@ -32,6 +32,8 @@
 #include "MHObservationWritterWrapper.h"
 #include "patPathSizeComputer.h"
 #include <dirent.h>
+#include "patRouter.h"
+#include "patVerifyingSamplingResult.h"
 using namespace std;
 
 void patExperimentBed::checkExperimentFolder() const {
@@ -39,7 +41,7 @@ void patExperimentBed::checkExperimentFolder() const {
 		throw RuntimeException("Experiment folder does not exist");
 	}
 }
-void patExperimentBed::checkChoiceSetFolder() const{
+void patExperimentBed::checkChoiceSetFolder() const {
 	if (!ifstream(m_choice_set_foler.c_str())) {
 		throw RuntimeException("Choiceset folder does not exist");
 	}
@@ -68,7 +70,7 @@ void patExperimentBed::initiateNetworks() {
 				patNBParameters::the()->boundingBoxRightBottumLongitude,
 				patNBParameters::the()->boundingBoxRightBottumLatitude);
 	} else {
-		bb = patGeoBoundingBox(-100, 100, -100, 100);
+		bb = patGeoBoundingBox(-100, 100, 100, -100);
 	}
 
 	m_network_environment = new patNetworkEnvironment(bb, err);
@@ -223,28 +225,30 @@ void patExperimentBed::initCostFunctions() {
 		cout << "Use MH algorithm" << endl;
 
 		map<ARC_ATTRIBUTES_TYPES, double> link_coef;
-		map<ARC_ATTRIBUTES_TYPES, double> router_link_coef;
 
 		link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_length_coef;
-		router_link_coef[ENUM_LENGTH] = -patNBParameters::the()->mh_length_coef;
 
 		if (m_network_real) {
 			cout << "\tReal network" << endl;
 			link_coef[ENUM_TRAFFIC_SIGNAL] = patNBParameters::the()->mh_sb_coef;
-			router_link_coef[ENUM_TRAFFIC_SIGNAL] =
-					-patNBParameters::the()->mh_sb_coef;
 		} else {
 			cout << "\tSynthetic network" << endl;
 			link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
-			router_link_coef[ENUM_SPEED_BUMP] =
-					-patNBParameters::the()->mh_sb_coef;
 		}
 
-		double router_ps_coef = 0.0;
-		m_mh_router_link_cost = new patLinkAndPathCost(router_link_coef,
-				patNBParameters::the()->router_cost_link_scale, router_ps_coef);
+		m_network_environment->computeGeneralizedCost(link_coef);
 
-		m_mh_weight_function = new MHWeightFunction(link_coef,
+		double router_ps_coef = 0.0;
+		double router_link_scale =
+				patNBParameters::the()->router_cost_link_scale;
+		if (router_link_scale > patNBParameters::the()->mh_link_scale) {
+			router_link_scale = patNBParameters::the()->mh_link_scale;
+		}
+		m_mh_router_link_cost = new patLinkAndPathCost(link_coef,router_link_scale,
+				router_ps_coef);
+
+		m_mh_weight_function = new MHWeightFunction(
+				link_coef,
 				patNBParameters::the()->mh_link_scale,
 				patNBParameters::the()->mh_ps_coef,
 				patNBParameters::the()->mh_obs_scale);
@@ -291,7 +295,11 @@ void patExperimentBed::initCostFunctions() {
 		m_mh_path_generator->setMHWeight(m_mh_weight_function);
 	} else if (m_algorithm == "RW") {
 		cout << "Use RW algorithm" << endl;
-		m_rw_router_link_cost = new patLinkAndPathCost(1.0, 1.0, 0.0, 0.0);
+		map<ARC_ATTRIBUTES_TYPES, double> rw_link_coef;
+
+		rw_link_coef[ENUM_LENGTH] = 1.0;
+
+		m_rw_router_link_cost = new patLinkAndPathCost(rw_link_coef, 1.0, 0.0);
 
 		m_rw_path_generator = new RWPathGenerator(m_rnd,
 				patNBParameters::the()->kumaA, patNBParameters::the()->kumaB,
@@ -301,14 +309,20 @@ void patExperimentBed::initCostFunctions() {
 
 	}
 
-	m_utility_function = new patUtilityFunction(
-			patNBParameters::the()->utility_link_scale,
-			patNBParameters::the()->utility_length_coef,
-			patNBParameters::the()->utility_ps_coef);
+	map<ARC_ATTRIBUTES_TYPES, double> utility_link_coef;
+
+	utility_link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_link_scale;
+
 	if (m_network_real) {
-		m_utility_function->deleteLinkCoefficient(ENUM_SPEED_BUMP);
-		m_utility_function->setLinkCoefficient(ENUM_TRAFFIC_SIGNAL, -0.1);
+		utility_link_coef[ENUM_TRAFFIC_SIGNAL] =
+				patNBParameters::the()->mh_sb_coef;
+	} else {
+		utility_link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
 	}
+
+	m_utility_function = new patUtilityFunction(utility_link_coef,
+			patNBParameters::the()->mh_link_scale,
+			patNBParameters::the()->mh_ps_coef);
 
 }
 
@@ -490,7 +504,6 @@ patExperimentBed::~patExperimentBed() {
 void patExperimentBed::writeBiogeme() {
 	checkObservationFolder();
 	checkChoiceSetFolder();
-	readObservations();
 	patPathGenerator* sampling_pg(NULL);
 
 	if (m_algorithm == "MH") {
@@ -503,6 +516,7 @@ void patExperimentBed::writeBiogeme() {
 		throw RuntimeException("Wrong sampling algorithm");
 	}
 
+	readObservations();
 	readChoiceSetForObservations();
 	readUniversalChoiceSet();
 	patWriteBiogemeData wbd(m_observations, m_utility_function, sampling_pg,
@@ -577,12 +591,12 @@ void patExperimentBed::readChoiceSetForObservations() {
 							ind_sample_file, m_rnd);
 
 					css.insert(new_css.begin(), new_css.end());
-					cout << "\t read sample file " << ind_sample_file << endl;
+//					cout << "\t read sample file " << ind_sample_file << endl;
 				}
 
 			}
 
-			cout << "\t chocie set read with ods: " << css.size() << endl;
+//			cout << "\t chocie set read with ods: " << css.size() << endl;
 			if (css.size() == 0) {
 				throw RuntimeException("no choice set for an observation.");
 			}
@@ -592,11 +606,11 @@ void patExperimentBed::readChoiceSetForObservations() {
 
 				pair<int, int> ccps =
 						m_observations[i].countChosenPathsSampled();
-				cout << "\t" << m_observations[i].getId() << "sampled: "
-						<< ccps.first << ", not sampled: " << ccps.second
-						<< " ("
-						<< (double) ccps.first / (ccps.first + ccps.second)
-						<< ")" << endl;
+//				cout << "\t" << m_observations[i].getId() << "sampled: "
+//						<< ccps.first << ", not sampled: " << ccps.second
+//						<< " ("
+//						<< (double) ccps.first / (ccps.first + ccps.second)
+//						<< ")" << endl;
 				sampled += ccps.first;
 				not_sampled += ccps.second;
 
@@ -648,7 +662,8 @@ void patExperimentBed::simulateObservations() {
 //	generator_clone->setNetwork(cloned_network);
 	cout << "Start simulation" << endl;
 	MHObservationWritterWrapper path_writer(m_observation_folder,
-			patNBParameters::the()->SAMPLEINTERVAL_ELEMENT,m_mh_weight_function);
+			patNBParameters::the()->SAMPLEINTERVAL_ELEMENT,
+			m_mh_weight_function);
 	generator_clone->setWritterWrapper(&path_writer);
 	generator_clone->run(origin, destination);
 	cout << "Finish simulation" << endl;
@@ -656,4 +671,73 @@ void patExperimentBed::simulateObservations() {
 	generator_clone = NULL;
 //	delete cloned_network;
 //	cloned_network = NULL;
+}
+
+void patExperimentBed::verifySamplingResult() {
+	patPathGenerator* sampling_pg(NULL);
+
+	if (m_algorithm == "MH") {
+		sampling_pg = m_mh_path_generator;
+	} else if (m_algorithm == "RW") {
+		sampling_pg = m_rw_path_generator;
+
+	} else {
+		WARNING("Wrong sampling algorithm: "<<m_algorithm);
+		throw RuntimeException("Wrong sampling algorithm");
+	}
+
+	readObservations();
+	readChoiceSetForObservations();
+	readUniversalChoiceSet();
+	patVerifyingSamplingResult vsr(m_observations);
+	vsr.verifyProbability(m_universal_choice_set, sampling_pg);
+
+}
+void patExperimentBed::testNetwork() const {
+	patRouter start_router(m_network_environment->getNetwork(m_transport_mode),
+			m_mh_router_link_cost);
+
+	patShortestPathTreeGeneral sp_tree(FWD);
+	const patNode* origin = m_network_environment->getNetworkElements().getNode(
+			patNBParameters::the()->OriginId);
+	const patNode* destination =
+			m_network_environment->getNetworkElements().getNode(
+					patNBParameters::the()->DestinationId);
+	if (origin == NULL || destination == NULL) {
+		WARNING("od not specified");
+		exit(-1);
+	}
+	if (m_mh_router_link_cost == NULL) {
+		WARNING("WRONG ROUTER");
+	}
+
+	start_router.fwdCost(sp_tree, origin, destination);
+	double linkCostSP = sp_tree.getLabel(destination);
+
+	DEBUG_MESSAGE(linkCostSP);
+	list<const patRoadBase*> list_of_roads;
+	sp_tree.getShortestPathTo(list_of_roads, destination);
+	patMultiModalPath sp_path(list_of_roads);
+
+	patMultiModalPath new_path_fwd = start_router.bestRouteFwd(origin,
+			destination);
+	patMultiModalPath new_path_bwd = start_router.bestRouteBwd(origin,
+			destination);
+	patKMLPathWriter sp_writer("sp.kml");
+	map<string, string> attr;
+	sp_writer.writePath(sp_path, attr);
+	sp_writer.writePath(new_path_fwd, attr);
+	sp_writer.writePath(new_path_bwd, attr);
+	DEBUG_MESSAGE(m_mh_router_link_cost->getCost(sp_path));
+	DEBUG_MESSAGE(m_mh_weight_function->getCost(sp_path));
+	DEBUG_MESSAGE(m_mh_weight_function->logWeigthOriginal(sp_path));
+	unordered_map<const patNode*, double> proposal_probabilities;
+	m_mh_path_generator->getNodeProbability(start_router,
+			proposal_probabilities, origin, destination);
+	for (unordered_map<const patNode*, double>::iterator node_iter =
+			proposal_probabilities.begin();
+			node_iter != proposal_probabilities.end(); ++node_iter) {
+		DEBUG_MESSAGE(node_iter->first->getUserId()<<":"<<node_iter->second);
+	}
+	sp_writer.close();
 }

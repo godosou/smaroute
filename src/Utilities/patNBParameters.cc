@@ -360,16 +360,6 @@ void patNBParameters::init(patError*& err) {
 
 
 	realParams["router_cost_link_scale"] = &router_cost_link_scale;
-	realParams["router_cost_length_coef"] = &router_cost_length_coef;
-	realParams["router_cost_sb_coef"] = &router_cost_sb_coef;
-
-
-	realParams["utility_link_scale"] = &utility_link_scale;
-	realParams["utility_length_coef"] = &utility_length_coef;
-	realParams["utility_ps_coef"] = &utility_ps_coef;
-	realParams["utility_sb_coef"] = &utility_sb_coef;
-
-
 	realParams["mh_obs_scale"] = &mh_obs_scale;
 	realParams["mh_link_scale"] = &mh_link_scale;
 	realParams["mh_length_coef"] = &mh_length_coef;

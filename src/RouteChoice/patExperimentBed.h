@@ -35,6 +35,7 @@ public:
 	void checkChoiceSetFolder() const;
 	void checkObservationFolder() const;
 
+	void testNetwork() const;
 	/**
 	 * Init the network environment m_network_environment.
 	 */
@@ -112,6 +113,9 @@ public:
 	 */
 	void enumerateMHPaths();
 
+
+
+	void verifySamplingResult()  ;
 	/**
 	 * Read chocie set (in m_choice_set_folder) and put them in m_observations.
 	 */
@@ -135,14 +139,18 @@ protected:
 	TransportMode m_transport_mode;
 	patLinkAndPathCost* m_mh_router_link_cost;
 	MHWeightFunction* m_mh_weight_function;
+	MHPathGenerator* m_mh_path_generator;
+
 	patLinkAndPathCost* m_rw_router_link_cost;
+	RWPathGenerator* m_rw_path_generator;
+
 	patUtilityFunction* m_utility_function;
+
+
 	patNetworkEnvironment* m_network_environment;
 
 	std::vector<patObservation> m_observations;
 
-	MHPathGenerator* m_mh_path_generator;
-	RWPathGenerator* m_rw_path_generator;
 
 	std::map<const patMultiModalPath, double> m_obs_path_probas;
 	std::map<const patMultiModalPath, double> m_path_size;

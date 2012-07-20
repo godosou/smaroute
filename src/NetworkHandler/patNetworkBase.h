@@ -83,6 +83,12 @@ public:
 	set<const patNode*> getNodes() const;
 
 	void removeNode(const patNode* node);
+
+	NODE_STATUS checkNodeStatus(const patNode* node) const ;
+
+	void setOutgoingIncidents(unordered_map<const patNode*, set<const patRoadBase*> >& oi){
+		m_outgoing_incidents=oi;
+	}
 protected:
 
 	unordered_map<const patNode*, set<const patRoadBase*> > m_outgoing_incidents;

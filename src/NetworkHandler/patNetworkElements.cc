@@ -358,6 +358,15 @@ void patNetworkElements::summarizeMembership() {
 	}
 
 }
+
+
+void patNetworkElements::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef){
+	for (map<unsigned long, patArc>::iterator arc_iter = m_arcs.begin();
+			arc_iter != m_arcs.end(); ++arc_iter) {
+		arc_iter->second.computeGeneralizedCost(link_coef);
+	}
+
+}
 void patNetworkElements::computeLength() {
 	for (map<unsigned long, patArc>::iterator arc_iter = m_arcs.begin();
 			arc_iter != m_arcs.end(); ++arc_iter) {

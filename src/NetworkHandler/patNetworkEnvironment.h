@@ -27,6 +27,7 @@ public:
 	 * Get the pointer to the network elements.
 	 */
 	const patNetworkElements& getNetworkElements() const;
+	void computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
 
 	/**
 	 * Get a particular type of network.

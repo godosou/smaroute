@@ -138,7 +138,7 @@ public:
 	const patArc* findArcByNodes(const patNode* up_node,
 			const patNode* down_node) const;
 	void computeLength();
-
+	void computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
 	set<const patNode*> getNearbyNode(const patCoordinates& coords,
 			double distance, int count) const;
 protected:

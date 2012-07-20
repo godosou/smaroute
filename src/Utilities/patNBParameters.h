@@ -245,13 +245,6 @@ double discardGPSGap;
 
 
 	double router_cost_link_scale;
-	double router_cost_length_coef;
-	double router_cost_sb_coef;
-
-	double utility_link_scale;
-	double utility_length_coef;
-	double utility_ps_coef;
-	double utility_sb_coef;
 
 	double mh_obs_scale;
 	double mh_link_scale;
