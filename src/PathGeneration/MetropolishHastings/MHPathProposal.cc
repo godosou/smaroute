@@ -126,8 +126,8 @@ double MHPathProposal::transitionLogProb(MHPath& from_route, MHPath& to_route) {
 	}
 }
 MHPath MHPathProposal::newInitialState() {
-	patMultiModalPath new_path = m_router->bestRoute(m_origin, m_destination);
-	cout<<new_path.getLength();
+	patMultiModalPath new_path = m_router->bestRouteFwd(m_origin, m_destination);
+//	cout<<"shortest path:"<<new_path.getLength()<<endl;
     //	DEBUG_MESSAGE("nbr of nodes" << new_path.nbrOfNodes());
 	MHPoints points = drawPoints(new_path.nbrOfNodes(), m_rnd);
 	return MHPath(new_path, points, m_router);

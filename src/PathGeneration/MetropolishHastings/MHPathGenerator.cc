@@ -11,6 +11,8 @@
 #include "MHPathWriterWrapper.h"
 #include "patNetworkReducer.h"
 #include "patNetworkCar.h"
+#include "patKMLPathWriter.h"
+#include "patNetworkCompressor.h"
 MHPathGenerator::MHPathGenerator(const patRandomNumber& rnd) :
 		patPathGenerator::patPathGenerator(), m_rnd(rnd), m_writter_wrapper(
 				NULL), m_path_writer(NULL) {
@@ -26,18 +28,17 @@ MHPathGenerator::MHPathGenerator(const patRandomNumber& rnd) :
 
 	m_relativeCostScale = patNBParameters::the()->RELATIVECOSTSCALE_ELEMENT;
 //	DEBUG_MESSAGE(m_rnd.nextDouble());
-	//m_linkAndPathCost.configure();
+	//m_router_cost.configure();
 
 }
 
 MHPathGenerator::MHPathGenerator(MHPathGenerator const& other) :
-		m_rnd(other.m_rnd), m_linkAndPathCost(other.m_linkAndPathCost), m_writter_wrapper(
+		m_rnd(other.m_rnd), m_router_cost(other.m_router_cost), m_writter_wrapper(
 				other.m_writter_wrapper), m_path_writer(other.m_path_writer) {
 	if (other.m_MHWeight != NULL) {
 		m_MHWeight = other.m_MHWeight->clone();
-	}
-	else{
-		m_MHWeight=NULL;
+	} else {
+		m_MHWeight = NULL;
 	}
 	setNetwork(other.m_network);
 	int DEFAULT_MSGINTERVAL = INT_MAX;
@@ -72,7 +73,7 @@ void MHPathGenerator::setPathWriter(patPathWriter* path_writer) {
 }
 
 void MHPathGenerator::setRouterLinkCost(const patLinkAndPathCost* linkCost) {
-	m_linkAndPathCost = linkCost;
+	m_router_cost = linkCost;
 }
 
 void MHPathGenerator::setMHWeight(const MHWeightFunction* MHWeight) {
@@ -83,66 +84,11 @@ double MHPathGenerator::calculatePathLogWeight(
 	return m_MHWeight->logWeigthOriginal(path);
 }
 
+void MHPathGenerator::getNodeProbability(patRouter& router,
+		unordered_map<const patNode*, double>& proposal_probabilities,
+		const patNode* origin, const patNode* destination) {
 
-void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
-
-	//MHLinkAndPathCost::configure();
-	/*
-	 * (3) compute shortest path link cost
-	 */
-	double linkCostSP;
-	patRouter start_router(m_network, m_linkAndPathCost);
-
-	patShortestPathTreeGeneral sp_tree(FWD);
-	start_router.fwdCost(sp_tree, origin, destination);
-	linkCostSP = sp_tree.getLabel(destination);
-
-	list<const patRoadBase*> list_of_roads;
-	sp_tree.getShortestPathTo(list_of_roads, destination);
-
-	patMultiModalPath sp_path(list_of_roads);
-
-	/*
-	 * (4) compute new scale if it is defined in relative terms
-	 */
-	/*
-	 if (m_relativeCostScale != 0.0) {
-	 m_linkAndPathCost.setLinkCostScale(
-	 log(2.0) / linkCostSP / (m_relativeCostScale - 1.0));
-	 }
-	 */
-
-	/*
-	 * (5) reduce the network if a positive cutoff probability is specified
-	 */
-	if (m_cutOffProbability > 0.0) {
-
-//		double expansion_scale = log(2.0) / linkCostSP
-//				/ (m_relativeCostScale - 1.0);
-//		double expansion = 1.0
-//				- log(m_cutOffProbability) / expansion_scale / linkCostSP;
-		double expansion = 1.0 - log(m_cutOffProbability) / (linkCostSP);
-		cout << m_linkAndPathCost->getLinkCostScale() << "," << linkCostSP
-				<< endl;
-		patNetworkReducer nr(origin, destination, m_linkAndPathCost, expansion);
-		nr.reduce(m_network);
-		if (m_path_writer != NULL
-				&& patNBParameters::the()->exportReducedNetwork == 1) {
-			m_network->exportKML(m_path_writer->getFileName() + ".reduced.kml");
-		}
-		cout << "network reduced NODE SIZE:" << (m_network->getNodeSize());
-		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
-	}
-
-	m_MHWeight->calculateObsScale(sp_path);
-	patRouter router(m_network, m_linkAndPathCost);
-	/*
-	 * (6) run the algorithm
-	 */
-
-	cout << "---DERIVE NODE INSERTTION PROBABILITY---" << endl;
-	unordered_map<const patNode*, double> proposal_probabilities;
-
+	//==============Start derive insertion probability for each node==============//
 	patShortestPathTreeGeneral fwdTree(FWD);
 	router.fwdCost(fwdTree, origin);
 	patShortestPathTreeGeneral bwdTree(BWD);
@@ -153,9 +99,6 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 	double minCost = DBL_MAX;
 
 	set<const patNode*> all_nodes = m_network->getNodes();
-//	cout << "all nodes: " << all_nodes.size() << " forward: " << fwdCost.size()
-//			<< "backward" << bwdCost.size() << endl;
-//
 	for (unordered_map<const patNode*, double>::const_iterator node_iter =
 			fwdCost.begin(); node_iter != fwdCost.end(); ++node_iter) {
 		unordered_map<const patNode*, double>::const_iterator bc_iter =
@@ -167,6 +110,7 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 			proposal_probabilities[node_iter->first] = cost;
 
 		}
+		//TODO add obs weight
 	}
 	double weightSum = 0.0;
 
@@ -181,8 +125,99 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 			proposal_probabilities.begin();
 			node_iter != proposal_probabilities.end(); ++node_iter) {
 		node_iter->second /= weightSum;
+//		cout<<node_iter->first->getUserId()<< ":"<<node_iter->second<<endl;
 	}
-//	cout << "---NODE INTERSTION DONE---" << endl;
+	//=========END drive insertion probaiblity=======================//
+}
+void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
+
+	//MHLinkAndPathCost::configure();
+	/*
+	 * (3) compute shortest path link cost
+	 */
+	double linkCostSP;
+	patRouter start_router(m_network, m_router_cost);
+
+	patShortestPathTreeGeneral sp_tree(FWD);
+	start_router.fwdCost(sp_tree, origin, destination);
+	linkCostSP = sp_tree.getLabel(destination);
+
+	list<const patRoadBase*> list_of_roads;
+	sp_tree.getShortestPathTo(list_of_roads, destination);
+
+	patMultiModalPath sp_path(list_of_roads);
+
+	patKMLPathWriter sp_writer("sp.kml");
+	map<string, string> attr;
+	sp_writer.writePath(sp_path, attr);
+	sp_writer.close();
+
+	/*
+	 * (4) compute new scale if it is defined in relative terms
+	 */
+	/*
+	 if (m_relativeCostScale != 0.0) {
+	 m_router_cost.setLinkCostScale(
+	 log(2.0) / linkCostSP / (m_relativeCostScale - 1.0));
+	 }
+	 */
+
+	/*
+	 * (5) reduce the network if a positive cutoff probability is specified
+	 */
+	patNetworkCompressor* nc=NULL;
+	if (m_cutOffProbability > 0.0) {
+
+//		double expansion_scale = log(2.0) / linkCostSP
+//				/ (m_relativeCostScale - 1.0);
+//		double expansion = 1.0
+//				- log(m_cutOffProbability) / expansion_scale / linkCostSP;
+		double expansion = 1.0 - log(m_cutOffProbability) / (linkCostSP);
+		patNetworkReducer nr(origin, destination, m_router_cost, expansion);
+		nr.reduce(m_network);
+
+		cout << "network reduced NODE SIZE:" << (m_network->getNodeSize());
+		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
+		if (patNBParameters::the()->exportReducedNetwork == 1) {
+			if (m_path_writer != NULL) {
+				m_network->exportKML(
+						m_path_writer->getFileName() + "reduced.kml");
+			} else {
+
+				m_network->exportKML("reduced.kml");
+			}
+		}
+//		unordered_set<const patNode*> uncompressed_nodes;
+//		uncompressed_nodes.insert(origin);
+//		uncompressed_nodes.insert(destination);
+//		nc = new patNetworkCompressor(m_network,uncompressed_nodes);
+//		nc->compress(m_router_cost->getLinkCoefficients());
+//		cout << "network compressed NODE SIZE:" << (m_network->getNodeSize());
+//		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
+		if (patNBParameters::the()->exportReducedNetwork == 1) {
+			if (m_path_writer != NULL) {
+				m_network->exportKML(
+						m_path_writer->getFileName() + "compressed.kml");
+			} else {
+
+				m_network->exportKML("compressed.kml");
+			}
+		}
+	}
+
+	m_MHWeight->calculateObsScale(sp_path);
+	patRouter router(m_network, m_router_cost);
+
+	/*
+	 * (6) run the algorithm
+	 */
+
+	cout << "---DERIVE NODE INSERTTION PROBABILITY---" << endl;
+	unordered_map<const patNode*, double> proposal_probabilities;
+	cout << "---DONE NODE INSERTTION PROBABILITY---" << endl;
+
+	getNodeProbability(router,proposal_probabilities,origin, destination) ;
+
 	MHPathProposal proposal(origin, destination, &router,
 			proposal_probabilities, 1.0, &m_rnd);
 
@@ -196,7 +231,8 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 
 	} else {
 		if (m_path_writer != NULL) {
-			MHPathWriterWrapper pww(m_path_writer, m_sampleInterval,m_MHWeight);
+			MHPathWriterWrapper pww(m_path_writer, m_sampleInterval,
+					m_MHWeight);
 			algo.addStateProcessor(&pww);
 
 			algo.run(
@@ -206,6 +242,10 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 		} else {
 			throw RuntimeException("invalid path writter.");
 		}
+	}
+	if(nc!=NULL){
+		delete nc;
+		nc=NULL;
 	}
 }
 

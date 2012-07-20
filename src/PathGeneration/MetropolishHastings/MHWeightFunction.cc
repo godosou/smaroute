@@ -15,15 +15,9 @@
 #include  <math.h>
 using namespace boost::algorithm;
 
-MHWeightFunction::MHWeightFunction(double link_scale, double length_coef,
-		double ps_coef, double obs_scale, double sb_coef) :
-		patLinkAndPathCost::patLinkAndPathCost(link_scale, length_coef, ps_coef,
-				sb_coef), m_obs_scale(obs_scale), m_path_probas(NULL) {
 
-}
-
-MHWeightFunction::MHWeightFunction(map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
-		double &link_scale, double &ps_scale, double obs_scale) :
+MHWeightFunction::MHWeightFunction(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
+		const double &link_scale, const double &ps_scale, const double obs_scale) :
 		patLinkAndPathCost::patLinkAndPathCost(link_coef, link_scale, ps_scale), m_obs_scale(
 				obs_scale), m_path_probas(NULL) {
 
@@ -42,22 +36,28 @@ MHWeightFunction::~MHWeightFunction() {
 
 }
 
-double MHWeightFunction::logWeigthOriginal(
-		const patMultiModalPath& path) const {
+double MHWeightFunction::computeObsWeight(const patMultiModalPath& path) const{
 
-	double pathCost = getCost(path);
-
+	double obs_weight=0.0;
 	if (m_path_probas != NULL) {
 
 		map<patMultiModalPath, double>::const_iterator find_path =
 				m_path_probas->find(path);
 		if (find_path != m_path_probas->end()) {
-//		DEBUG_MESSAGE(m_obs_scale<<"*"<<find_path->second);
-//			pathCost = log(exp(pathCost) + m_obs_scale * find_path->second);
-			pathCost += log(1.0 + m_obs_scale * find_path->second);
-//			pathCost *= log(1.0 + m_obs_scale * find_path->second);
+//			obs_weight = log(exp(pathCost) + m_obs_scale * find_path->second);
+//			cout << m_obs_scale<<"*"<<find_path->second<<endl;
+			obs_weight = log(1.0 + m_obs_scale * find_path->second);
+//			obs_weight *= log(1.0 + m_obs_scale * find_path->second);
 		}
 	}
+	return obs_weight;
+}
+double MHWeightFunction::logWeigthOriginal(
+		const patMultiModalPath& path) const {
+
+	double pathCost = getCost(path);
+
+	pathCost+=computeObsWeight(path);
 	return pathCost; // - this.nodeLoopScale * nodeLoopCnt);
 }
 
@@ -104,7 +104,7 @@ double MHWeightFunction::calculateObsScale(const patMultiModalPath& sp_path) {
 		double highest_utility = getCost(highest_path);
 
 //		m_obs_scale = exp(sp_utility/highest_utility)/(highest_proba-sp_proba);
-		m_obs_scale = (exp(sp_utility-highest_utility)-1.0)/highest_proba;
+		m_obs_scale = patNBParameters::the()->mh_obs_scale* (exp(sp_utility-highest_utility)-1.0)/highest_proba;
 		cout<<sp_utility<<","<<highest_utility<<","<<highest_proba<<","<<sp_proba<<endl;
 		cout<<"obs scale:"<<m_obs_scale<<endl;
 		if(!isfinite(m_obs_scale)){

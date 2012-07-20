@@ -29,6 +29,9 @@ public:
 		return new MHPathGenerator(*this);
 	}
 
+	void getNodeProbability(patRouter& router,
+			unordered_map<const patNode*, double>& proposal_probabilities,
+			const patNode* origin, const patNode* destination);
 	virtual ~MHPathGenerator();
 	void run(const patNode* origin, const patNode* destination);
 	void setPathWriter( patPathWriter* path_writer);
@@ -57,7 +60,7 @@ protected:
 
 	const patRandomNumber& m_rnd;
 
-	const patLinkAndPathCost* m_linkAndPathCost;
+	const patLinkAndPathCost* m_router_cost;
 	 MHWeightFunction* m_MHWeight;
 	patPathWriter* m_path_writer;
 	MHStateProcessor<MHPath>* m_writter_wrapper;

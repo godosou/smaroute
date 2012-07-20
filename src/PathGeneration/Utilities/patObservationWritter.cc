@@ -32,7 +32,6 @@ patObservationWritter::patObservationWritter(string folder,
 		throw IllegalArgumentException(
 				"sample interval is not strictly positive");
 	}
-	DEBUG_MESSAGE(m_warmup_iterations);
 
 }
 

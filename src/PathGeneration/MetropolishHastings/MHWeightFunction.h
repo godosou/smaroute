@@ -17,18 +17,17 @@
 class patMultiModalPath;
 class patNode;
 using namespace std::tr1;
-class MHWeightFunction: public patLinkAndPathCost, public MHWeight<MHPath> ,public patWeightFunction{
+class MHWeightFunction: public patLinkAndPathCost,
+		public MHWeight<MHPath>,
+		public patWeightFunction {
 public:
 
 	/**
 	 * Constructor.
 	 */
-	MHWeightFunction(double link_scale=patNBParameters::the()->mh_link_scale, double length_coef=patNBParameters::the()->mh_length_coef,
-			double ps_coef = patNBParameters::the()->mh_ps_coef,
-			double obs_scale = patNBParameters::the()->mh_obs_scale,
-			double sb_coef=patNBParameters::the()->mh_sb_coef);
-	MHWeightFunction(map<ARC_ATTRIBUTES_TYPES, double>& link_coef, double &link_scale, double &ps_scale, double obs_scale);
-
+	MHWeightFunction(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
+			const double &link_scale, const double &ps_scale,
+			const double obs_scale );
 
 	virtual MHWeightFunction* clone() const;
 	MHWeightFunction(const MHWeightFunction& another);
@@ -44,20 +43,20 @@ public:
 	 */
 	virtual double logWeigthOriginal(const patMultiModalPath& path) const;
 
-	virtual double logWeightWithoutCorrection(const MHPath& path) const{
+	double computeObsWeight(const patMultiModalPath& path) const;
+	double logWeightWithoutCorrection(const MHPath& path) const {
 		return logWeigthOriginal(path);
 	}
 	/**
 	 * Calculate the log weight of a path.
 	 * @param path: the path to be calculated.
 	 */
-	 virtual double logWeight(const MHPath& path) const;
-
+	virtual double logWeight(const MHPath& path) const;
 
 	void setPathProbas(const map<const patMultiModalPath, double>* path_probas);
 
 	double calculateObsScale(const patMultiModalPath& sp_path);
-	protected:
+protected:
 	// CONFIGURATION
 
 	const map<const patMultiModalPath, double>* m_path_probas;

@@ -13,7 +13,8 @@ MHPath::MHPath() :
 
 MHPath::MHPath(const patMultiModalPath& path, const MHPoints& points,
 		const patRouter* router) :
-		m_cost(0.0), m_spliceable(-1), m_points(points), m_router(router) ,patMultiModalPath::patMultiModalPath(path){
+		m_cost(0.0), m_spliceable(-1), m_points(points), m_router(router), patMultiModalPath::patMultiModalPath(
+				path) {
 }
 void MHPath::setRouter(const patRouter* router) {
 	m_router = router;
@@ -54,6 +55,28 @@ void MHPath::setPoints(MHPoints points) {
 	m_spliceable = -1;
 }
 
+deque<const patNode*> MHPath::getOrderedNodes(int start, int end,
+		Direction direct) const {
+
+	deque<const patNode*> nodes;
+
+	vector<const patArc*>::const_iterator a_arc_iter = m_arcs.begin();
+	a_arc_iter += start;
+	if (direct == FWD) {
+		nodes.push_back((*a_arc_iter)->getUpNode());
+	} else {
+		nodes.push_front((*a_arc_iter)->getUpNode());
+	}
+	for (int i = 0; i < end - start; ++i) {
+		if (direct == FWD) {
+			nodes.push_back((*a_arc_iter)->getDownNode());
+		} else {
+			nodes.push_front((*a_arc_iter)->getDownNode());
+		}
+		++a_arc_iter;
+	}
+	return nodes;
+}
 bool MHPath::equalsSubPath(patMultiModalPath& b_path, int start,
 		int end) const {
 	const vector<const patArc*>& b_arcs = b_path.getArcsPointer();
@@ -80,23 +103,84 @@ bool MHPath::equalsSubPath(patMultiModalPath& b_path, int start,
 	}
 	return true;
 }
+
+bool MHPath::checkSpliceableAB(const patNode* insertNode) const {
+
+	set<const patNode*> excluded_nodes = getNodesFront(getA() - 1);
+	set<const patNode*> excluded_nodes_2 = getNodesBack(size() - getC());
+	excluded_nodes.insert(excluded_nodes_2.begin(), excluded_nodes_2.end());
+	if (excluded_nodes.find(insertNode) != excluded_nodes.end()) {
+		throw RuntimeException("insert node excluded");
+	}
+	patShortestPathTreeGeneral sp_tree(FWD);
+	bool spliceable = true;
+	deque<const patNode*> ordered_nodes = getOrderedNodes(m_points.getA(),
+			m_points.getB(), FWD);
+
+	m_router->fwdCostWithoutExcludedNodes(sp_tree, getNodeA(), insertNode,
+			excluded_nodes, NULL, &ordered_nodes, &spliceable);
+	return spliceable;
+}
+bool MHPath::checkSpliceableBC(const patNode* insertNode) const {
+
+	set<const patNode*> excluded_nodes = getNodesFront(getA());
+	set<const patNode*> excluded_nodes_2 = getNodesBack(size() - getC() - 1);
+	excluded_nodes.insert(excluded_nodes_2.begin(), excluded_nodes_2.end());
+	if (excluded_nodes.find(insertNode) != excluded_nodes.end()) {
+		throw RuntimeException("insert node excluded");
+	}
+	patShortestPathTreeGeneral sp_tree(BWD);
+	bool spliceable = true;
+	deque<const patNode*> ordered_nodes = getOrderedNodes(m_points.getB(),
+			m_points.getC(), BWD);
+	m_router->bwdCostWithoutExcludedNodes(sp_tree, getNodeC(), insertNode,
+			excluded_nodes, NULL, &ordered_nodes, &spliceable);
+
+	return spliceable;
+}
 bool MHPath::isSpliceable() {
 	if (m_spliceable == -1) {
-		bool correct;
-		patMultiModalPath path_AB = newSpliceSegmentAB(getNodeB(), correct);
-//        DEBUG_MESSAGE(path_AB.size()<<","<<getA()<<","<<getB());
-		if (!equalsSubPath(path_AB, m_points.getA(), m_points.getB())) {
+//		cout << "New: check sp " << endl;
+		if (!checkSpliceableAB(getNodeB())) {
 			m_spliceable = 0;
 		} else {
-			patMultiModalPath path_BC = newSpliceSegmentBC(getNodeB(), correct);
-
-			bool sp = equalsSubPath(path_BC, m_points.getB(), m_points.getC());
-			if (sp == true) {
+			if (checkSpliceableBC(getNodeB())) {
 				m_spliceable = 1;
 			} else {
 				m_spliceable = 0;
 			}
 		}
+//
+////		cout << "New check done" << m_spliceable << endl;
+//		bool correct;
+//
+//		short new_spl = m_spliceable;
+////		cout << "Old: check sp " << endl;
+//		patMultiModalPath path_AB = newSpliceSegmentAB(getNodeB(), correct);
+////        DEBUG_MESSAGE(path_AB.size()<<","<<getA()<<","<<getB());
+//		if (!equalsSubPath(path_AB, m_points.getA(), m_points.getB())) {
+//			m_spliceable = 0;
+//		} else {
+//			patMultiModalPath path_BC = newSpliceSegmentBC(getNodeB(), correct);
+//
+//			bool sp = equalsSubPath(path_BC, m_points.getB(), m_points.getC());
+//			if (sp == true) {
+//				m_spliceable = 1;
+//			} else {
+//				m_spliceable = 0;
+//			}
+//		}
+//		if (new_spl != m_spliceable) {
+//			cout << "spliceable inconsistent: " << new_spl << "!="
+//					<< m_spliceable << endl;
+//			cout <<checkSpliceableAB(getNodeB())<<","<<checkSpliceableBC(getNodeB());
+//			patMultiModalPath path_BC = newSpliceSegmentBC(getNodeB(), correct);
+//			cout << equalsSubPath(path_AB, m_points.getA(), m_points.getB())
+//					<< ","
+//					<< equalsSubPath(path_BC, m_points.getB(), m_points.getC())
+//					<< endl;
+//		}
+//		cout << "Old check done" << m_spliceable << endl;
 	}
 	if (m_spliceable == 1) {
 		return true;
@@ -112,13 +196,9 @@ patMultiModalPath MHPath::newSpliceSegmentAB(const patNode* insertNode,
 	if (excluded_nodes.find(insertNode) != excluded_nodes.end()) {
 		throw RuntimeException("insert node excluded");
 	}
-//    DEBUG_MESSAGE(getA()<<","<<getC()<<","<<size()<<":"<<excluded_nodes.size());
-//    DEBUG_MESSAGE(getNodeA()->getUserId()<<","<<insertNode->getUserId());
 	patShortestPathTreeGeneral sp_tree(FWD);
 	m_router->fwdCostWithoutExcludedNodes(sp_tree, getNodeA(), insertNode,
 			excluded_nodes, NULL);
-//    DEBUG_MESSAGE("sp built");
-//    DEBUG_MESSAGE(sp_tree.getShortestPathTo(insertNode).size());
 	list<const patRoadBase*> list_of_roads;
 	if (sp_tree.getShortestPathTo(list_of_roads, insertNode) == true) {
 		correct = true;
