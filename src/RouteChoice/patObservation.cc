@@ -187,9 +187,13 @@ list<unordered_map<string, string> > patObservation::genAttributes(
 			throw RuntimeException("no choice set is given");
 		}
 
+		const patChoiceSet* u_cs = universal_choiceset;
+		if(u_cs==NULL){
+			u_cs = &(find_choice_set->second);
+		}
 		unordered_map<string, double> row_attributes =
 				find_choice_set->second.genAttributes(*path_iter,
-						utility_function, path_generator, universal_choiceset,choice_set_size,rnd);
+						utility_function, path_generator, u_cs,choice_set_size,rnd);
 		unordered_map < string, string > path_attributes;
 
 		row_attributes["AggWeight"] = m_path_probas.find(*path_iter)->second;

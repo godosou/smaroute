@@ -13,6 +13,7 @@ using kmldom::FolderPtr;
 #include <tr1/unordered_set>
 using namespace std::tr1;
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 patArcSequence::patArcSequence() {
 
 	m_length = 0.0;
@@ -26,28 +27,29 @@ patArcSequence::patArcSequence(const patArcSequence& another) :
 patArcSequence::patArcSequence(const vector<const patRoadBase*>& roads) {
 	for (vector<const patRoadBase*>::const_iterator road_iter = roads.begin();
 			road_iter != roads.end(); ++road_iter) {
-		if(!addArcsToBack (*road_iter)){
+		if (!addArcsToBack(*road_iter)) {
 			throw RuntimeException("Wrong compostion of arc sequence");
 		}
 	}
 }
 
 bool operator==(const patArcSequence& seq_a, const patArcSequence& seq_b) {
-	vector<const patArc*> arc_list_a = seq_a.getArcList();
-	vector<const patArc*> arc_list_b = seq_b.getArcList();
-	if (arc_list_a.size() != arc_list_b.size()) {
-		return false;
-	}
-	vector<const patArc*>::iterator iter_a = arc_list_a.begin();
-	vector<const patArc*>::iterator iter_b = arc_list_b.begin();
-	while (iter_a != arc_list_a.end()) {
-		if (*iter_a != *iter_b) {
-			return false;
-		}
-		++iter_a;
-		++iter_b;
-	}
-	return true;
+	return seq_a.getArcString()==seq_b.getArcString();
+//	vector<const patArc*> arc_list_a = seq_a.getArcList();
+//	vector<const patArc*> arc_list_b = seq_b.getArcList();
+//	if (arc_list_a.size() != arc_list_b.size()) {
+//		return false;
+//	}
+//	vector<const patArc*>::iterator iter_a = arc_list_a.begin();
+//	vector<const patArc*>::iterator iter_b = arc_list_b.begin();
+//	while (iter_a != arc_list_a.end()) {
+//		if (*iter_a != *iter_b) {
+//			return false;
+//		}
+//		++iter_a;
+//		++iter_b;
+//	}
+//	return true;
 
 }
 const patNode* patArcSequence::containLoop() const {
@@ -240,6 +242,7 @@ bool patArcSequence::addArcToFront(const patArc* arc) {
 		m_arcs.insert(m_arcs.begin(), arc);
 		m_last_added_arcs == 1;
 		m_length += arc->getLength();
+		m_arc_string = m_arc_string+arc->getArcString();
 		return true;
 	}
 }
@@ -258,6 +261,7 @@ bool patArcSequence::addArcToBack(const patArc* arc) {
 		m_arcs.push_back(arc);
 		m_last_added_arcs == 1;
 		m_length += arc->getLength();
+		m_arc_string+=arc->getArcString();
 		return true;
 	}
 	return true;
@@ -335,7 +339,13 @@ FolderPtr patArcSequence::getKML() const {
 	for (vector<const patArc*>::iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
 
-		kml_folder->add_feature((*arc_iter)->getArcKML(""));
+		vector<PlacemarkPtr> arc_pts = (*arc_iter)->getArcKML("");
+
+		for (vector<PlacemarkPtr>::const_iterator pt_iter = arc_pts.begin();
+				pt_iter != arc_pts.end(); ++pt_iter) {
+
+			kml_folder->add_feature(*pt_iter);
+		}
 	}
 	return kml_folder;
 
@@ -468,4 +478,10 @@ set<const patNode*> patArcSequence::getNodesBack(int stop_index) const {
 		--arc_iter;
 	}
 	return nodes;
+}
+void patArcSequence::clear(){
+	m_arcs.clear();
+	m_arc_string="";
+
+	m_length = 0.0;
 }

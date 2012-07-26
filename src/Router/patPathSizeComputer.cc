@@ -12,7 +12,7 @@
 
 using namespace std;
 patPathSizeComputer::~patPathSizeComputer() {
-	cout<<" ps no found: "<<m_ps_not_found<<endl;
+	cout << " ps no found: " << m_ps_not_found << endl;
 	// TODO Auto-generated destructor stub
 }
 
@@ -31,7 +31,7 @@ patPathSizeComputer::patPathSizeComputer(const patPathSizeComputer& another) {
 patPathSizeComputer::patPathSizeComputer(
 		const set<patMultiModalPath>& choice_set,
 		const patMultiModalPath& chosen_alternative) {
-	m_ps_not_found=0.0;
+	m_ps_not_found = 0.0;
 	set<patMultiModalPath> choice_set_copy = choice_set;
 	choice_set_copy.insert(chosen_alternative);
 
@@ -80,25 +80,32 @@ double patPathSizeComputer::computePS(const patMultiModalPath& path) {
 
 	for (vector<const patArc*>::const_iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
-		unordered_map<const patArc*, int>::const_iterator find_arc_overlap =
-				m_arc_overlap.find(*arc_iter);
-		if (find_arc_overlap != m_arc_overlap.end()) {
+		vector<const patArc*> original_arc_list =
+				(*arc_iter)->getOriginalArcList();
+		for (vector<const patArc*>::const_iterator o_arc_iter =
+				original_arc_list.begin();
+				o_arc_iter != original_arc_list.end(); ++o_arc_iter) {
+			unordered_map<const patArc*, int>::const_iterator find_arc_overlap =
+					m_arc_overlap.find(*o_arc_iter);
+			if (find_arc_overlap != m_arc_overlap.end()) {
 
-			ps += (*arc_iter)->getLength()
-					/ (pL * (double) find_arc_overlap->second);
-		} else {
-			continue;
-			//			throw RuntimeException("an arc not in path set");
+				ps += (*o_arc_iter)->getLength()
+						/ (pL * (double) find_arc_overlap->second);
+			} else {
+				continue;
+				//			throw RuntimeException("an arc not in path set");
+
+			}
 
 		}
 	}
-	if (ps==0.0){
-		cout<<"!!!!!!!!WRONG PS SPECIFICATION!!!!!!!!!";
+	if (ps == 0.0) {
+		cout << "!!!!!!!!WRONG PS SPECIFICATION!!!!!!!!!";
 	}
 	m_path_size[path] = ps;
 	return ps;
-}
 
+}
 double patPathSizeComputer::getPS(const patMultiModalPath& path) {
 	if (m_path_size.empty()) {
 		throw RuntimeException("No path to calculate the ps");
@@ -107,7 +114,7 @@ double patPathSizeComputer::getPS(const patMultiModalPath& path) {
 			m_path_size.find(path);
 
 	if (find_path == m_path_size.end()) {
-		cout << "\t\t path not found in ps, compute it." << endl;
+//		cout << "\t\t path not found in ps, compute it." << endl;
 		m_ps_not_found++;
 		return computePS(path);
 	} else {

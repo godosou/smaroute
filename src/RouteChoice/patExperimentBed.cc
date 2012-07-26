@@ -34,6 +34,7 @@
 #include <dirent.h>
 #include "patRouter.h"
 #include "patVerifyingSamplingResult.h"
+#include "patNetworkCompressor.h"
 using namespace std;
 
 void patExperimentBed::checkExperimentFolder() const {
@@ -217,6 +218,8 @@ void patExperimentBed::readUniversalChoiceSet() {
 		map<patOd, patChoiceSet> od_choice_set = rc.read(choiceset_file, m_rnd);
 		patOd od = od_choice_set.begin()->first;
 		m_universal_choice_set = od_choice_set.begin()->second;
+		cout << "Uniserval choice set with paths"
+				<< m_universal_choice_set.size() << endl;
 	}
 }
 void patExperimentBed::initCostFunctions() {
@@ -241,14 +244,13 @@ void patExperimentBed::initCostFunctions() {
 		double router_ps_coef = 0.0;
 		double router_link_scale =
 				patNBParameters::the()->router_cost_link_scale;
-		if (router_link_scale > patNBParameters::the()->mh_link_scale) {
-			router_link_scale = patNBParameters::the()->mh_link_scale;
-		}
-		m_mh_router_link_cost = new patLinkAndPathCost(link_coef,router_link_scale,
-				router_ps_coef);
+//		if (router_link_scale > patNBParameters::the()->mh_link_scale) {
+//			router_link_scale = patNBParameters::the()->mh_link_scale;
+//		}
+		m_mh_router_link_cost = new patLinkAndPathCost(link_coef,
+				router_link_scale, router_ps_coef);
 
-		m_mh_weight_function = new MHWeightFunction(
-				link_coef,
+		m_mh_weight_function = new MHWeightFunction(link_coef,
 				patNBParameters::the()->mh_link_scale,
 				patNBParameters::the()->mh_ps_coef,
 				patNBParameters::the()->mh_obs_scale);
@@ -280,6 +282,13 @@ void patExperimentBed::initCostFunctions() {
 				throw RuntimeException("No observation is read");
 			}
 			m_obs_path_probas = ppfo.getPathProbas(m_observations);
+			cout << "\t" << m_obs_path_probas.size()
+					<< " mh observations for sampling algorithm" << endl;
+			for (std::map<const patMultiModalPath, double>::const_iterator path_iter =
+					m_obs_path_probas.begin();
+					path_iter != m_obs_path_probas.end(); ++path_iter) {
+				cout<<path_iter->first.getArcString()<<endl;
+			}
 			m_mh_weight_function->setPathProbas(&m_obs_path_probas);
 		}
 
@@ -657,20 +666,31 @@ void patExperimentBed::simulateObservations() {
 	}
 //	patNetworkBase* cloned_network = m_mh_path_generator->getNetwork()->clone();
 
-	MHPathGenerator* generator_clone = m_mh_path_generator->clone();
+	const unsigned long num_threads = patNBParameters::the()->nbrOfThreads;
 
-//	generator_clone->setNetwork(cloned_network);
-	cout << "Start simulation" << endl;
-	MHObservationWritterWrapper path_writer(m_observation_folder,
-			patNBParameters::the()->SAMPLEINTERVAL_ELEMENT,
-			m_mh_weight_function);
-	generator_clone->setWritterWrapper(&path_writer);
-	generator_clone->run(origin, destination);
-	cout << "Finish simulation" << endl;
-	delete generator_clone;
-	generator_clone = NULL;
-//	delete cloned_network;
-//	cloned_network = NULL;
+	const unsigned long block = ceil(
+			(double) patNBParameters::the()->SAMPLE_COUNT / num_threads);
+#pragma omp parallel num_threads( num_threads)
+
+	{
+#pragma omp for
+
+		for (unsigned i = 0; i < num_threads; ++i) {
+			MHPathGenerator* generator_clone = m_mh_path_generator->clone();
+
+			cout << "Start simulation" << endl;
+			MHObservationWritterWrapper path_writer(m_observation_folder,
+					patNBParameters::the()->SAMPLEINTERVAL_ELEMENT,
+					m_mh_weight_function, i * block);
+			generator_clone->setSampleCount(block);
+			generator_clone->setWritterWrapper(&path_writer);
+			generator_clone->run(origin, destination);
+			cout << "Finish simulation" << endl;
+			delete generator_clone;
+			generator_clone = NULL;
+
+		}
+	}
 }
 
 void patExperimentBed::verifySamplingResult() {
@@ -728,16 +748,44 @@ void patExperimentBed::testNetwork() const {
 	sp_writer.writePath(sp_path, attr);
 	sp_writer.writePath(new_path_fwd, attr);
 	sp_writer.writePath(new_path_bwd, attr);
+	DEBUG_MESSAGE("check sp"<<(sp_path==new_path_fwd));
 	DEBUG_MESSAGE(m_mh_router_link_cost->getCost(sp_path));
 	DEBUG_MESSAGE(m_mh_weight_function->getCost(sp_path));
 	DEBUG_MESSAGE(m_mh_weight_function->logWeigthOriginal(sp_path));
+
+	unordered_set<const patNode*> uncompressed_nodes;
+	uncompressed_nodes.insert(origin);
+	uncompressed_nodes.insert(destination);
+	patNetworkBase* clone_network = m_network_environment->getNetwork(
+			m_transport_mode)->clone();
+	patNetworkCompressor nc(clone_network, uncompressed_nodes);
+	patRouter compressed_router(clone_network, m_mh_router_link_cost);
+	nc.compress(m_mh_router_link_cost->getLinkCoefficients());
+
+	clone_network->exportKML("compressed_1.kml");
+	nc.compress(m_mh_router_link_cost->getLinkCoefficients());
+
+	clone_network->exportKML("compressed_2.kml");
+	patShortestPathTreeGeneral sp_tree_compressed(FWD);
+	compressed_router.fwdCost(sp_tree_compressed, origin, destination);
+
+	patMultiModalPath sp_compressed = compressed_router.bestRouteFwd(origin,
+			destination);
+
+	DEBUG_MESSAGE("check compressed sp: "<<(sp_compressed==sp_path));
+	DEBUG_MESSAGE("compressed sp: "<<sp_compressed.getArcString());
+	DEBUG_MESSAGE("original sp: "<<sp_path.getArcString());
+
+	sp_writer.writePath(sp_compressed, attr);
 	unordered_map<const patNode*, double> proposal_probabilities;
 	m_mh_path_generator->getNodeProbability(start_router,
 			proposal_probabilities, origin, destination);
-	for (unordered_map<const patNode*, double>::iterator node_iter =
-			proposal_probabilities.begin();
-			node_iter != proposal_probabilities.end(); ++node_iter) {
-		DEBUG_MESSAGE(node_iter->first->getUserId()<<":"<<node_iter->second);
-	}
+//	for (unordered_map<const patNode*, double>::iterator node_iter =
+//			proposal_probabilities.begin();
+//			node_iter != proposal_probabilities.end(); ++node_iter) {
+//		DEBUG_MESSAGE(node_iter->first->getUserId()<<":"<<node_iter->second);
+//	}
 	sp_writer.close();
+	delete clone_network;
+	clone_network = NULL;
 }

@@ -96,6 +96,7 @@ public:
 	bool containsNodeFront(const patNode* node, int stop_index) const;
 	bool containsNodeBack(const patNode* node, int stop_index) const;
 	string getArcsString() const;
+	virtual void clear();
 protected:
 	vector<const patArc*> m_arcs;
 //	double m_length;

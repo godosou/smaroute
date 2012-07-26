@@ -21,7 +21,8 @@ void patRoadBase::setLength(bool the_length) {
 	m_length = the_length;
 }
 patRoadBase::patRoadBase(const patRoadBase& another) :
-		m_length(another.m_length) {
+		m_length(another.m_length), m_generalized_cost(
+				another.m_generalized_cost), m_arc_string(another.m_arc_string) {
 
 }
 patRoadBase::~patRoadBase() {
@@ -38,11 +39,13 @@ double patRoadBase::getLength() const {
 }
 double patRoadBase::computeGeneralizedCost(
 		const map<ARC_ATTRIBUTES_TYPES, double>& link_coef) {
-	vector<const patArc*> arc_list= getArcList( );
+	vector<const patArc*> arc_list = getArcList();
 	m_generalized_cost = 0.0;
 	for (vector<const patArc*>::iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
-		m_generalized_cost+=const_cast<patArc*>(*arc_iter)->computeGeneralizedCost(link_coef);
+		m_generalized_cost +=
+				const_cast<patArc*>(*arc_iter)->computeGeneralizedCost(
+						link_coef);
 	}
 	return m_generalized_cost;
 }
@@ -52,8 +55,20 @@ FolderPtr patRoadBase::getKML(string mode) const {
 	vector<const patArc*> arc_list = getArcList();
 	for (vector<const patArc*>::iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
-		road_folder->add_feature((*arc_iter)->getArcKML(mode));
+
+		vector<PlacemarkPtr> arc_pts = (*arc_iter)->getArcKML(mode);
+
+		for (vector<PlacemarkPtr>::const_iterator pt_iter = arc_pts.begin();
+				pt_iter != arc_pts.end(); ++pt_iter) {
+
+			road_folder->add_feature(*pt_iter);
+		}
 	}
 	return road_folder;
 
+}
+
+string patRoadBase::getArcString() const {
+//	cout << "road string"<<m_arc_string << endl;
+	return m_arc_string;
 }

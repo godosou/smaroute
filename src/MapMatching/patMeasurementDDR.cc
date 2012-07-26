@@ -162,16 +162,16 @@ set<const patArc*> patMeasurementDDR::getDDRArcSet(TransportMode mode) const {
 
 bool patMeasurementDDR::isArcInDomain(const patArc* arc,
 		TransportMode mode) const {
-	map<TransportMode, map<const patArc*, double> >::const_iterator find_mode = m_ddr_arcs.find(mode);
-	if (find_mode==m_ddr_arcs.end()){
+	map<TransportMode, map<const patArc*, double> >::const_iterator find_mode =
+			m_ddr_arcs.find(mode);
+	if (find_mode == m_ddr_arcs.end()) {
 		return false;
-	}
-	else{
-		map<const patArc*, double>::const_iterator find_arc = find_mode->second.find(arc);
-		if(find_arc ==find_mode->second.end() ){
+	} else {
+		map<const patArc*, double>::const_iterator find_arc =
+				find_mode->second.find(arc);
+		if (find_arc == find_mode->second.end()) {
 			return false;
-		}
-		else{
+		} else {
 			return true;
 		}
 	}
@@ -227,12 +227,21 @@ FolderPtr patMeasurementDDR::getKML(int i) const {
 		for (map<const patArc*, double>::const_iterator arc_iter =
 				mode_iter->second.begin(); arc_iter != mode_iter->second.end();
 				++arc_iter) {
-			PlacemarkPtr arc = arc_iter->first->getArcKML(
-					getTransportMode(mode_iter->first));
+
 			stringstream v;
 			v << arc_iter->second;
-			arc->set_name(v.str());
-			mode_folder->add_feature(arc);
+
+			vector<PlacemarkPtr> arc_pts = (arc_iter->first)->getArcKML(
+					getTransportMode(mode_iter->first));
+
+			for (vector<PlacemarkPtr>::const_iterator pt_iter = arc_pts.begin();
+					pt_iter != arc_pts.end(); ++pt_iter) {
+
+				PlacemarkPtr arc = *pt_iter;
+				arc->set_name(v.str());
+				mode_folder->add_feature(arc);
+			}
+
 		}
 		ddr_folder->add_feature(mode_folder);
 	}
@@ -281,7 +290,8 @@ double patMeasurementDDR::computePathDDRRaw(
 
 	return rtn_value;
 }
-void patMeasurementDDR::finalize(const patNetworkEnvironment* network_environment) {
+void patMeasurementDDR::finalize(
+		const patNetworkEnvironment* network_environment) {
 
 	map<const patArc*, pair<double, struct link_ddr_range> > arc_ddr_set_temp;
 	for (map<TransportMode, map<const patArc*, struct link_ddr_range> >::const_iterator mode_iter =
@@ -303,14 +313,14 @@ void patMeasurementDDR::finalize(const patNetworkEnvironment* network_environmen
 			++network_iter) {
 		m_ddr_arcs[network_iter->second->getTransportMode()];
 		m_arc_ddr_ranges[network_iter->second->getTransportMode()];
-		for ( map<const patArc*, pair<double, struct link_ddr_range> > ::const_iterator
-				arc_iter = arc_ddr_set_temp.begin();
-				arc_iter != arc_ddr_set_temp.end();
+		for (map<const patArc*, pair<double, struct link_ddr_range> >::const_iterator arc_iter =
+				arc_ddr_set_temp.begin(); arc_iter != arc_ddr_set_temp.end();
 				++arc_iter) {
 			if (!network_iter->second->getRoadsContainArc(arc_iter->first).empty()) {
 				m_ddr_arcs[network_iter->second->getTransportMode()][arc_iter->first] =
 						arc_iter->second.first;
-				m_arc_ddr_ranges[network_iter->second->getTransportMode()][arc_iter->first] =arc_iter->second.second;
+				m_arc_ddr_ranges[network_iter->second->getTransportMode()][arc_iter->first] =
+						arc_iter->second.second;
 			}
 		}
 

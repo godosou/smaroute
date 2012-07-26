@@ -71,6 +71,7 @@ class patArc: public patRoadBase {
 	friend ostream& operator<<(ostream& str, const patArc& x);
 
 public:
+	patArc();
 	patArc(unsigned long theId, const patNode* theUpNode,
 			const patNode* theDownNode);
 
@@ -84,7 +85,6 @@ public:
 	 @return length of the arc in meters
 	 */
 //	double getLength() const;
-
 	double computeLength();
 	/**
 	 @return patTRUE is the arc "follower" is actually consecutive to
@@ -98,31 +98,32 @@ public:
 	const patNode* getDownNode() const;
 	double calHeading();
 	vector<const patArc*> getArcList() const;
+	virtual vector<const patArc*> getOriginalArcList() const;
 	unsigned long getUserId() const;
 	double getHeading() const;
 	string getName() const;
 	int size() const;
 	bool isValid() const;
-	PlacemarkPtr getArcKML(string mode) const;
+	virtual vector<PlacemarkPtr> getArcKML(string mode) const;
 
 	map<string, double> distanceTo(const patNode* a_node) const;
 	virtual double getAttribute(ARC_ATTRIBUTES_TYPES attribute_name) const;
-    static string getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name);
-	void setTags(const unordered_map<string, string>& tags );
-
-	double computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
+	static string getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name);
+	void setTags(const unordered_map<string, string>& tags);
+	void genArcString();
+	virtual double computeGeneralizedCost(
+			const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
+private:
+	unordered_map<string, string> m_tags;
+	unsigned long m_internal_id;
+	struct arc_attributes m_attributes;
 protected:
 	double frozenGeneralizedCost;
-	unordered_map<string, string> m_tags;
 	unsigned long m_user_id;
-	unsigned long m_internal_id;
-	unsigned long m_up_node_id;
-	unsigned long m_down_node_id;
 	const patNode* m_up_node;
 	const patNode* m_down_node;
 	string m_name;
 	unsigned long m_way_id;
-	struct arc_attributes m_attributes;
 	list<patCoordinates> m_polyline;
 };
 

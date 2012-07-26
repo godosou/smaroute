@@ -535,7 +535,12 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 				for (vector<const patArc*>::iterator arc_iter = arc_list.begin();
 						arc_iter != arc_list.end(); ++arc_iter) {
 
-					seg_folder->add_feature((*arc_iter)->getArcKML("bus"));
+					vector<PlacemarkPtr> arc_pts = (*arc_iter)->getArcKML("bus");
+
+					for (vector<PlacemarkPtr>::const_iterator pt_iter = arc_pts.begin();
+							pt_iter != arc_pts.end(); ++pt_iter) {
+						seg_folder->add_feature(*pt_iter);
+					}
 				}
 				segs_folder->add_feature(seg_folder);
 			} else {

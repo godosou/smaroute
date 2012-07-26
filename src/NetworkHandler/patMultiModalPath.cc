@@ -41,14 +41,14 @@ patMultiModalPath::patMultiModalPath(
 }
 
 patMultiModalPath::patMultiModalPath(const patMultiModalPath& anotherPath) :
-		patArcSequence::patArcSequence(anotherPath),
-		m_roads(anotherPath.m_roads), m_unique_modes(
+		patArcSequence::patArcSequence(anotherPath), m_roads(
+				anotherPath.m_roads), m_unique_modes(
 				anotherPath.m_unique_modes), m_od(anotherPath.m_od), m_name(
 				anotherPath.m_name), m_id(anotherPath.m_id), m_attributes(
 				anotherPath.m_attributes), m_distance_to_stop(
 				anotherPath.m_distance_to_stop)
 
-				{
+{
 
 }
 
@@ -130,24 +130,60 @@ bool operator==(const patMultiModalPath& aPath,
 	//patBoolean equal =patTRUE;
 	//compare path size
 	//FIXME differet road but the same arc
-	if (aPath.m_arcs.size() != bPath.m_arcs.size()
-			or aPath.m_roads.size() != bPath.m_roads.size()) {
-
-		return false;
-	}
-
-	//compare from road to road
-	list<RoadTravel>::const_iterator aIter = aPath.m_roads.begin();
-	list<RoadTravel>::const_iterator bIter = bPath.m_roads.begin();
-	while (aIter != aPath.m_roads.end() && bIter != bPath.m_roads.end()) {
-		if (*aIter != *bIter) {
-			return false;
-		}
-		++aIter;
-		++bIter;
-	}
-	//DEBUG_MESSAGE("path equal");
-	return true;
+	return aPath.getArcString()==bPath.getArcString();
+//
+//	vector<const patArc*> a_original_arcs, b_original_arcs;
+//
+//	for (vector<const patArc*>::const_iterator iter_1 = aPath.m_arcs.begin();
+//			iter_1 != aPath.m_arcs.end(); ++iter_1) {
+//
+//		vector<const patArc*> orig_arcs = (*iter_1)->getOriginalArcList();
+//		a_original_arcs.insert(a_original_arcs.end(), orig_arcs.begin(),
+//				orig_arcs.end());
+//	}
+//	for (vector<const patArc*>::const_iterator iter_1 = bPath.m_arcs.begin();
+//			iter_1 != bPath.m_arcs.end(); ++iter_1) {
+//
+//		vector<const patArc*> orig_arcs = (*iter_1)->getOriginalArcList();
+//		b_original_arcs.insert(b_original_arcs.end(), orig_arcs.begin(),
+//				orig_arcs.end());
+//	}
+//
+//	if (a_original_arcs.size() != b_original_arcs.size()) {
+//		return false;
+//
+//	}
+//
+//	vector<const patArc*>::const_iterator a_iter = a_original_arcs.begin();
+//	vector<const patArc*>::const_iterator b_iter = b_original_arcs.begin();
+//
+//	while (a_iter != a_original_arcs.end() && b_iter != b_original_arcs.end()) {
+//		if (*a_iter != *b_iter) {
+//			return false;
+//		}
+//		++a_iter;
+//		++b_iter;
+//	}
+//	return true;
+//
+//	if (aPath.m_arcs.size() != bPath.m_arcs.size()
+//			or aPath.m_roads.size() != bPath.m_roads.size()) {
+//
+//		return false;
+//	}
+//
+//	//compare from road to road
+//	list<RoadTravel>::const_iterator aIter = aPath.m_roads.begin();
+//	list<RoadTravel>::const_iterator bIter = bPath.m_roads.begin();
+//	while (aIter != aPath.m_roads.end() && bIter != bPath.m_roads.end()) {
+//		if (*aIter != *bIter) {
+//			return false;
+//		}
+//		++aIter;
+//		++bIter;
+//	}
+//	//DEBUG_MESSAGE("path equal");
+//	return true;
 }
 
 bool operator!=(const patMultiModalPath& aPath,
@@ -167,40 +203,41 @@ bool operator<(const patMultiModalPath& aPath, const patMultiModalPath& bPath) {
 	if (a_length > b_length) {
 		return false;
 	}
-
-	const unsigned a_size = aPath.m_arcs.size();
-	const unsigned b_size = bPath.m_arcs.size();
-	if (a_size < b_size) {
-		return true;
-	}
-	if (a_size > b_size) {
-		return false;
-	}
-
-	const unsigned a_road_size = aPath.m_roads.size();
-	const unsigned b_road_size = bPath.m_roads.size();
-	if (a_road_size < b_road_size) {
-		return true;
-	}
-	if (a_road_size > b_road_size) {
-		return false;
-	}
-	list<RoadTravel>::const_iterator aIter = aPath.m_roads.begin();
-	list<RoadTravel>::const_iterator bIter = bPath.m_roads.begin();
-	while (aIter != aPath.m_roads.end() && bIter != bPath.m_roads.end()) {
-		if ((*aIter) < (*bIter)) {
-			return true;
-		} else if ((*aIter) == (*bIter)) {
-
-			++aIter;
-			++bIter;
-			continue;
-		} else {
-			return false;
-		}
-	}
-
-	return false;
+	return aPath.getArcString()<bPath.getArcString();
+//
+//	const unsigned a_size = aPath.m_arcs.size();
+//	const unsigned b_size = bPath.m_arcs.size();
+//	if (a_size < b_size) {
+//		return true;
+//	}
+//	if (a_size > b_size) {
+//		return false;
+//	}
+//
+//	const unsigned a_road_size = aPath.m_roads.size();
+//	const unsigned b_road_size = bPath.m_roads.size();
+//	if (a_road_size < b_road_size) {
+//		return true;
+//	}
+//	if (a_road_size > b_road_size) {
+//		return false;
+//	}
+//	list<RoadTravel>::const_iterator aIter = aPath.m_roads.begin();
+//	list<RoadTravel>::const_iterator bIter = bPath.m_roads.begin();
+//	while (aIter != aPath.m_roads.end() && bIter != bPath.m_roads.end()) {
+//		if ((*aIter) < (*bIter)) {
+//			return true;
+//		} else if ((*aIter) == (*bIter)) {
+//
+//			++aIter;
+//			++bIter;
+//			continue;
+//		} else {
+//			return false;
+//		}
+//	}
+//
+//	return false;
 }
 void patMultiModalPath::removeRoadTravelToBack() {
 	const patRoadBase* end_road = m_roads.back().road;
@@ -680,7 +717,7 @@ vector<double> patMultiModalPath::getIntermediateUnimodalLengths() const {
 	}
 	intermediate_length.push_back(current_length - back()->getLength()); //For the last segment, the last arc is not considered.
 
-	//intermediate_length[0]-=front()->getLength();
+			//intermediate_length[0]-=front()->getLength();
 	return intermediate_length;
 }
 
@@ -1112,8 +1149,7 @@ const list<double>* patMultiModalPath::getDistanceToStop() const {
  }
  */
 void patMultiModalPath::clear() {
-	m_arcs.clear();
-	m_length = 0.0;
+	patArcSequence::clear();
 	m_roads.clear();
 	m_unique_modes.clear();
 	m_od = NULL;

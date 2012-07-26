@@ -15,11 +15,14 @@
 #include "patCoordinates.h"
 #include "patNBParameters.h"
 #include "patException.h"
+#include <boost/lexical_cast.hpp>
 using kmldom::CoordinatesPtr;
 using kmldom::KmlFactory;
 using kmldom::LineStringPtr;
 using kmldom::PlacemarkPtr;
+patArc::patArc(){
 
+}
 patArc::patArc(unsigned long theId, const patNode* theUpNode,
 		const patNode* theDownNode, string theName,
 		struct arc_attributes theAttr, patError*& err) :
@@ -32,10 +35,9 @@ patArc::patArc(unsigned long theId, const patNode* theUpNode,
 		WARNING(err->describe());
 		return;
 	}
-	m_up_node_id = theUpNode->userId;
-	m_down_node_id = theDownNode->userId;
 	computeLength();
 	calHeading();
+	genArcString();
 }
 double patArc::computeLength() {
 	m_length = m_up_node->getGeoCoord().distanceTo(m_down_node->geoCoord);
@@ -46,6 +48,7 @@ patArc::patArc(unsigned long theId, const patNode* theUpNode,
 				0.0) {
 	computeLength();
 	calHeading();
+	genArcString();
 }
 patArc::patArc(unsigned long theId, const patNode* theUpNode,
 		const patNode* theDownNode, string theName, patError*& err) :
@@ -56,10 +59,9 @@ patArc::patArc(unsigned long theId, const patNode* theUpNode,
 		WARNING(err->describe());
 		return;
 	}
-	m_up_node_id = theUpNode->userId;
-	m_down_node_id = theDownNode->userId;
 	m_length = theUpNode->getGeoCoord().distanceTo(theDownNode->geoCoord);
 	calHeading();
+	genArcString();
 }
 void patArc::calPriority() {
 	if (m_attributes.type == "steps") {
@@ -171,7 +173,7 @@ int patArc::size() const {
 bool patArc::isValid() const {
 	return true;
 }
-PlacemarkPtr patArc::getArcKML(string mode) const {
+vector<PlacemarkPtr> patArc::getArcKML(string mode) const {
 	KmlFactory* factory = KmlFactory::GetFactory();
 
 	stringstream ss;
@@ -190,7 +192,10 @@ PlacemarkPtr patArc::getArcKML(string mode) const {
 	placemark->set_description(ss.str());
 	placemark->set_styleurl("#" + mode);
 	placemark->set_geometry(line_string); // placemark takes ownership
-	return placemark;
+
+	vector<PlacemarkPtr> rtn;
+	rtn.push_back(placemark);
+	return rtn;
 
 }
 
@@ -340,4 +345,12 @@ double patArc::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& l
 
 	return m_generalized_cost;
 //	DEBUG_MESSAGE(m_generalized_cost);
+}
+
+vector<const patArc*>  patArc::getOriginalArcList() const{
+	return getArcList();
+}
+void patArc::genArcString(){
+	m_arc_string = boost::lexical_cast<string>(getUserId())+string(";");
+//	cout<<"arc:"<<getArcString()<<endl;
 }

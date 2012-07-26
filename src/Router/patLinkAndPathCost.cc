@@ -50,6 +50,7 @@ double patLinkAndPathCost::getCost(const patMultiModalPath& path) const {
 	}
 	if (m_ps_computer != NULL && m_pathsize_coefficient > 0.0) {
 		double ps_value = m_ps_computer->getPS(path);
+//		cout<<pathCost<<","<<ps_value<<","<<log(ps_value)<<endl;
 		pathCost +=  m_pathsize_coefficient * log(ps_value);
 	}
 	return pathCost;

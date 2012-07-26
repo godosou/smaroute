@@ -19,8 +19,9 @@ int main(int argc, char *argv[]) {
 	char *command = NULL;
 	int nbr_observation = INT_MAX;
 	bool synthetic_network = false;
+	bool real_observation = false;
 	int c;
-	while ((c = getopt(argc, argv, "c:f:n:s")) != -1) {
+	while ((c = getopt(argc, argv, "c:f:n:s:r")) != -1) {
 		switch (c) {
 		case 'c':
 			command = optarg;
@@ -30,6 +31,9 @@ int main(int argc, char *argv[]) {
 			break;
 		case 'f':
 			param_file = optarg;
+			break;
+		case 'r':
+			real_observation = true;
 			break;
 		case 'n':
 			try {
@@ -58,7 +62,7 @@ int main(int argc, char *argv[]) {
 	cout <<command_str<<endl;
 	initParameters(param_file);
 
-	patExperimentBed run(!synthetic_network, false, CAR, nbr_observation);
+	patExperimentBed run(!synthetic_network, real_observation, CAR, nbr_observation);
 
 	if (command_str == "SampleWithOd") {
 		run.sampleChoiceSetWithOd(nbr_observation);
