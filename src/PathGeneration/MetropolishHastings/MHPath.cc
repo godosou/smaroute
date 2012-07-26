@@ -44,7 +44,10 @@ const patNode* MHPath::getNodeC() const {
 }
 
 unsigned long MHPath::pointCombinationSize() const {
-	double nbr_of_nodes = size() + 1;
+	double nbr_of_nodes = nbrOfNodes();
+//	if (!m_valide_nodes.empty()) {
+//		nbr_of_nodes = m_valide_nodes.size();
+//	}
 	return (double) 1.0 * ((double) nbr_of_nodes)
 			* ((double) nbr_of_nodes - 1.0) * ((double) nbr_of_nodes - 2.0)
 			/ 6.0;
@@ -151,7 +154,7 @@ bool MHPath::isSpliceable() {
 			}
 		}
 //
-////		cout << "New check done" << m_spliceable << endl;
+//		cout << "New check done" << m_spliceable << endl;
 //		bool correct;
 //
 //		short new_spl = m_spliceable;
@@ -234,19 +237,22 @@ patMultiModalPath MHPath::newSpliceSegmentBC(const patNode* insertNode,
 	}
 
 }
-bool MHPath::insertDetour(const patNode* nodeB) {
+bool MHPath::insertDetour(const patNode* nodeB,
+		const unordered_map<const patNode*, double>& proposalProbabilities) {
 	/*
 	 * (1) compute new path segments
 	 */
-//    DEBUG_MESSAGE(getNodeA()->getUserId()<<"-"<<nodeB->getUserId());
+//    DEBUG_MESSAGE(getNodeA()->getUserId()<<"-"<<nodeB->getUserId()<<"-"<<getNodeC()->getUserId());
 	bool correct = true;
 	patMultiModalPath pathAB = newSpliceSegmentAB(nodeB, correct);
 	if (correct == false) {
+//		cout << " no AB shortest path found";
 		return false;
 	}
 //    DEBUG_MESSAGE("PATH AB");
 	patMultiModalPath pathBC = newSpliceSegmentBC(nodeB, correct);
 	if (correct == false) {
+//		cout << " no BC shortest path found";
 		return false;
 	}
 
@@ -304,5 +310,64 @@ bool MHPath::insertDetour(const patNode* nodeB) {
 	clear();
 	append(new_path);
 	m_points = new_points;
+//	cout<<"new proposal"<<getArcString()<<endl;
+//	update(proposalProbabilities);
 	return true;
+}
+void MHPath::update(
+		const unordered_map<const patNode*, double>& proposalProbabilities) {
+	m_valide_nodes.clear();
+	return;
+	unsigned node_index = 0;
+	vector<const patArc*>::const_iterator arc_iter = m_arcs.begin();
+
+	if (proposalProbabilities.find((*arc_iter)->getUpNode())
+			!= proposalProbabilities.end()) {
+		m_valide_nodes.push_back(node_index);
+	}
+
+	for (; arc_iter != m_arcs.end(); ++arc_iter) {
+		++node_index;
+		if (proposalProbabilities.find((*arc_iter)->getDownNode())
+				!= proposalProbabilities.end()) {
+			m_valide_nodes.push_back(node_index);
+		}
+
+	}
+}
+MHPoints MHPath::drawPoints(const patRandomNumber* rnd) {
+
+	int n = m_valide_nodes.size();
+	if (n < 3) {
+		throw RuntimeException("less than three alternatives!");
+	}
+	/*
+	 * (2) draw three disjoint numbers
+	 */
+	int u1 = rnd->nextInt(n);
+	int u2 = rnd->nextInt(n - 1);
+	if (u2 >= u1) {
+		u2++;
+	}
+	int u3 = rnd->nextInt(n - 2);
+	if (u3 >= u1 || u3 >= u2) {
+		u3++;
+	}
+	if (u3 >= u1 && u3 >= u2) {
+		u3++;
+	}
+	//	DEBUG_MESSAGE(u1 << "," << u2 << "," << u3);
+	/*
+	 * (3) return sorted numbers
+	 */
+	vector<int> us;
+	us.push_back(u1);
+	us.push_back(u2);
+	us.push_back(u3);
+	sort(us.begin(), us.end());
+//	cout<<valide_nodes[us[0]]<<","<< valide_nodes[us[1]]<<","<< valide_nodes[us[2]]<<endl;
+	m_points = MHPoints(m_valide_nodes[us[0]], m_valide_nodes[us[1]],
+			m_valide_nodes[us[2]]);
+	return m_points;
+
 }

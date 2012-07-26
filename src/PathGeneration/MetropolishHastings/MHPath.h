@@ -31,7 +31,7 @@ public:
 	const patNode* getNodeB() const;
 	const patNode* getNodeC() const;
 
-	bool checkSpliceableAB(const patNode* insertNode)  const;
+	bool checkSpliceableAB(const patNode* insertNode) const;
 	bool checkSpliceableBC(const patNode* insertNode) const;
 	deque<const patNode*> getOrderedNodes(int start, int end,
 			Direction direct) const;
@@ -44,10 +44,16 @@ public:
 	bool equalsSubPath(patMultiModalPath& b_path, int start, int end) const;
 	bool isSpliceable();
 	void setRouter(const patRouter* router);
-	bool insertDetour(const patNode* nodeB);
+	bool insertDetour(const patNode* nodeB,
+			const unordered_map<const patNode*, double>& proposalProbabilities);
+
+	void update(
+			const unordered_map<const patNode*, double>& proposalProbabilities);
+	MHPoints drawPoints(const patRandomNumber* rnd);
 
 protected:
 	const patRouter* m_router;
+	vector<unsigned> m_valide_nodes;
 	vector<const patRoadBase*> m_roads;
 	double m_cost;
 	MHPoints m_points;

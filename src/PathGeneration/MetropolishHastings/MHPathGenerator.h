@@ -41,6 +41,7 @@ public:
 	const MHWeightFunction* getMHWeight() const{
 		return m_MHWeight;
 	}
+	void setSampleCount(const unsigned long& sample_count);
 	double calculatePathLogWeight(const patMultiModalPath& path) const;
 protected:
 

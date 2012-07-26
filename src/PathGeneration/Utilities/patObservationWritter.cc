@@ -23,9 +23,11 @@ patObservationWritter::~patObservationWritter() {
 
 patObservationWritter::patObservationWritter(string folder,
 		const unsigned long sampleInterval,
-		const patLinkAndPathCost* cost_function) :
+		const patLinkAndPathCost* cost_function,
+		const unsigned long& writer_indexer
+		) :
 		m_sample_interval(sampleInterval), m_folder(folder), m_path_count(0), m_cost_function(
-				cost_function), m_sampled_path_count(0) {
+				cost_function), m_sampled_path_count(0) ,m_writer_indexer(writer_indexer){
 
 	m_warmup_iterations = patNBParameters::the()->WARMUP_ITERATIONS;
 	if (sampleInterval <= 0) {
@@ -65,7 +67,7 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 //	cout << m_path_count<<"-"<<m_warmup_iterations<<endl;
 //	cout <<"export a path"<<endl;
 	m_sampled_path_count++;
-	string i_str = boost::lexical_cast<string>(m_sampled_path_count);
+	string i_str = boost::lexical_cast<string>(m_writer_indexer+ m_sampled_path_count);
 	patKMLPathWriter kml_writer(m_folder + "/" + i_str + ".kml");
 //	cout <<m_folder + "observations/" + i_str + ".kml"<<endl;
 	map<string, string> attrs_true;

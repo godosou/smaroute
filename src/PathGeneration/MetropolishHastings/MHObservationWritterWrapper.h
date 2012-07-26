@@ -12,30 +12,34 @@
 #include "MHStateProcessor.h"
 #include "MHPath.h"
 class patLinkAndPathCost;
-class MHObservationWritterWrapper: public patObservationWritter, public MHStateProcessor<
-		MHPath> {
+class MHObservationWritterWrapper: public patObservationWritter,
+		public MHStateProcessor<MHPath> {
 public:
 	MHObservationWritterWrapper();
 	virtual ~MHObservationWritterWrapper();
 
-	MHObservationWritterWrapper(std::string folder, const int sampleInterval, const patLinkAndPathCost* cost_function) :
-		patObservationWritter::patObservationWritter(folder, sampleInterval,cost_function) {
+	MHObservationWritterWrapper(std::string folder, const int sampleInterval,
+			const patLinkAndPathCost* cost_function,
+			const unsigned long& writer_indexer=0) :
+			patObservationWritter::patObservationWritter(folder, sampleInterval,
+					cost_function,writer_indexer) {
 
 	}
 	;
-	void end(){
+	void end() {
 		patObservationWritter::end();
-	};
-
-	void processState(const MHPath& path, const double log_weight){
-		patObservationWritter::processState(path,log_weight);
 	}
 	;
-	void start(){
+
+	void processState(const MHPath& path, const double log_weight) {
+		patObservationWritter::processState(path, log_weight);
+	}
+	;
+	void start() {
 		patObservationWritter::start();
-	};
+	}
+	;
 
 };
-
 
 #endif /* MHOBSERVATIONWRITTERWRAPPER_H_ */

@@ -39,6 +39,7 @@ private:
 	const patNode* m_destination;
 	const patRandomNumber* m_rnd;
 
+	const double m_splice_probability;
 	const double m_detour_cost_scale;
 
 	const patRouter* m_router;

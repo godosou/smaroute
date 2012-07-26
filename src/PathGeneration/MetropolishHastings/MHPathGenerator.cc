@@ -105,7 +105,12 @@ void MHPathGenerator::getNodeProbability(patRouter& router,
 				bwdCost.find(node_iter->first);
 		if (bc_iter != bwdCost.end() && bc_iter->second != DBL_MAX
 		&& node_iter->second != DBL_MAX) {
-			double cost = node_iter->second + bc_iter->second;
+			list<const patRoadBase*> sp_roads;
+			fwdTree.getShortestPathTo(sp_roads,node_iter->first);
+			bwdTree.getShortestPathTo(sp_roads,node_iter->first);
+			patMultiModalPath sp(sp_roads);
+			double cost = m_MHWeight->logWeigthOriginal(sp);
+//			double cost = node_iter->second + bc_iter->second;
 			minCost = cost < minCost ? cost : minCost;
 			proposal_probabilities[node_iter->first] = cost;
 
@@ -117,7 +122,7 @@ void MHPathGenerator::getNodeProbability(patRouter& router,
 	for (unordered_map<const patNode*, double>::iterator node_iter =
 			proposal_probabilities.begin();
 			node_iter != proposal_probabilities.end(); ++node_iter) {
-		double weight = exp(-node_iter->second + minCost); //TODO more factors
+		double weight = exp(node_iter->second - minCost); //weight
 		weightSum += weight;
 		node_iter->second = weight;
 	}
@@ -187,24 +192,36 @@ void MHPathGenerator::run(const patNode* origin, const patNode* destination) {
 				m_network->exportKML("reduced.kml");
 			}
 		}
-//		unordered_set<const patNode*> uncompressed_nodes;
-//		uncompressed_nodes.insert(origin);
-//		uncompressed_nodes.insert(destination);
-//		nc = new patNetworkCompressor(m_network,uncompressed_nodes);
-//		nc->compress(m_router_cost->getLinkCoefficients());
-//		cout << "network compressed NODE SIZE:" << (m_network->getNodeSize());
-//		cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
-		if (patNBParameters::the()->exportReducedNetwork == 1) {
-			if (m_path_writer != NULL) {
-				m_network->exportKML(
-						m_path_writer->getFileName() + "compressed.kml");
-			} else {
-
-				m_network->exportKML("compressed.kml");
-			}
-		}
 	}
 
+	unordered_set<const patNode*> uncompressed_nodes;
+	uncompressed_nodes.insert(origin);
+	uncompressed_nodes.insert(destination);
+	nc = new patNetworkCompressor(m_network,uncompressed_nodes);
+	nc->compress(m_router_cost->getLinkCoefficients());
+	cout << "network compressed NODE SIZE:" << (m_network->getNodeSize());
+	cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
+	if (patNBParameters::the()->exportReducedNetwork == 1) {
+		if (m_path_writer != NULL) {
+			m_network->exportKML(
+					m_path_writer->getFileName() + "compressed.kml");
+		} else {
+
+			m_network->exportKML("compressed.kml");
+		}
+	}
+//	nc->compress(m_router_cost->getLinkCoefficients());
+//	cout << "network compressed NODE SIZE:" << (m_network->getNodeSize());
+//	cout << " ARC SIZE:" << (m_network->getAllArcs().size()) << endl;
+//	if (patNBParameters::the()->exportReducedNetwork == 1) {
+//		if (m_path_writer != NULL) {
+//			m_network->exportKML(
+//					m_path_writer->getFileName() + "compressed_2.kml");
+//		} else {
+//
+//			m_network->exportKML("compressed_2.kml");
+//		}
+//	}
 	m_MHWeight->calculateObsScale(sp_path);
 	patRouter router(m_network, m_router_cost);
 
@@ -253,3 +270,7 @@ void MHPathGenerator::setWritterWrapper(
 		MHStateProcessor<MHPath>* writter_wrapper) {
 	m_writter_wrapper = writter_wrapper;
 }
+
+void MHPathGenerator::setSampleCount(const unsigned long& sample_count){
+	m_total_samples = sample_count;
+};
