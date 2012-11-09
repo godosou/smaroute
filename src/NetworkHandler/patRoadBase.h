@@ -59,7 +59,9 @@ public:
 	virtual int size() const=0;
 	//virtual double getAttribute(string attribute) const;
 	virtual ~patRoadBase();
-	string getArcString() const;
+	virtual string getArcString() const;
+	string getGeomText() const;
+
 protected:
 	double m_length;
 	double m_generalized_cost;

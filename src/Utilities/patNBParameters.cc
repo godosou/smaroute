@@ -306,7 +306,7 @@ void patNBParameters::init(patError*& err) {
 
 
 	intParams["exportReducedNetwork"] = &exportReducedNetwork;
-
+	intParams["mh_function_type"] = &mh_function_type;
 	strParams["choiceSetInBiogemeData"] = &choiceSetInBiogemeData;
 
 
@@ -326,6 +326,7 @@ void patNBParameters::init(patError*& err) {
 	strParams["lowSpeedAlgo"] = &lowSpeedAlgo;
 	strParams["dataDirectory"] = &dataDirectory;
 	strParams["observationDirectory"] = &observationDirectory;
+	strParams["experimentDirectory"] = &experimentDirectory;
 
 	strParams["paramFolder"] = &paramFolder;
 
@@ -366,7 +367,19 @@ void patNBParameters::init(patError*& err) {
 	realParams["mh_sb_coef"] = &mh_sb_coef;
 	realParams["mh_ps_coef"] = &mh_ps_coef;
 
+
+	realParams["ObsErrorDistanceScale"] = &ObsErrorDistanceScale;
+	realParams["ObsErrorDistance"] = &ObsErrorDistance;
+
+
+
+
 	intParams["writeBiogemeModelFile"] =&writeBiogemeModelFile;
+	intParams["mh_link_scale_relative"] =&mh_link_scale_relative;
+	strParams["mh_trigger_path"] =&mh_trigger_path;
+
+
+	intParams["compressNetwork"] =&compressNetwork;
 
 	for (map<patString, double*>::iterator realIter = realParams.begin();
 			realIter != realParams.end(); ++realIter) {

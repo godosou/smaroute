@@ -8,6 +8,8 @@
 #ifndef PATNETWORKBASE_H_
 #define PATNETWORKBASE_H_
 #include <tr1/unordered_map>
+#include <tr1/unordered_set>
+
 //#include <unordered_map>
 #include <set>
 #include "patNode.h"
@@ -16,17 +18,20 @@
 #include "patTransportMode.h"
 #include "patGeoBoundingBox.h"
 #include "patNetworkElements.h"
+class patMultiModalPath;
 using namespace std::tr1;
 class patNetworkBase {
 public:
 	patNetworkBase();
 	patNetworkBase(const patNetworkBase& other);
 	virtual patNetworkBase* clone() const=0;
+
+	virtual patNetworkBase* getSubNetwork(const patGeoBoundingBox& bb) const;
 	virtual ~patNetworkBase();
-	virtual void walkFromToStops(
-			patNetworkElements* network_elements, patNetworkBase* walk_network)=0;
- virtual void walkOnTrack(
-		patNetworkElements* network_elements, patNetworkBase* walk_network) const = 0;
+	virtual void walkFromToStops(patNetworkElements* network_elements,
+			patNetworkBase* walk_network)=0;
+	virtual void walkOnTrack(patNetworkElements* network_elements,
+			patNetworkBase* walk_network) const = 0;
 
 	/**
 	 * Get the pointer to the outgoing incidents.
@@ -84,11 +89,21 @@ public:
 
 	void removeNode(const patNode* node);
 
-	NODE_STATUS checkNodeStatus(const patNode* node) const ;
+	NODE_STATUS checkNodeStatus(const patNode* node) const;
 
-	void setOutgoingIncidents(unordered_map<const patNode*, set<const patRoadBase*> >& oi){
-		m_outgoing_incidents=oi;
+	void setOutgoingIncidents(
+			unordered_map<const patNode*, set<const patRoadBase*> >& oi) {
+		m_outgoing_incidents = oi;
 	}
+
+	const patNode* getNearestNode(const patCoordinates* geo) const;
+	unordered_map<const patNode*, double> getNearbyNodes(const patNode* center,
+			const double& distance) const;
+
+	patNetworkBase(string network_type, TransportMode transport_mode,
+			unordered_map<const patNode*, set<const patRoadBase*> >& outgoing_incidents);
+
+	patMultiModalPath recoverPath(const patMultiModalPath& path) const;
 protected:
 
 	unordered_map<const patNode*, set<const patRoadBase*> > m_outgoing_incidents;

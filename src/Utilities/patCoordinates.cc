@@ -79,3 +79,18 @@ ostream& operator<<(ostream &str, const patCoordinates& x) {
 			<< x.lonMinutes << "'" << x.lonSeconds << "\"" << x.lonOrientation;
 }
 
+
+patReal patCoordinates::getLatitude() const{
+	return latitudeInDegrees;
+}
+patReal patCoordinates::getLongitude() const{
+	return longitudeInDegrees;
+
+}
+
+string patCoordinates::getGeomText() const{
+
+	stringstream ss;
+	ss<<"'POINT("<<longitudeInDegrees<<" "<<latitudeInDegrees<<")'";
+	return ss.str();
+}

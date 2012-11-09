@@ -72,6 +72,13 @@ public:
 	bool isLinkInPath(const patArc* theArc) const;
 	bool isNodeInPath(const patNode* node) const;
 
+
+	virtual vector<const patArc*> getOriginalArcs() const;
+	vector<const patNode*> getOriginalNodes() const ;
+	void getOriginalXY(vector<double>& X, vector<double>& Y) const ;
+
+
+
 	set<const patArc*> getDistinctArcs();
 	int size() const;
 
@@ -96,6 +103,8 @@ public:
 	bool containsNodeFront(const patNode* node, int stop_index) const;
 	bool containsNodeBack(const patNode* node, int stop_index) const;
 	string getArcsString() const;
+	double distanceTo(const patNode* node) const;
+	double distanceFrom(const patArcSequence* arc_seq) const;
 	virtual void clear();
 protected:
 	vector<const patArc*> m_arcs;

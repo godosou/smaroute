@@ -6,7 +6,7 @@
  */
 
 #include "patSimulateProbabilisticPaths.h"
-
+#include "patNetworkBase.h"
 #include "patMultiModalPath.h"
 #include "patRouter.h"
 #include "MHPath.h"
@@ -14,13 +14,18 @@
 #include "patRandomNumber.h"
 #include "patNode.h"
 #include <tr1/unordered_map>
+#include <tr1/unordered_set>
+#include "patSampleDiscreteDistribution.h"
 using namespace std::tr1;
 patSimulateProbabilisticPaths::patSimulateProbabilisticPaths(
-		const patMultiModalPath& path, const patRouter* router) :
-		m_path(path), m_router(router) {
+		const patNetworkBase* network, const patRouter* router,
+		const patRandomNumber* rnd) :
+		m_rnd(rnd), m_router(router), m_network(network), m_distance_scale(
+				patNBParameters::the()->ObsErrorDistanceScale), m_obs_error_distance(
+				patNBParameters::the()->ObsErrorDistance) {
 
 }
-MHPoints patSimulateProbabilisticPaths::drawPoints(int n) {
+MHPoints patSimulateProbabilisticPaths::drawPoints(int n) const {
 	/*
 	 * (1) check
 	 */
@@ -54,43 +59,68 @@ MHPoints patSimulateProbabilisticPaths::drawPoints(int n) {
 	MHPoints new_points(us[0], us[1], us[2]);
 	return new_points;
 }
-map<patMultiModalPath, double> patSimulateProbabilisticPaths::run(unsigned int count, double error) {
+
+map<patMultiModalPath, double> patSimulateProbabilisticPaths::run(
+		const patMultiModalPath& path, const unsigned int& count,
+		const double& error) const {
 	map<patMultiModalPath, double> simulated_paths;
-	double total_simulated_proba=0.0;
-    //TODO
-//	for (unsigned int i = 0; i < count; ++i) {
-//		MHPath new_path(m_path, drawPoints(m_path.size() + 1), m_router);
-//
-//		unordered_map<const patNode*, double> node_insert_probas =
-//				new_path.getInsertProbs( 3.0);//detour_cost_scale=3.0
-//		double threshold = m_rnd->nextDouble();
-//		double sum = 0.0;
-//
-//		const patNode* insert_node;
-//		double simulated_proba = error / (double) count;
-//
-//		for (unordered_map<const patNode*, double>::const_iterator iter =
-//				node_insert_probas.begin(); iter != node_insert_probas.end();
-//				++iter) {
-//			sum += iter->second;
-//			if (sum >= threshold) {
-//				insert_node = iter->first;
-//				simulated_proba = iter->second;
-//				total_simulated_proba += iter->second;
-//			}
-//		}
-//
-//		new_path.insertDetour(insert_node);
-//
-//		patMultiModalPath simulated_path(new_path);
-//
-//		simulated_paths[simulated_path] = simulated_proba;
-//	}
-//	for (map<patMultiModalPath, double>::iterator path_iter =
-//			simulated_paths.begin(); path_iter != simulated_paths.end();
-//			++path_iter) {
-//		path_iter->second *= error/total_simulated_proba;
-//	}
+
+	double total_simulated_proba = 0.0;
+
+	unsigned int i = 0;
+	while (i < count) {
+
+		MHPath new_path(path, drawPoints(path.nbrOfNodes()), m_router);
+
+		unordered_map<const patNode*, double> nearby_nodes =
+				m_network->getNearbyNodes(new_path.getNodeB(),
+						m_obs_error_distance); //TODO 200m as radius, include it in patNBParameters
+		vector<const patNode*> nodes;
+		vector<double> probas;
+
+		for (unordered_map<const patNode*, double>::const_iterator node_iter =
+				nearby_nodes.begin(); node_iter != nearby_nodes.end();
+				++node_iter) {
+			nodes.push_back(node_iter->first);
+			double cost = -m_distance_scale * node_iter->second;
+			cout << cost << endl;
+			probas.push_back(cost);
+
+		}
+		cout << endl;
+
+		for (unsigned i = 0; i < probas.size(); ++i) {
+			probas[i] = exp(probas[i]); //TODO check the scale
+		}
+
+		unsigned int sampled = patSampleDiscreteDistribution()(probas, *m_rnd);
+		const patNode* insert_node = nodes[sampled];
+		if (new_path.containsNodeFront(insert_node, new_path.getA())
+				|| new_path.containsNodeBack(insert_node,
+						new_path.size() - new_path.getC())) {
+
+			unsigned int sampled = patSampleDiscreteDistribution()(probas,
+					*m_rnd);
+
+			const patNode* insert_node = nodes[sampled];
+		}
+
+		if (new_path.insertDetour(insert_node, nearby_nodes)
+				&& new_path != path) {
+
+			patMultiModalPath simulated_path(new_path);
+			simulated_paths[simulated_path] = probas[sampled];
+			total_simulated_proba += probas[sampled];
+			++i;
+		}
+	}
+	for (map<patMultiModalPath, double>::iterator path_iter =
+			simulated_paths.begin(); path_iter != simulated_paths.end();
+			++path_iter) {
+		path_iter->second *= error / total_simulated_proba;
+		cout << "\t path proba: " << path_iter->second << endl;
+	}
+	cout << endl;
 	return simulated_paths;
 }
 patSimulateProbabilisticPaths::~patSimulateProbabilisticPaths() {

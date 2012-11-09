@@ -280,3 +280,6 @@ void RWPathGenerator::run(const patNode* origin, const patNode* destination) {
 
 	csw.end();
 }
+void RWPathGenerator::calibrate(const patNode* origin, const patNode* destination) {
+
+}

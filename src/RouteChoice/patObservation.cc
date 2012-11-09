@@ -9,7 +9,8 @@
 #include <iomanip>
 #include <iostream>
 #include "patRandomNumber.h"
-patObservation::patObservation():m_id("") {
+patObservation::patObservation() :
+		m_id("") {
 	m_path_probas.clear();
 //	make_pair(patMultiModalPath(), 1.0);
 }
@@ -60,6 +61,7 @@ map<const patMultiModalPath, double> patObservation::getNormalizedPathProbas() c
 	for (map<const patMultiModalPath, double>::const_iterator path_iter =
 			m_path_probas.begin(); path_iter != m_path_probas.end();
 			++path_iter) {
+		cout <<path_iter->second<<endl;
 		sum += path_iter->second;
 	}
 	if (sum == 0.0) {
@@ -90,26 +92,46 @@ void patObservation::orderPathsByOD() {
 	}
 }
 
-void patObservation::addPath(const patMultiModalPath& new_path, double proba) {
-
-	m_paths.insert(new_path);
-	m_path_probas.insert(make_pair(new_path,proba));
+void patObservation::addPath(const patMultiModalPath& new_path, double proba,
+		bool replace) {
+	set<patMultiModalPath>::iterator find_path = m_paths.find(new_path);
+	map<const patMultiModalPath, double>::iterator find_proba =
+			m_path_probas.find(new_path);
+	if (find_path == m_paths.end()) {
+		if (find_proba == m_path_probas.end()) {
+			m_paths.insert(new_path);
+			m_path_probas.insert(make_pair(new_path, proba));
+		} else {
+			WARNING("PATH NOT IN m_paths in m_path_probas");
+			throw RuntimeException("PATH NOT IN m_paths in m_path_probas");
+		}
+	} else {
+		if (find_proba == m_path_probas.end()) {
+			m_path_probas.insert(make_pair(new_path, proba));
+		} else {
+			if (replace) {
+				find_proba->second = proba;
+			} else {
+				find_proba->second += proba;
+			}
+		}
 	}
+}
 
 void patObservation::sampleChoiceSet(patPathGenerator* path_generator,
 		const string obs_folder) {
 	orderPathsByOD();
 	m_choice_set.clear();
-	cout<< "paths: "<<m_paths.size()<<"; ods: "<<m_paths_by_od.size()<<endl;
 	string observation_folder = obs_folder;
 	if (observation_folder == "") {
 		observation_folder = patNBParameters::the()->observationDirectory
 				+ patNBParameters::the()->choiceSetFolder;
 	}
-	string file_name = observation_folder  + getId() + "_sample.kml";
+	string file_name = observation_folder + getId() + "_sample.kml";
 //	DEBUG_MESSAGE(file_name);
-	if (patNBParameters::the()->overwriteSampleFile==0 && ifstream((file_name).c_str())) {
-		cout<<"SKIPPED"<<endl;
+	if (patNBParameters::the()->overwriteSampleFile == 0
+			&& ifstream((file_name).c_str())) {
+		cout << "SKIPPED" << endl;
 		return;
 	}
 
@@ -123,17 +145,17 @@ void patObservation::sampleChoiceSet(patPathGenerator* path_generator,
 	{
 //#pragma omp for
 		for (unsigned int i = 0; i < ods.size(); ++i) {
-			cout<<"Start an od"<<endl;
+			cout << "Start an od" << endl;
 			path_generator->setPathWriter(&path_writer);
 			path_generator->run(ods[i].getOrigin(), ods[i].getDestination());
-			cout<<"An od is dealt with"<<endl;
+			cout << "An od is dealt with" << endl;
 		}
 	}
 	//
 	//
 
 	path_writer.close();
-	cout<<"KML written"<<endl;
+	cout << "KML written" << endl;
 }
 
 //void patObservation::putODChoiceSet(patOd od, patChoiceSet& od_choice_set) {
@@ -167,6 +189,30 @@ pair<int, int> patObservation::countChosenPathsSampled() {
 	}
 	return pair<int, int>(sampled, not_sampled);
 }
+
+double patObservation::computeChoiceSetSimilarity(const unsigned& choice_set_size){
+
+	/**
+	 * The similarity indicator is weighted among candidates.
+	 */
+	double sim=0.0;
+	double weight=0.0;
+	for (set<patMultiModalPath>::const_iterator path_iter = m_paths.begin();
+			path_iter != m_paths.end(); ++path_iter) {
+
+		double proba= m_path_probas.find(*path_iter)->second;
+		patOd od((*path_iter).getUpNode(), (*path_iter).getDownNode());
+		map<patOd, patChoiceSet>::const_iterator find_choice_set =
+				m_choice_set.find(od);
+		if (find_choice_set == m_choice_set.end()) {
+			WARNING(" no choice set is given");
+			throw RuntimeException("no choice set is given");
+		}
+		sim+=proba * find_choice_set->second.computeSimilarity(*path_iter,choice_set_size);
+		weight+=proba;
+	}
+	return sim/weight;
+}
 list<unordered_map<string, string> > patObservation::genAttributes(
 		const unsigned& choice_set_size, const patRandomNumber& rnd,
 		const patUtilityFunction* utility_function,
@@ -174,7 +220,7 @@ list<unordered_map<string, string> > patObservation::genAttributes(
 		const patChoiceSet* universal_choiceset) const {
 	map<const patMultiModalPath, double> normalized_probas =
 			getNormalizedPathProbas();
-	list < unordered_map<string, string> > attributes;
+	list<unordered_map<string, string> > attributes;
 	int i = 1;
 //	DEBUG_MESSAGE(m_paths.size()<<","<<m_choice_set.size());
 	for (set<patMultiModalPath>::const_iterator path_iter = m_paths.begin();
@@ -188,13 +234,13 @@ list<unordered_map<string, string> > patObservation::genAttributes(
 		}
 
 		const patChoiceSet* u_cs = universal_choiceset;
-		if(u_cs==NULL){
+		if (u_cs == NULL) {
 			u_cs = &(find_choice_set->second);
 		}
 		unordered_map<string, double> row_attributes =
 				find_choice_set->second.genAttributes(*path_iter,
-						utility_function, path_generator, u_cs,choice_set_size,rnd);
-		unordered_map < string, string > path_attributes;
+						utility_function, path_generator, u_cs, choice_set_size);
+		unordered_map<string, string> path_attributes;
 
 		row_attributes["AggWeight"] = m_path_probas.find(*path_iter)->second;
 		row_attributes["AggWeightNormalized"] = normalized_probas[*path_iter];
@@ -258,13 +304,65 @@ vector<int> patObservation::getUniquePathsPerOD() const {
 	return uppod;
 }
 unsigned patObservation::getNbrOfCandidates() const {
+
 	return m_paths.size();
 }
 unsigned patObservation::getNbOfOds() const {
-	return m_choice_set.size();
+
+	set<patOd> ods;
+	for (set<patMultiModalPath>::const_iterator path_iter = m_paths.begin();
+			path_iter != m_paths.end(); ++path_iter) {
+		patOd od((*path_iter).getUpNode(), (*path_iter).getDownNode());
+		ods.insert(od);
+	}
+
+	return ods.size();
 }
 
 void patObservation::setChoiceSet(map<patOd, patChoiceSet>& choice_set) {
 	m_choice_set = choice_set;
 //	DEBUG_MESSAGE(m_choice_set.size());
+}
+void patObservation::writeKML(const string& folder) const {
+
+	string file_name = folder + "/" + m_id + ".kml";
+	patKMLPathWriter kml_writer(file_name);
+
+	unsigned i = 0;
+	for (map<const patMultiModalPath, double>::const_iterator path_iter =
+			m_path_probas.begin(); path_iter != m_path_probas.end();
+			++path_iter) {
+		++i;
+		map<string, string> attrs_true;
+
+		attrs_true["id"] = boost::lexical_cast<string> (i);
+		attrs_true["proba"] = boost::lexical_cast<string>(path_iter->second);
+		kml_writer.writePath(path_iter->first, attrs_true);
+
+	}
+	kml_writer.close();
+
+}
+
+void patObservation::writeChoiceSetSHP(const string& choice_set_folder) const{
+	int i = 1;
+
+	for (set<patMultiModalPath>::const_iterator path_iter = m_paths.begin();
+			path_iter != m_paths.end(); ++path_iter) {
+		patOd od((*path_iter).getUpNode(), (*path_iter).getDownNode());
+		map<patOd, patChoiceSet>::const_iterator find_choice_set =
+				m_choice_set.find(od);
+		if (find_choice_set == m_choice_set.end()) {
+			throw RuntimeException("no choice set is given");
+		}
+		stringstream ss;
+		ss << i;
+
+		string file_path = choice_set_folder + "/"+getId() + "_" + ss.str();
+		cout<<"patObservation: write shp file"<<file_path<<endl;
+//		system(("mkdir -p \"" + file_path + "\"").c_str());
+		find_choice_set->second.exportSHP(*path_iter, file_path);
+		++i;
+	}
+
 }

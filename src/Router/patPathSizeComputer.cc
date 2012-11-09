@@ -72,7 +72,7 @@ void patPathSizeComputer::initiatePS(const set<patMultiModalPath>& choice_set) {
 	}
 }
 
-double patPathSizeComputer::computePS(const patMultiModalPath& path) {
+double patPathSizeComputer::computePS(const patMultiModalPath& path,bool not_in_set) {
 
 	vector<const patArc*> arc_list = path.getArcList();
 	double ps = 0;
@@ -90,8 +90,10 @@ double patPathSizeComputer::computePS(const patMultiModalPath& path) {
 			if (find_arc_overlap != m_arc_overlap.end()) {
 
 				ps += (*o_arc_iter)->getLength()
-						/ (pL * (double) find_arc_overlap->second);
+						/ (pL * (double) (find_arc_overlap->second+not_in_set));
 			} else {
+				ps += (*o_arc_iter)->getLength()
+						/ (pL );
 				continue;
 				//			throw RuntimeException("an arc not in path set");
 
@@ -100,9 +102,9 @@ double patPathSizeComputer::computePS(const patMultiModalPath& path) {
 		}
 	}
 	if (ps == 0.0) {
-		cout << "!!!!!!!!WRONG PS SPECIFICATION!!!!!!!!!";
+		throw RuntimeException("!!!!!!!!WRONG PS SPECIFICATION!!!!!!!!!");
 	}
-	m_path_size[path] = ps;
+	m_path_size.insert(make_pair(path,ps));
 	return ps;
 
 }
@@ -116,7 +118,7 @@ double patPathSizeComputer::getPS(const patMultiModalPath& path) {
 	if (find_path == m_path_size.end()) {
 //		cout << "\t\t path not found in ps, compute it." << endl;
 		m_ps_not_found++;
-		return computePS(path);
+		return computePS(path,true);
 	} else {
 		return find_path->second;
 	}

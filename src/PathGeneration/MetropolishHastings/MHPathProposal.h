@@ -23,7 +23,8 @@ public:
 	MHPathProposal(const patNode* origin, const patNode* destination,
 			const patRouter* router, unordered_map<const patNode*, double>& proposalProbabilities,
 			const double detour_cost_scale,
-			const patRandomNumber* rnd);
+			const patRandomNumber* rnd,
+			const patMultiModalPath& trigger_path);
 	static MHPoints drawPoints(int n, const patRandomNumber* rnd);
 	double transitionLogProb(MHPath& from_route, MHPath& to_route);
 	MHPath newInitialState();
@@ -38,7 +39,7 @@ private:
 	const patNode* m_origin;
 	const patNode* m_destination;
 	const patRandomNumber* m_rnd;
-
+	const patMultiModalPath& m_trigger_path;
 	const double m_splice_probability;
 	const double m_detour_cost_scale;
 

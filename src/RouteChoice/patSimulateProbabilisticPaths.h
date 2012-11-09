@@ -13,15 +13,20 @@ using namespace std;
 class patMultiModalPath;
 class patRouter;
 class patRandomNumber;
+class patNetworkBase;
+
 class patSimulateProbabilisticPaths {
 public:
-	patSimulateProbabilisticPaths(const patMultiModalPath& path,
-			const patRouter* router);
-	MHPoints drawPoints(int n);
-	map<patMultiModalPath,double> run(unsigned int count, double error);
+	patSimulateProbabilisticPaths(const patNetworkBase* network,
+			const patRouter* router, const patRandomNumber* rnd);
+	MHPoints drawPoints(int n) const;
+	map<patMultiModalPath, double> run(const patMultiModalPath& path,
+			const unsigned int& count, const double& error) const;
 	virtual ~patSimulateProbabilisticPaths();
 protected:
-	const patMultiModalPath& m_path;
+	const double m_distance_scale;
+	const double m_obs_error_distance;
+	const patNetworkBase* m_network;
 	const patRouter* m_router;
 	const patRandomNumber* m_rnd;
 };

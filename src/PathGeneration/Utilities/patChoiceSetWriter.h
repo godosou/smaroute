@@ -29,7 +29,8 @@ protected:
 	const patLinkAndPathCost* m_cost_function;
 	int m_sample_interval;
 //	const MHLinkAndPathCost* m_path_cost;
-	map<patMultiModalPath,pair<int, double> > m_sampled_set;
+	vector<pair<patMultiModalPath, double> >m_sampled_set;
+//	map<patMultiModalPath,pair<int, double> > m_sampled_set;
 	int m_path_count;
 };
 

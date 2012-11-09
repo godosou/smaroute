@@ -12,7 +12,7 @@
 class patReadNetworkFromOSM {
 public:
 	patReadNetworkFromOSM();
-	static void read(string file_name, patNetworkElements& network_element, patGeoBoundingBox& bb,	patError*& err);
+	static void read(string file_name, patNetworkElements& network_element, patGeoBoundingBox& bb);
 	virtual ~patReadNetworkFromOSM();
 };
 

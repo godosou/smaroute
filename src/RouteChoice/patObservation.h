@@ -36,7 +36,7 @@ public:
 
 	void orderPathsByOD();
 	pair<int, int> countChosenPathsSampled();
-	void addPath(const patMultiModalPath& new_path, double proba);
+	void addPath(const patMultiModalPath& new_path, double proba, bool replace=true);
 	void sampleChoiceSet(patPathGenerator* path_generator, const string folder);
 //	void putODChoiceSet(patOd od, patChoiceSet& od_choice_set);
 
@@ -49,9 +49,17 @@ public:
 	unsigned getNbrOfCandidates() const;
 	unsigned getNbOfOds() const;
 	void setChoiceSet(map<patOd, patChoiceSet>& choice_set);
+
+	void writeChoiceSetSHP(const string& choice_set_folder) const;
 	const map<patOd, patChoiceSet>& getChoiceSet() const{
 		return m_choice_set;
 	}
+
+/**
+ * Compute similarity indicator for paths
+ */
+	double computeChoiceSetSimilarity(const unsigned& choice_set_size);
+ void writeKML(const string& folder) const;
 protected:
 	string m_id;
 	double m_start_time;

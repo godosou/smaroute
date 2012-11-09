@@ -27,11 +27,12 @@ void patReadObservationFromKML::parseFile(string file_name,
 		throw RuntimeException("no file is given");
 
 	}
+	cout << "patReadObservationFromKML: parse file" << file_name << endl;
 	//DEBUG_MESSAGE("file loaded");
-    unsigned slash_position=file_name.rfind("/");
-    unsigned file_name_length = file_name.size()-slash_position-5;
+	unsigned slash_position = file_name.rfind("/");
+	unsigned file_name_length = file_name.size() - slash_position - 5;
 //    DEBUG_MESSAGE(file_name_length);
-	observation->setId(file_name.substr(slash_position+1,file_name_length));
+	observation->setId(file_name.substr(slash_position + 1, file_name_length));
 	xml::document &doc = parser.get_document();
 
 	xml::node root_node = doc.get_root_node();
@@ -45,7 +46,7 @@ void patReadObservationFromKML::parseFile(string file_name,
 		}
 		xml::node::iterator doc_node = root_iter;
 		//DEBUG_MESSAGE(doc_node->get_name());
-		xml::node::iterator paths_folder;
+		xml::node::iterator paths_folder = doc_node;
 		for (xml::node::iterator folder_iter = doc_node->begin();
 				folder_iter != doc_node->end(); ++folder_iter) {
 			if (folder_iter->is_text()) {
@@ -54,7 +55,7 @@ void patReadObservationFromKML::parseFile(string file_name,
 
 			if (string(folder_iter->get_name()) == string("Folder")) {
 
-				//DEBUG_MESSAGE(folder_iter->get_name());
+//				DEBUG_MESSAGE(folder_iter->get_name());
 				for (xml::node::iterator name_iter_1 = folder_iter->begin();
 						name_iter_1 != folder_iter->end(); ++name_iter_1) {
 					if (string(name_iter_1->get_content()) == string("paths")) {
@@ -64,7 +65,8 @@ void patReadObservationFromKML::parseFile(string file_name,
 				}
 			}
 		}
-		DEBUG_MESSAGE(paths_folder->get_name());
+//		DEBUG_MESSAGE(paths_folder->get_name());
+//		xml::node::iterator od_iter;
 		xml::node::iterator od_iter = paths_folder->begin();
 		for (; od_iter != paths_folder->end(); ++od_iter) {
 			if (od_iter->is_text()) {
@@ -76,18 +78,50 @@ void patReadObservationFromKML::parseFile(string file_name,
 				continue;
 			}
 
+//			bool is_od_folder=false;
+
+			bool is_od_folder = false;
+			for (xml::node::iterator name_iter_od = od_iter->begin();
+					name_iter_od != od_iter->end(); ++name_iter_od) {
+				if (string(name_iter_od->get_name()) == string("name")) {
+					string folder_name(name_iter_od->get_content());
+//					cout << folder_name << endl;
+					if (folder_name.find(string("DDR")) == string::npos
+							&& folder_name.find(string("GPS"))
+									== string::npos) {
+						is_od_folder = true;
+//						cout << "is od folder" << endl;
+						break;
+					}
+				}
+			}
+
+			if (!is_od_folder) {
+				continue;
+			}
 			for (xml::node::iterator path_iter = od_iter->begin();
 					path_iter != od_iter->end(); ++path_iter) {
+				//DEBUG_MESSAGE(path_iter->get_name());
+//				if (path_iter->is_text()
+//						&& (string(path_iter->get_content()) == string("DDR")
+//								|| string(path_iter->get_content())
+//										== string("GPS"))) {
+//					DEBUG_MESSAGE("skip "<<path_iter->get_content()<<" folder");
+//					is_od_folder==false;
+//					break;
+//				}
+//				is_od_folder=true;
 				if (path_iter->is_text()) {
 					continue;
 				}
-				//DEBUG_MESSAGE(path_iter->get_name());
+
 				if (string(path_iter->get_name()) != string("Folder")) {
 					continue;
 				}
+
 //				DEBUG_MESSAGE("new path");
 				patMultiModalPath new_path;
-				bool zero_proba_path=false;
+				bool zero_proba_path = false;
 				double proba = 0.0;
 				double normalized_proba = 0.0;
 				for (xml::node::iterator placemark_iter = path_iter->begin();
@@ -106,17 +140,50 @@ void patReadObservationFromKML::parseFile(string file_name,
 									"no path proba info for path");
 						} else {
 //							DEBUG_MESSAGE(desc_str);
-							sregex rex = sregex::compile("ts: (\\d+\\.?\\d*?e?[\\-\\+]?\\d*?)\\((\\d+\\.?\\d*?e?[\\-\\+]?\\d*?)\\)");
+							sregex rex =
+									sregex::compile(
+											"ts: (\\d+\\.?\\d*?e?[\\-\\+]?\\d*?)\\((\\d+\\.?\\d*?e?[\\-\\+]?\\d*?)\\)");
 							smatch what;
 							if (regex_search(desc_str, what, rex)) {
-								//DEBUG_MESSAGE(what[1].str());
+								DEBUG_MESSAGE(what[1].str());
 								proba = atof(what[1].str().c_str());
 								normalized_proba = atof(what[2].str().c_str());
 //								DEBUG_MESSAGE(proba<<","<<normalized_proba);
 								if (proba == 0.0) {
-									zero_proba_path=true;
-									DEBUG_MESSAGE("ZERO PROBA");
+									zero_proba_path = true;
+//									DEBUG_MESSAGE("ZERO PROBA");
 									break;
+								}
+							} else {
+
+								sregex rex_2 = sregex::compile(
+										"proba: ([\\-\\+]?\\d+\\.\\d+)");
+								smatch what_2;
+								if (regex_search(desc_str, what_2, rex_2)) {
+//									DEBUG_MESSAGE(what_2[1]);
+									proba = atof(what_2[1].str().c_str());
+									//								DEBUG_MESSAGE(proba<<","<<normalized_proba);
+									if (proba == 0.0) {
+										zero_proba_path = true;
+										//									DEBUG_MESSAGE("ZERO PROBA");
+										break;
+									}
+								} else {
+
+									sregex rex_3 =
+											sregex::compile(
+													"proba: ([\\-\\+]?\\d+\\.\\d+e[\\-\\+]?\\d+)");
+									smatch what_3;
+									if (regex_search(desc_str, what_3, rex_3)) {
+										DEBUG_MESSAGE(what_3[1]);;
+										proba = atof(what_3[1].str().c_str());
+										//								DEBUG_MESSAGE(proba<<","<<normalized_proba);
+										if (proba == 0.0) {
+											zero_proba_path = true;
+											//									DEBUG_MESSAGE("ZERO PROBA");
+											break;
+										}
+									}
 								}
 							}
 						}
@@ -159,20 +226,19 @@ void patReadObservationFromKML::parseFile(string file_name,
 														down_node_id);
 										if (up_node == NULL) {
 											WARNING(
-													"node not found: " << up_node_id );
+													"node not found: " << up_node_id);
 											throw RuntimeException(
 													"node not found");
 										}
 										if (down_node == NULL) {
 											WARNING(
-													"node not found: " << down_node_id );
+													"node not found: " << down_node_id);
 											throw RuntimeException(
 													"node not found");
 										}
 										const patArc* new_arc =
 												m_network->findArcByNodes(
-														up_node,
-														down_node);
+														up_node, down_node);
 										if (new_arc == NULL) {
 											WARNING(
 													"arc not found: " << up_node_id << "-" << down_node_id);
@@ -187,9 +253,9 @@ void patReadObservationFromKML::parseFile(string file_name,
 														"not valid path");
 											}
 										}
-									}
-									else{
-										throw RuntimeException("not valid link");
+									} else {
+										throw RuntimeException(
+												"not valid link");
 									}
 
 								}
@@ -198,7 +264,8 @@ void patReadObservationFromKML::parseFile(string file_name,
 						}
 					}
 				}
-				if(zero_proba_path){
+				if (zero_proba_path) {
+					cout << "zero proba path" << endl;
 					continue;
 				}
 
@@ -208,7 +275,9 @@ void patReadObservationFromKML::parseFile(string file_name,
 				observation->addPath(new_path, proba);
 //				DEBUG_MESSAGE("done");
 			}
-
+//			if(is_od_folder==false){
+//				break;
+//			}
 		}
 
 	}

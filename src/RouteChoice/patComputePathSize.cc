@@ -44,6 +44,49 @@ unordered_map<const patArc*, int> patComputePathSize::getOverlap(
 	return arc_overlap;
 }
 
+double patComputePathSize::computeMeanSimilarity(
+		const set<patMultiModalPath>& choice_set) const {
+
+	unordered_map<const patArc*, int> arc_overlap = getOverlap(choice_set);
+	map<const patMultiModalPath, double> sim_set = computeSimilarity(choice_set,
+			arc_overlap);
+
+	double sim=0.0;
+	for (map<const patMultiModalPath, double>::const_iterator path_iter =
+			sim_set.begin(); path_iter != sim_set.end(); ++path_iter) {
+		sim+=path_iter->second;
+	}
+	return sim/(double)sim_set.size();
+}
+map<const patMultiModalPath, double> computeSimilarity(
+		const set<patMultiModalPath>& choice_set,
+		const unordered_map<const patArc*, int>& arc_overlap) const {
+
+	map<const patMultiModalPath, double> sim_set;
+
+	for (set<patMultiModalPath>::const_iterator path_iter = choice_set.begin();
+			path_iter != choice_set.end(); ++path_iter) {
+
+		vector<const patArc*> arc_list = (*path_iter).getArcList();
+		double ps = 0;
+		double pL = (*path_iter).getLength();
+
+		for (vector<const patArc*>::const_iterator arc_iter = arc_list.begin();
+				arc_iter != arc_list.end(); ++arc_iter) {
+			unordered_map<const patArc*, int>::const_iterator find_arc_overlap =
+					arc_overlap.find(*arc_iter);
+			if (find_arc_overlap == arc_overlap.end()) {
+				throw RuntimeException("an arc not in path set");
+			} else {
+				ps += (*arc_iter)->getLength() * find_arc_overlap->second
+						/ (pL);
+
+			}
+		}
+		sim_set[(*path_iter)] = ps;
+	}
+	return sim_set;
+}
 map<const patMultiModalPath, double> patComputePathSize::computePS(
 		const set<patMultiModalPath>& choice_set,
 		const unordered_map<const patArc*, int>& arc_overlap) const {

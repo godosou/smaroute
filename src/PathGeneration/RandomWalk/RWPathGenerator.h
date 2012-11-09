@@ -39,7 +39,7 @@ public:
 			const patShortestPathTreeGeneral* sp_tree,patChoiceSetWriter& csw) ;
 	double calculatePathLogWeight(const patMultiModalPath& path) const;
 	void run(const patNode* origin, const patNode* destination) ;
-
+	virtual void calibrate(const patNode* origin, const patNode* destination) ;
 	virtual ~RWPathGenerator();
 protected:
 

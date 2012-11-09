@@ -115,7 +115,7 @@ bool patShortestPathGeneral::buildShortestPathTree(set<const patNode*> root_node
 									+ road_cost);
 					if (shortest_path_tree.getLabel(down_node)
 							< minimum_label) {
-						WARNING("NEGATIVE CYCLE DETECTED");
+						WARNING("NEGATIVE CYCLE DETECTED:"<<shortest_path_tree.getLabel(down_node)<<","<<minimum_label);
 						return false;
 					}
 					shortest_path_tree.setPredecessor(down_node,

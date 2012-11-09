@@ -16,9 +16,10 @@ using namespace std;
 class patPostGISDataType {
 public:
 	patPostGISDataType();
-	static pair<double,double> PointToLonLat(string lat_lon_string);
+	static vector<pair<double, double> > MultiLineToString(string line_string);
+	static pair<double, double> PointToLonLat(string lat_lon_string);
 	static list<unsigned long> IntArrayToULongList(string str);
-	static unordered_map<string,string> hstoreToMap(string str);
+	static unordered_map<string, string> hstoreToMap(string str);
 	virtual ~patPostGISDataType();
 };
 

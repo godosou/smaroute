@@ -7,13 +7,15 @@
 
 #include "MHPathProposal.h"
 #include "patTimeFunctions.h"
+#include "patKMLPathWriter.h"
 MHPathProposal::MHPathProposal(const patNode* origin,
 		const patNode* destination, const patRouter* router,
 		unordered_map<const patNode*, double>& proposalProbabilities,
-		const double detour_cost_scale, const patRandomNumber* rnd) :
+		const double detour_cost_scale, const patRandomNumber* rnd,
+		const patMultiModalPath& trigger_path) :
 		m_origin(origin), m_destination(destination), m_proposalProbabilities(
 				proposalProbabilities), m_detour_cost_scale(detour_cost_scale), m_rnd(
-				rnd), m_router(router) ,m_splice_probability(0.8){
+				rnd), m_router(router), m_splice_probability(0.8),m_trigger_path(trigger_path) {
 	if (origin == NULL) {
 		throw IllegalArgumentException("origin is NULL");
 	}
@@ -98,6 +100,10 @@ double MHPathProposal::transitionLogProb(MHPath& from_route, MHPath& to_route,
 				 * point b -- a feasible SPLICE must have occurred because
 				 * shuffle-b-only is not allowed
 				 */
+//				cout << to_route.getNodeB()->getUserId() << endl;
+//				cout
+//						<< m_proposalProbabilities.find(to_route.getNodeB())->second
+//						<< endl;
 				return log(m_splice_probability)
 						+ log(
 								m_proposalProbabilities.find(
@@ -130,14 +136,52 @@ double MHPathProposal::transitionLogProb(MHPath& from_route, MHPath& to_route) {
 	}
 }
 MHPath MHPathProposal::newInitialState() {
-	patMultiModalPath new_path = m_router->bestRouteFwd(m_origin,
-			m_destination);
+	patMultiModalPath new_path = m_trigger_path;
 //	cout<<"shortest path:"<<new_path.getLength()<<endl;
-	//	DEBUG_MESSAGE("nbr of nodes" << new_path.nbrOfNodes());
+//	DEBUG_MESSAGE("nbr of nodes" << new_path.nbrOfNodes());
 	MHPoints points = drawPoints(new_path.nbrOfNodes(), m_rnd);
+
 	MHPath mh_path(new_path, points, m_router);
+	cout<<"MHPathProposal: node proba size:"<<m_proposalProbabilities.size()<<endl;
+
+	while (m_proposalProbabilities.find(mh_path.getNodeA())
+			== m_proposalProbabilities.end()
+			|| m_proposalProbabilities.find(mh_path.getNodeB())
+					== m_proposalProbabilities.end()
+			|| m_proposalProbabilities.find(mh_path.getNodeC())
+					== m_proposalProbabilities.end()) { //FIXME sth wrong in compressed arc?
+		if (m_proposalProbabilities.find(mh_path.getNodeA())
+				== m_proposalProbabilities.end()) {
+
+			cout << "MHPathProposal: wrong initial points A"<<mh_path.getNodeA()->getUserId() << endl;
+		}
+		if (m_proposalProbabilities.find(mh_path.getNodeB())
+				== m_proposalProbabilities.end()) {
+
+			cout << "MHPathProposal: wrong initial points B"<<mh_path.getNodeB()->getUserId() << endl;
+		}
+		if (m_proposalProbabilities.find(mh_path.getNodeC())
+				== m_proposalProbabilities.end()) {
+
+			cout << "MHPathProposal: wrong initial points C"<<mh_path.getNodeC()->getUserId() << endl;
+		}
+		cout<< m_origin->getUserId()<<"-"<<m_destination->getUserId()<<endl;
+		cout << "MHPathProposal: wrong initial points" << endl;
+		exit(-1);
+		points = drawPoints(new_path.nbrOfNodes(), m_rnd);
+		MHPath new_mh_path(new_path, points, m_router);
+		mh_path = new_mh_path;
+	}
+	stringstream ss;
+	ss<<"init"<<mh_path.getUpNode()->getUserId()<<"_"<<mh_path.getDownNode()->getUserId()<<".kml";
+	patKMLPathWriter sp_writer(ss.str());
+	map < string, string > attr;
+	sp_writer.writePath(mh_path, attr);
+	sp_writer.close();
+
 //	 mh_path.update(m_proposalProbabilities);
 //	 mh_path.drawPoints(m_rnd);
+	cout<<"initiated"<<endl;
 	return mh_path;
 }
 
@@ -152,7 +196,10 @@ const patNode* MHPathProposal::drawInsertNode() {
 			return iter->first;
 		}
 	}
-	throw RuntimeException("no node is selected");
+	stringstream ss;
+	ss << "MHPathProposal: no node is selected";
+	ss << sum << "," << threshold;
+	throw RuntimeException(ss.str().c_str());
 	return NULL;
 }
 //int tran_count = 0;
@@ -173,8 +220,9 @@ MHTransition<MHPath> MHPathProposal::newTransition(MHPath& from_route) {
 	MHPath to_route;
 	bool splice_flag = false;
 
-	//	double start_time = getMillisecond();
-	if (m_rnd->nextDouble() < m_splice_probability && from_route.isSpliceable()) {
+//	double start_time = getMillisecond();
+	if (m_rnd->nextDouble() < m_splice_probability
+			&& from_route.isSpliceable()) {
 		//		splice_count++;
 		//		double isspliceable_t = getMillisecond();
 		//		isspliceable_time += (isspliceable_t - start_time);
@@ -203,7 +251,7 @@ MHTransition<MHPath> MHPathProposal::newTransition(MHPath& from_route) {
 				//			double insert_detour_t = getMillisecond();
 				//			insert_detour_time += (insert_detour_t - draw_insert_t);
 
-				if (proposal_route.containLoop()!=NULL) {
+				if (proposal_route.containLoop() != NULL) {
 //					cout<< "contain loop"<<endl;
 					//				DEBUG_MESSAGE("CONTAIN LOOP");
 					//				double detect_loop_t = getMillisecond();
@@ -242,40 +290,40 @@ MHTransition<MHPath> MHPathProposal::newTransition(MHPath& from_route) {
 		//		set_points_time += (set_points_t - isspliceable_t);
 
 	}
-	//	double finish_operation_t =  getMillisecond();
+//	double finish_operation_t =  getMillisecond();
 	double fwdLogProb = transitionLogProb(from_route, to_route, splice_flag);
 	double bwdLogProb = transitionLogProb(to_route, from_route, splice_flag);
-	//
-	//	double cal_transition_proba_t =  getMillisecond();
-	//	if (splice_flag){
-	//		cal_transition_proba_splice_time+=(cal_transition_proba_t-finish_operation_t);
-	//	}
-	//	else{
-	//		cal_transition_proba_shuffle_time+=(cal_transition_proba_t-finish_operation_t);
-	//	}
-	//	if ((shuffle_count + splice_count) % 50000 == 0) {
-	//		DEBUG_MESSAGE(
-	//				"shuffle " << shuffle_count << " splice: " << splice_count);
-	//		DEBUG_MESSAGE("\t isspliceable_time" << isspliceable_time);
-	//		DEBUG_MESSAGE("shuffle ");
-	//		DEBUG_MESSAGE(
-	//				"\t set points \t " << set_points_time << "\t sp updated");
-	//		DEBUG_MESSAGE(
-	//				"\t calculate proba \t " << cal_transition_proba_shuffle_time << "\t calculate transition proba");
-	//		DEBUG_MESSAGE("splice ");
-	//		DEBUG_MESSAGE(
-	//				"\t insert proba \t " << cal_insert_time << "\t calculate insert proba");
-	//		DEBUG_MESSAGE(
-	//				"\t draw node \t " << draw_insert_time << "\t draw insert node");
-	//		DEBUG_MESSAGE(
-	//				"\t insert detour \t " << insert_detour_time << "\t insert detour with node");
-	//		DEBUG_MESSAGE(
-	//				"\t detect loop \t " << detect_loop_time << "\t detect loop");
-	//		DEBUG_MESSAGE(
-	//				"\t calculate proba \t " << cal_transition_proba_splice_time << "\t calculate transition proba");
-	//	}
-	//	DEBUG_MESSAGE("operation done");
-	//DEBUG_MESSAGE("probas" << fwdLogProb << "," << bwdLogProb);
+//
+//	double cal_transition_proba_t =  getMillisecond();
+//	if (splice_flag){
+//		cal_transition_proba_splice_time+=(cal_transition_proba_t-finish_operation_t);
+//	}
+//	else{
+//		cal_transition_proba_shuffle_time+=(cal_transition_proba_t-finish_operation_t);
+//	}
+//	if ((shuffle_count + splice_count) % 50000 == 0) {
+//		DEBUG_MESSAGE(
+//				"shuffle " << shuffle_count << " splice: " << splice_count);
+//		DEBUG_MESSAGE("\t isspliceable_time" << isspliceable_time);
+//		DEBUG_MESSAGE("shuffle ");
+//		DEBUG_MESSAGE(
+//				"\t set points \t " << set_points_time << "\t sp updated");
+//		DEBUG_MESSAGE(
+//				"\t calculate proba \t " << cal_transition_proba_shuffle_time << "\t calculate transition proba");
+//		DEBUG_MESSAGE("splice ");
+//		DEBUG_MESSAGE(
+//				"\t insert proba \t " << cal_insert_time << "\t calculate insert proba");
+//		DEBUG_MESSAGE(
+//				"\t draw node \t " << draw_insert_time << "\t draw insert node");
+//		DEBUG_MESSAGE(
+//				"\t insert detour \t " << insert_detour_time << "\t insert detour with node");
+//		DEBUG_MESSAGE(
+//				"\t detect loop \t " << detect_loop_time << "\t detect loop");
+//		DEBUG_MESSAGE(
+//				"\t calculate proba \t " << cal_transition_proba_splice_time << "\t calculate transition proba");
+//	}
+//	DEBUG_MESSAGE("operation done");
+//DEBUG_MESSAGE("probas" << fwdLogProb << "," << bwdLogProb);
 	MHTransition<MHPath> path(from_route, to_route, fwdLogProb, bwdLogProb);
 	return path;
 }

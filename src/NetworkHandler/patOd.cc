@@ -20,13 +20,13 @@ ostream& operator<<(ostream& str, const patOd& x) {
  operator for comparing paths
  */
 bool operator<(const patOd& od1, const patOd& od2) {
-	if (od1.orig->userId < od2.orig->userId) {
+	if (od1.orig->getUserId() < od2.orig->getUserId()) {
 		return true;
 	}
-	if (od1.orig->userId > od2.orig->userId) {
+	if (od1.orig->getUserId() > od2.orig->getUserId()) {
 		return false;
 	}
-	return (od1.dest->userId < od2.dest->userId);
+	return (od1.dest->getUserId() < od2.dest->getUserId());
 }
 
 /*

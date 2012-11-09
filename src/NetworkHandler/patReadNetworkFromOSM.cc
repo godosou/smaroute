@@ -10,7 +10,6 @@
 #include <xmlwrapp/xmlwrapp.h>
 #include <sstream>
 #include "patException.h"
-#include "patError.h"
 patReadNetworkFromOSM::patReadNetworkFromOSM() {
 	// TODO Auto-generated constructor stub
 
@@ -21,7 +20,7 @@ patReadNetworkFromOSM::~patReadNetworkFromOSM() {
 }
 
  void patReadNetworkFromOSM::read(string file_name,
-		patNetworkElements& network_element, patGeoBoundingBox& bb,	patError*& err
+		patNetworkElements& network_element, patGeoBoundingBox& bb
 ) {
 	 DEBUG_MESSAGE("Read "<<file_name);
 	xml::init xmlinit;
@@ -31,7 +30,7 @@ patReadNetworkFromOSM::~patReadNetworkFromOSM() {
 	if (!parser) {
 		stringstream str;
 		str << "Error while parsing " << file_name;
-		WARNING(str.str());
+		cout<<str.str();
 		throw RuntimeException(str.str().c_str());
 	}
 
@@ -146,7 +145,7 @@ patReadNetworkFromOSM::~patReadNetworkFromOSM() {
 			patNode new_node(id, lat, lon);
 			new_node.setTags(node_tags);
 			new_node.setName(name);
-			network_element.addNode(id, new_node, err);
+			network_element.addNode(id, new_node);
 //			if (err != NULL) {
 //				stringstream str;
 //				str << "Node " << new_node << " not added to the network";
@@ -215,7 +214,7 @@ patReadNetworkFromOSM::~patReadNetworkFromOSM() {
 			}
 			if (!nodes.empty()) {
 				patWay new_way = patWay(id, tags);
-				network_element.addWay(&new_way, nodes, err);
+				network_element.addWay(&new_way, nodes);
 			}
 		} else {
 

@@ -312,6 +312,10 @@ bool MHPath::insertDetour(const patNode* nodeB,
 	m_points = new_points;
 //	cout<<"new proposal"<<getArcString()<<endl;
 //	update(proposalProbabilities);
+	if (nodeB!=getNodeB()){
+		throw RuntimeException("MHPath: wrong node B");
+	}
+
 	return true;
 }
 void MHPath::update(

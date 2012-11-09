@@ -20,7 +20,7 @@ using kmldom::CoordinatesPtr;
 using kmldom::KmlFactory;
 using kmldom::LineStringPtr;
 using kmldom::PlacemarkPtr;
-patArc::patArc(){
+patArc::patArc() {
 
 }
 patArc::patArc(unsigned long theId, const patNode* theUpNode,
@@ -187,7 +187,11 @@ vector<PlacemarkPtr> patArc::getArcKML(string mode) const {
 	line_string->set_coordinates(coordinates); // point takes ownership
 
 	PlacemarkPtr placemark = factory->CreatePlacemark();
-	placemark->set_name(getName());
+	placemark->set_name(
+			boost::lexical_cast<string>(getName())
+					+ boost::lexical_cast<string>(getUpNode()->getUserId())
+					+ "-"
+					+ boost::lexical_cast<string>(getDownNode()->getUserId()));
 	ss << *this;
 	placemark->set_description(ss.str());
 	placemark->set_styleurl("#" + mode);
@@ -280,59 +284,100 @@ map<string, double> patArc::distanceTo(const patNode* a_node) const {
 }
 
 double patArc::getAttribute(ARC_ATTRIBUTES_TYPES attribute_name) const {
-    switch (attribute_name) {
-        case ENUM_LENGTH:
-            return m_length;
-            break;
-        case ENUM_SPEED_BUMP:
-        {
-            unordered_map<string, string>::const_iterator find_sb = m_tags.find("speed_bump");
-            if (find_sb != m_tags.end() && find_sb->second == "yes") {
-                return 1.0;
-            } else {
-                return 0.0;
-            }
-        }   break;
+	switch (attribute_name) {
+	case ENUM_LENGTH:
+		return m_length;
+		break;
+	case ENUM_SPEED_BUMP: {
+		unordered_map<string, string>::const_iterator find_sb = m_tags.find(
+				"speed_bump");
+		if (find_sb != m_tags.end() && find_sb->second == "yes") {
+			return 1.0;
+		} else {
+			return 0.0;
+		}
+	}
+		break;
 
-        case ENUM_TRAFFIC_SIGNAL:
-        {
-            if (getDownNode()->hasTrafficSignal()) {
-                return 1.0;
-            } else {
-                return 0.0;
-            }
-        }   break;
-        default:
-            throw RuntimeException("Non valid attribute");
-            return 0.0;
-    }
+	case ENUM_TRAFFIC_SIGNAL: {
+		if (getDownNode()->hasTrafficSignal()) {
+			return 1.0;
+		} else {
+			return 0.0;
+		}
+	}
+		break;
+	case ENUM_MOTORWAY_LENGTH: {
+		return getMotorWayLength();
+
+	}
+		break;
+	case ENUM_TRUNK_LENGTH: {
+		return getTrunkLength();
+
+	}
+		break;
+	case ENUM_PRIMARYWAY_LENGTH: {
+		return getPrimaryWayLength();
+
+	}
+		break;
+	case ENUM_SECONDARYWAY_LENGTH: {
+		return getSecondaryWayLength();
+
+	}
+		break;
+	case ENUM_TERTIARYWAY_LENGTH: {
+		return getTertiaryWayLength();
+
+	}
+		break;
+	default:
+		throw RuntimeException("Non valid attribute");
+		return 0.0;
+	}
 
 }
 
 void patArc::setTags(const unordered_map<string, string>& tags) {
 	m_tags = tags;
 }
-string patArc::getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name){
-    switch (type_name) {
-        case ENUM_LENGTH:
-            return "length";
-            break;
-        case ENUM_SPEED_BUMP:
-return "speed_bump";
-            break;
+string patArc::getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name) {
+	switch (type_name) {
+	case ENUM_LENGTH:
+		return "length";
+		break;
+	case ENUM_SPEED_BUMP:
+		return "speed_bump";
+		break;
 
-        case ENUM_TRAFFIC_SIGNAL:
-return "traffic_signal";
-            break;
-        default:
-            throw RuntimeException("Non valid attribute");
-    }
+	case ENUM_MOTORWAY_LENGTH:
+		return "motorway_length";
+		break;
+	case ENUM_TRUNK_LENGTH:
+		return "trunkway_length";
+		break;
 
+	case ENUM_PRIMARYWAY_LENGTH:
+		return "primaryway_length";
+		break;
+	case ENUM_SECONDARYWAY_LENGTH:
+		return "secondaryway_length";
+		break;
+	case ENUM_TERTIARYWAY_LENGTH:
+		return "tertiaryway_length";
+		break;
+	case ENUM_TRAFFIC_SIGNAL:
+		return "traffic_signal";
+		break;
+	default:
+		throw RuntimeException("Non valid attribute");
+	}
 
 }
 
-
-double patArc::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef){
+double patArc::computeGeneralizedCost(
+		const map<ARC_ATTRIBUTES_TYPES, double>& link_coef) {
 	m_generalized_cost = 0.0;
 	for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator a_iter =
 			link_coef.begin(); a_iter != link_coef.end(); ++a_iter) {
@@ -343,14 +388,158 @@ double patArc::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& l
 		}
 	}
 
+	if (m_generalized_cost == 0.0) {
+		cout << "patArc: zero generalized cost" << endl;
+		for (map<ARC_ATTRIBUTES_TYPES, double>::const_iterator a_iter =
+				link_coef.begin(); a_iter != link_coef.end(); ++a_iter) {
+			if (a_iter->second != 0.0) {
+
+				cout << a_iter->first << "," << getAttribute(a_iter->first)
+						<< endl;
+			}
+		}
+
+	}
 	return m_generalized_cost;
 //	DEBUG_MESSAGE(m_generalized_cost);
 }
 
-vector<const patArc*>  patArc::getOriginalArcList() const{
+vector<const patArc*> patArc::getOriginalArcList() const {
 	return getArcList();
 }
-void patArc::genArcString(){
-	m_arc_string = boost::lexical_cast<string>(getUserId())+string(";");
+void patArc::genArcString() {
+	m_arc_string = boost::lexical_cast<string>(getUserId()) + string(";");
 //	cout<<"arc:"<<getArcString()<<endl;
+}
+
+bool patArc::isPrimaryWay() const {
+
+	unordered_map<string, string>::const_iterator find_highway_tag =
+			m_tags.find("highway");
+	if (find_highway_tag != m_tags.end()) {
+		if (find_highway_tag->second.find("primary") != string::npos) {
+//			DEBUG_MESSAGE( find_highway_tag->second);
+			return true;
+		}
+	}
+	return false;
+
+}
+
+bool patArc::isSecondaryWay() const {
+
+	unordered_map<string, string>::const_iterator find_highway_tag =
+			m_tags.find("highway");
+	if (find_highway_tag != m_tags.end()) {
+		if (find_highway_tag->second.find("secondary") != string::npos) {
+			return true;
+		}
+	}
+	return false;
+
+}
+
+bool patArc::isTertiaryWay() const {
+
+	unordered_map<string, string>::const_iterator find_highway_tag =
+			m_tags.find("highway");
+	if (find_highway_tag != m_tags.end()) {
+		if (find_highway_tag->second.find("tertiary") != string::npos) {
+			return true;
+		}
+	}
+	return false;
+
+}
+
+bool patArc::isTrunk() const {
+
+	unordered_map<string, string>::const_iterator find_highway_tag =
+			m_tags.find("highway");
+	if (find_highway_tag != m_tags.end()) {
+		if (find_highway_tag->second.find("trunk") != string::npos) {
+			return true;
+		}
+	}
+	return false;
+
+}
+bool patArc::isMotorWay() const {
+
+	unordered_map<string, string>::const_iterator find_highway_tag =
+			m_tags.find("highway");
+	if (find_highway_tag != m_tags.end()) {
+		if (find_highway_tag->second.find("motorway") != string::npos) {
+			return true;
+		}
+	}
+	return false;
+}
+double patArc::getMotorWayLength() const {
+
+	double motorway_length(0.0);
+	const vector<const patArc*> arcs = getOriginalArcList();
+
+	for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
+			arc_iter != arcs.end(); ++arc_iter) {
+		if ((*arc_iter)->isMotorWay()) {
+			motorway_length += getLength();
+		}
+	}
+	return motorway_length;
+}
+double patArc::getTrunkLength() const {
+
+	double motorway_length(0.0);
+	const vector<const patArc*> arcs = getOriginalArcList();
+
+	for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
+			arc_iter != arcs.end(); ++arc_iter) {
+		if ((*arc_iter)->isTrunk()) {
+			motorway_length += getLength();
+		}
+	}
+	return motorway_length;
+}
+
+double patArc::getPrimaryWayLength() const {
+
+	double motorway_length(0.0);
+	const vector<const patArc*> arcs = getOriginalArcList();
+
+	for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
+			arc_iter != arcs.end(); ++arc_iter) {
+		if ((*arc_iter)->isPrimaryWay()) {
+//			DEBUG_MESSAGE(getLength());
+			motorway_length += getLength();
+		}
+	}
+	return motorway_length;
+}
+
+double patArc::getSecondaryWayLength() const {
+
+	double motorway_length(0.0);
+	const vector<const patArc*> arcs = getOriginalArcList();
+
+	for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
+			arc_iter != arcs.end(); ++arc_iter) {
+		if ((*arc_iter)->isSecondaryWay()) {
+			motorway_length += getLength();
+		}
+	}
+	return motorway_length;
+}
+double patArc::getTertiaryWayLength() const {
+
+	double motorway_length(0.0);
+	const vector<const patArc*> arcs = getOriginalArcList();
+
+	for (vector<const patArc*>::const_iterator arc_iter = arcs.begin();
+			arc_iter != arcs.end(); ++arc_iter) {
+		if ((*arc_iter)->isTertiaryWay()) {
+			motorway_length += getLength();
+		}
+	}
+	return motorway_length;
 }

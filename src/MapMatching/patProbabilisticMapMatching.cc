@@ -149,6 +149,7 @@ void patProbabilisticMapMatching::run(patError*& err) {
 			fail_iter=0;
 			inter_data.clear();
 			if (patNBParameters::the()->printKMLEveryIteration == 1) {
+//				DEBUG_MESSAGE("KML file writen to"<<m_file_name);
 				mm_iteration.writeKML(m_file_name, i);
 			}
 			if (i == m_observations.m_gps_sequence->size() - 1) {

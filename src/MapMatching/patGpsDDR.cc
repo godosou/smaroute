@@ -40,7 +40,7 @@ patGpsDDR::patGpsDDR(patGpsPoint* the_gps) :
 	m_distance_threshold_loc = m_horizon_accuracy
 			* sqrt(-2 * log(m_min_point_ddr));
 
-	DEBUG_MESSAGE(m_distance_threshold_loc);
+//	DEBUG_MESSAGE(m_distance_threshold_loc);
 }
 
 patGpsDDR::~patGpsDDR() {

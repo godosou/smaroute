@@ -32,26 +32,23 @@ public:
 	 * Add a node to the network.
 	 * @param the_id the identifier of the node.
 	 * @param the node The reference to the node.
-	 * @param err The error pointer.
 	 *
 	 * @return True if adding is successful; False otherwise;
 	 */
-	bool addNode(unsigned long the_id, patNode& the_node, patError*& err);
+	patNode* addNode(unsigned long the_id, patNode& the_node);
 
 	/**
 	 * Add a way to the network.
 	 * Ways, defined by OSM, are a connection of straight arcs.
 	 * @param the_way The pointer to the way;
 	 * @param the_list_of_nodes_ids. The list of the ids of the nodes i the way;
-	 * @param err. Error;
 	 *
 	 * @return True if adding is successful; False otherwise;
 	 */
-	bool addWay(patWay* the_way, list<unsigned long> the_list_of_nodes_ids,
-			patError*& err);
+	bool addWay(patWay* the_way, list<unsigned long> the_list_of_nodes_ids);
 	bool addProcessedWay(patWay& the_way,
 			list<unsigned long> the_list_of_nodes_ids, unsigned long source,
-			unsigned long target, patError*& err);
+			unsigned long target);
 	/**
 	 * Get the pointer to the way sets;
 	 * @return A pointer to the ways member variable containing all the ways in the network;
@@ -67,45 +64,38 @@ public:
 	 * @param upNode The up node of the new arc;
 	 * @param downNode the down node of the new arc;
 	 * @param theWay The way that contains the arc;
-	 * @param err Error pointer
 	 * @see patArc::patArc
 	 *
 	 *
 	 * @return Pointer to the new arc;
 	 */
 	patArc* addArc(const patNode* upNode, const patNode* downNode,
-			patWay* theWay, patError*& err);
+			patWay* theWay);
 
-	patPublicTransportSegment* addPTSegment(patPublicTransportSegment* ptSeg,
-			patError*& err);
+	patPublicTransportSegment* addPTSegment(patPublicTransportSegment* ptSeg);
 	/**
 	 * Read the network from postgresql database given bounding_box;
 	 * @param bounding_box The bounding box of the network.
-	 * @param err Error pointer
 	 * @see readNodesFromPostGreSQL
 	 * @see readWaysFromPostGreSQL
 	 */
-	void readNetworkFromPostGreSQL(patGeoBoundingBox bounding_box,
-			patError*& err);
+	void readNetworkFromPostGreSQL(patGeoBoundingBox bounding_box);
 	void readNetworkFromOSMFile(string file_name,
-			patGeoBoundingBox& bounding_box, patError*& err);
+			patGeoBoundingBox& bounding_box);
 	/**
 	 * Read nodes from the postgresql datbase. Called by patNetworkElements::readNetworkFromPostGreSQL
 	 * @param bounding_box The bounding box of the network.
-	 * @param err Error pointer
 	 *
 	 */
-	void readNodesFromPostGreSQL(patGeoBoundingBox bounding_box,
-			patError*& err);
+	void readNodesFromPostGreSQL(patGeoBoundingBox bounding_box);
 
 	/**
 	 * Read ways from the postgresql datbase. Called by patNetworkElements::readNetworkFromPostGreSQL
 	 * @param bounding_box The bounding box of the network.
-	 * @param err Error pointer
 	 *
 	 */
 
-	void readWaysFromPostGreSQL(patGeoBoundingBox bounding_box, patError*& err);
+	void readWaysFromPostGreSQL(patGeoBoundingBox bounding_box);
 
 	/**
 	 * Return the number of arcs in the network;
@@ -132,7 +122,7 @@ public:
 	 * @param osm_id The osm id of the way.
 	 * @return list of arcs.
 	 */
-	list<patArc*> getArcsFromWayOSMId(int osm_id, patError*& err);
+	//list<patArc*> getArcsFromWayOSMId(int osm_id);
 
 	void summarizeMembership();
 	const patArc* findArcByNodes(const patNode* up_node,

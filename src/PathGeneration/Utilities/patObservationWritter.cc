@@ -24,10 +24,10 @@ patObservationWritter::~patObservationWritter() {
 patObservationWritter::patObservationWritter(string folder,
 		const unsigned long sampleInterval,
 		const patLinkAndPathCost* cost_function,
-		const unsigned long& writer_indexer
-		) :
+		const unsigned long& writer_indexer) :
 		m_sample_interval(sampleInterval), m_folder(folder), m_path_count(0), m_cost_function(
-				cost_function), m_sampled_path_count(0) ,m_writer_indexer(writer_indexer){
+				cost_function), m_sampled_path_count(0), m_writer_indexer(
+				writer_indexer) {
 
 	m_warmup_iterations = patNBParameters::the()->WARMUP_ITERATIONS;
 	if (sampleInterval <= 0) {
@@ -43,7 +43,7 @@ void patObservationWritter::start() {
 }
 
 void patObservationWritter::processState(const patMultiModalPath& path,
-		const double log_weight) {
+		const double log_weight, const double proba) {
 	/*
 	 * (1) check if this path should be written
 	 */
@@ -67,7 +67,8 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 //	cout << m_path_count<<"-"<<m_warmup_iterations<<endl;
 //	cout <<"export a path"<<endl;
 	m_sampled_path_count++;
-	string i_str = boost::lexical_cast<string>(m_writer_indexer+ m_sampled_path_count);
+	string i_str = boost::lexical_cast<string>(
+			m_writer_indexer + m_sampled_path_count);
 	patKMLPathWriter kml_writer(m_folder + "/" + i_str + ".kml");
 //	cout <<m_folder + "observations/" + i_str + ".kml"<<endl;
 	map<string, string> attrs_true;
@@ -76,14 +77,13 @@ void patObservationWritter::processState(const patMultiModalPath& path,
 
 		for (map<string, double>::const_iterator attr_iter = cf_attrs.begin();
 				attr_iter != cf_attrs.end(); ++attr_iter) {
-			attrs_true[attr_iter->first] = boost::lexical_cast < string
-					> (attr_iter->second);
+			attrs_true[attr_iter->first] = boost::lexical_cast<string>(
+					attr_iter->second);
 		}
 	}
 	attrs_true["true"] = boost::lexical_cast<string>(log_weight);
 	attrs_true["id"] = i_str;
-	attrs_true["proba"] = boost::lexical_cast<string>(
-			1.0 - patNBParameters::the()->errorInSimulatedObservations);
+	attrs_true["proba"] = boost::lexical_cast<string>(proba);
 	kml_writer.writePath(path, attrs_true);
 	kml_writer.close();
 

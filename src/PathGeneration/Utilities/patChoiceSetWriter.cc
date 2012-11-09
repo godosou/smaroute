@@ -61,27 +61,28 @@ void patChoiceSetWriter::processState(const patMultiModalPath& path,
 	/*
 	 * (2) write out the link IDs that correspond to the inverted nodes
 	 */
-	map<patMultiModalPath, pair<int, double> >::iterator find_path =
-			m_sampled_set.find(path);
-
-	if (find_path == m_sampled_set.end()) {
-		pair<int, double> d(1, log_weight);
-		m_sampled_set.insert(
-				pair<patMultiModalPath, pair<int, double> >(path, d));
-	} else {
-		find_path->second.first += 1;
-		cout << (int) sampled_count / m_sample_interval << "paths, unique: "
-				<< m_sampled_set.size() << endl;
-	}
+	m_sampled_set.push_back(make_pair(path, log_weight));
+//	map<patMultiModalPath, pair<int, double> >::iterator find_path =
+//			m_sampled_set.find(path);
+//
+//	if (find_path == m_sampled_set.end()) {
+//		pair<int, double> d(1, log_weight);
+//		m_sampled_set.insert(
+//				pair<patMultiModalPath, pair<int, double> >(path, d));
+//	} else {
+//		find_path->second.first += 1;
+//		cout << (int) sampled_count / m_sample_interval << "paths, unique: "
+//				<< m_sampled_set.size() << endl;
+//	}
 
 }
 
 void patChoiceSetWriter::end() {
 	int total_count = 0;
-	for (map<patMultiModalPath, pair<int, double> >::iterator path_iter =
+	for (vector<pair<patMultiModalPath, double> >::iterator path_iter =
 			m_sampled_set.begin(); path_iter != m_sampled_set.end();
 			++path_iter) {
-		total_count += path_iter->second.first;
+		total_count += 1;
 		map<string, string> attrs;
 		if (m_cost_function != NULL) {
 			map<string, double> cf_attrs = m_cost_function->getAttributes(
@@ -97,8 +98,8 @@ void patChoiceSetWriter::end() {
 //		double log_weight = m_path_cost->logWeightWithoutCorrection(path_iter->first);
 //		DEBUG_MESSAGE("write a path "<<log_weight);
 		attrs["logweight"] = lexical_cast<std::string>(
-				path_iter->second.second);
-		attrs["count"] = lexical_cast<std::string>(path_iter->second.first);
+				path_iter->second);
+		attrs["count"] = lexical_cast<std::string>(1);
 		m_path_writer->writePath(path_iter->first, attrs);
 
 	}

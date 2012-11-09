@@ -43,7 +43,7 @@ const map<const patMultiModalPath, double> patGetPathProbasFromObservations::get
 					od_path_probas.find(the_od);
 			if (find_od == od_path_probas.end()) {
 				od_path_probas[the_od];
-				od_path_probas[the_od][path_iter->first] = path_iter->second;
+				od_path_probas[the_od].insert(make_pair(path_iter->first,path_iter->second));
 			} else {
 				map<const patMultiModalPath, double>::iterator find_path =
 						find_od->second.find(path_iter->first);

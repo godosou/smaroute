@@ -58,7 +58,7 @@ map<string, map<const patArc*, const patNode*> > patNetworkPublicTransport::find
 		bool find_tag = false;
 		if (find_incoming != incoming_incidents.end()) {
 			stops_incoming_links[stop_name];
-			DEBUG_MESSAGE(stop_name << stop_iter->second);
+//			DEBUG_MESSAGE(stop_name << stop_iter->second);
 
 			for (list<const patArc*>::iterator arc_iter =
 					find_incoming->second.begin();
@@ -69,7 +69,7 @@ map<string, map<const patArc*, const patNode*> > patNetworkPublicTransport::find
 				 */
 				if (stop_iter->second == 1 or stop_iter->second == 3) {
 					if (forward_arcs.find(*arc_iter) != forward_arcs.end()) {
-						DEBUG_MESSAGE("found one forward");
+//						DEBUG_MESSAGE("found one forward");
 						stops_incoming_links[stop_name][*arc_iter] =
 								stop_iter->first;
 						find_tag = true;
@@ -78,7 +78,7 @@ map<string, map<const patArc*, const patNode*> > patNetworkPublicTransport::find
 				if (stop_iter->second == 2 or stop_iter->second == 3) {
 					if (backward_arcs.find(*arc_iter) != backward_arcs.end()) {
 
-						DEBUG_MESSAGE("found one backward");
+//						DEBUG_MESSAGE("found one backward");
 						stops_incoming_links[stop_name][*arc_iter] =
 								stop_iter->first;
 						find_tag = true;
@@ -93,7 +93,7 @@ map<string, map<const patArc*, const patNode*> > patNetworkPublicTransport::find
 					outgoing_incidents.find(stop_iter->first);
 			if (find_outgoing == outgoing_incidents.end()
 					or find_tag == false) {
-				DEBUG_MESSAGE("no stop on route" << *(stop_iter->first));
+//				DEBUG_MESSAGE("no stop on route" << *(stop_iter->first));
 				double min_distance = DBL_MAX;
 				const patArc* best_arc;
 //				if (stop_iter->second == 1 or stop_iter->second == 3) {
@@ -130,7 +130,7 @@ map<string, map<const patArc*, const patNode*> > patNetworkPublicTransport::find
 
 				}
 				if (min_distance < 500.0) {
-					DEBUG_MESSAGE("nearest link distance" << min_distance);
+//					DEBUG_MESSAGE("nearest link distance" << min_distance);
 
 					const_cast<patNode*>(best_arc->getDownNode())->setName(
 							stop_name);
@@ -201,8 +201,8 @@ map<const patNode*, int> patNetworkPublicTransport::getStops(
 			//stops.insert(node);
 
 			int direction;
-			DEBUG_MESSAGE(
-					node_iter->second << ":" << node->getUserId() << " " << node->getName() << " " << node << " " << node->getTagString());
+//			DEBUG_MESSAGE(
+//					node_iter->second << ":" << node->getUserId() << " " << node->getName() << " " << node << " " << node->getTagString());
 
 			if (node_iter->second.find("forward") != string::npos) {
 				direction = 1;
@@ -402,7 +402,7 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 		//return;
 	}
 	map<const patNode*, int> stops = getStops(network_elements, node_ids);
-	DEBUG_MESSAGE("links:");
+//	DEBUG_MESSAGE("links:");
 	map<const patNode*, list<const patArc*> > outgoing_incidents;
 	map<const patNode*, list<const patArc*> > incoming_incidents; //int is the direction.
 	set<const patArc*> forward_arcs;
@@ -462,7 +462,7 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 	list<const patNode*> true_stops;
 
 	//TODO use the sequence information about the stops
-	DEBUG_MESSAGE("stops: " << stops_incoming.size());
+//	DEBUG_MESSAGE("stops: " << stops_incoming.size());
 
 	map<const patNode*, map<const patNode*, patPublicTransportSegment> > lines;
 
@@ -505,28 +505,26 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 
 				}
 			}
-	DEBUG_MESSAGE("segs:" << pt_incidents.size());
+//	DEBUG_MESSAGE("segs:" << pt_incidents.size());
 
 	for (map<pair<string, string> , set<patPublicTransportSegment> >::iterator pt_iter =
 			pt_incidents.begin(); pt_iter != pt_incidents.end(); ++pt_iter) {
 		if (pt_iter->second.size() > 1) {
 
-			DEBUG_MESSAGE("confusion" << pt_iter->second.size());
+//			DEBUG_MESSAGE("confusion" << pt_iter->second.size());
 
 		}
 		for (set<patPublicTransportSegment>::iterator seg_iter =
 				pt_iter->second.begin(); seg_iter != pt_iter->second.end();
 				++seg_iter) {
 			patPublicTransportSegment new_pt = *seg_iter;
-			DEBUG_MESSAGE(
-					pt_iter->first.first << "->" << pt_iter->first.second);
+//			DEBUG_MESSAGE(
+//					pt_iter->first.first << "->" << pt_iter->first.second);
 			const patNode* up_node = new_pt.getUpNode();
 			m_pt_outgoing_incidents[up_node];
-			patError* err(NULL);
 
 			patPublicTransportSegment* pt_added_pointer =
-					network_elements->addPTSegment(&new_pt, err);
-			if (err == NULL) {
+					network_elements->addPTSegment(&new_pt);
 				m_pt_outgoing_incidents[up_node].insert(pt_added_pointer);
 				FolderPtr seg_folder = factory->CreateFolder();
 				vector<const patArc*> arc_list = pt_added_pointer->getArcList();
@@ -543,9 +541,6 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 					}
 				}
 				segs_folder->add_feature(seg_folder);
-			} else {
-				WARNING("Add pt seg failed.");
-			}
 		}
 	}
 	document->add_feature(stops_folder);
@@ -555,9 +550,9 @@ void patNetworkPublicTransport::getRoute(patNetworkElements* network_elements,
 
 	kml_file << kmldom::SerializePretty(kml);
 	kml_file.close();
-	DEBUG_MESSAGE(kml_file_path << " written");
+	DEBUG_MESSAGE("bus route"<<kml_file_path << " written");
 
-	DEBUG_MESSAGE("a route end");
+//	DEBUG_MESSAGE("a route end");
 	return;
 }
 
@@ -848,10 +843,9 @@ void patNetworkPublicTransport::walkFromToStops(
 				++near_iter) {
 			const patArc* found_arc = network_elements->findArcByNodes(
 					*stop_iter, *near_iter);
-			patError* err;
 			if (found_arc == NULL) {
 				found_arc = network_elements->addArc(*stop_iter, *near_iter,
-						NULL, err);
+						NULL);
 				if (found_arc == NULL) {
 					continue;
 				}
@@ -862,7 +856,7 @@ void patNetworkPublicTransport::walkFromToStops(
 					*stop_iter, *near_iter);
 			if (reverse_arc == NULL) {
 				reverse_arc = network_elements->addArc(*near_iter, *stop_iter,
-						NULL, err);
+						NULL);
 				if (reverse_arc == NULL) {
 					continue;
 				}

@@ -105,7 +105,8 @@ public:
  void setTag(string key, string value);
  unordered_map<string, string > getTags() const;
 	double calHeading(const patNode* b_node) const;
-
+	double distanceTo(const patCoordinates* b_geo) const;
+	double distanceTo(const patNode* b_node) const;
 	bool hasTrafficSignal() const;
 protected:
 	unordered_map<string, string > m_tags;

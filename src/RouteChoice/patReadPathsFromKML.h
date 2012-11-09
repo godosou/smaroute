@@ -15,7 +15,7 @@ using namespace std;
 class patReadPathsFromKML {
 public:
 	patReadPathsFromKML();
-	static vector<patMultiModalPath> read(const patNetworkElements* m_network,string file_path);
+	static map<patMultiModalPath,double> read(const patNetworkElements* m_network,string file_path);
 	virtual ~patReadPathsFromKML();
 };
 

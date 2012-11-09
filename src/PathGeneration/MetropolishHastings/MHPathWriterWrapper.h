@@ -11,12 +11,12 @@
 #include "patChoiceSetWriter.h"
 #include "MHStateProcessor.h"
 #include "MHPath.h"
-#include "MHWeightFunction.h"
+#include "patLinkAndPathCost.h"
 class MHPathWriterWrapper: public patChoiceSetWriter, public MHStateProcessor<
 		MHPath> {
 public:
-	MHPathWriterWrapper(patPathWriter* pathWriter, const int sampleInterval, const MHWeightFunction* mh_weight) :
-			patChoiceSetWriter::patChoiceSetWriter(pathWriter, sampleInterval ,mh_weight) {
+	MHPathWriterWrapper(patPathWriter* pathWriter, const int sampleInterval, const patLinkAndPathCost* link_cost) :
+			patChoiceSetWriter::patChoiceSetWriter(pathWriter, sampleInterval ,link_cost) {
 
 	}
 	;

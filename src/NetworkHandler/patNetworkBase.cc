@@ -14,6 +14,7 @@
 #include<fstream>
 #include "patNetworkBase.h"
 #include "patTransportMode.h"
+#include "patMultiModalPath.h"
 #include "kml/dom.h"
 using kmldom::DocumentPtr;
 using kmldom::KmlFactory;
@@ -24,10 +25,16 @@ using kmldom::FolderPtr;
 using kmldom::StylePtr;
 using kmldom::LineStylePtr;
 patNetworkBase::patNetworkBase() :
-		m_minimum_label(DBL_MAX) {
+		m_minimum_label(-DBL_MAX) {
 
 }
+patNetworkBase::patNetworkBase(string network_type,
+		TransportMode transport_mode,
+		unordered_map<const patNode*, set<const patRoadBase*> >& outgoing_incidents) :
+		m_network_type(network_type), m_transport_mode(transport_mode), m_outgoing_incidents(
+				outgoing_incidents), m_minimum_label(-DBL_MAX) {
 
+}
 patNetworkBase::patNetworkBase(const patNetworkBase& other) :
 		m_outgoing_incidents(other.m_outgoing_incidents), m_incoming_incidents(
 				other.m_incoming_incidents), m_minimum_label(
@@ -49,9 +56,11 @@ const unordered_map<const patNode*, set<const patRoadBase*> >* patNetworkBase::g
 }
 bool patNetworkBase::hasDownStream(const patNode * const a_node) const {
 
+//	DEBUG_MESSAGE(m_outgoing_incidents.size());
+//	DEBUG_MESSAGE(*a_node);
 	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_node =
 			m_outgoing_incidents.find(a_node);
-	if (!find_node->second.empty()) {
+	if (find_node != m_outgoing_incidents.end() && !find_node->second.empty()) {
 		return true;
 	} else {
 		return false;
@@ -61,7 +70,7 @@ TransportMode patNetworkBase::getTransportMode() const {
 	return m_transport_mode;
 }
 double patNetworkBase::computeMinimumLabel() {
-
+	m_minimum_label = DBL_MAX;
 	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator n_iter =
 			m_outgoing_incidents.begin(); n_iter != m_outgoing_incidents.end();
 			++n_iter) {
@@ -382,26 +391,177 @@ NODE_STATUS patNetworkBase::checkNodeStatus(const patNode* node) const {
 		outgoing_nodes.insert((*arc_iter)->getDownNode());
 	}
 	short incidents = 0;
-	short duplicate_incoming=0;
+	short duplicate_incoming = 0;
 	for (set<const patRoadBase*>::const_iterator arc_iter =
 			find_incoming->second.begin();
 			arc_iter != find_incoming->second.end(); ++arc_iter) {
-		const patNode* new_node =(*arc_iter)->getUpNode();
+		const patNode* new_node = (*arc_iter)->getUpNode();
 		++incidents;
-		if (outgoing_nodes.find(new_node)!=outgoing_nodes.end()){
+		if (outgoing_nodes.find(new_node) != outgoing_nodes.end()) {
 			++duplicate_incoming;
 		}
 	}
 
-	short valid_incidents = incidents+ outgoing_nodes.size()-duplicate_incoming;
+	short valid_incidents = incidents + outgoing_nodes.size()
+			- duplicate_incoming;
 
-	if(valid_incidents<=1){
+	if (valid_incidents <= 1) {
 		return DEADEND;
-	}
-	else if(valid_incidents==2){
+	} else if (valid_incidents == 2) {
 		return INTERMEDIATE;
-	}
-	else{
+	} else {
 		return NORMAL;
 	}
+}
+
+const patNode* patNetworkBase::getNearestNode(const patCoordinates* geo) const {
+
+	double min_dist = DBL_MAX;
+	const patNode* node = NULL;
+	for (set<const patNode*>::const_iterator n_iter = m_nodes.begin();
+			n_iter != m_nodes.end(); ++n_iter) {
+		double dist = (*n_iter)->distanceTo(geo);
+		if (min_dist < dist) {
+			min_dist = dist;
+			node = (*n_iter);
+		}
+	}
+	return node;
+}
+unordered_map<const patNode*, double> patNetworkBase::getNearbyNodes(
+		const patNode* center, const double& distance) const {
+
+	unordered_map<const patNode*, double> nearby_nodes;
+
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator node_iter =
+			m_outgoing_incidents.begin();
+			node_iter != m_outgoing_incidents.end(); ++node_iter) {
+		double node_dist = center->distanceTo(node_iter->first);
+		if (node_dist <= distance) {
+			nearby_nodes[node_iter->first] = node_dist;
+		}
+	}
+
+	return nearby_nodes;
+}
+
+patNetworkBase* patNetworkBase::getSubNetwork(
+		const patGeoBoundingBox& bb) const {
+
+	patNetworkBase* new_network_clone = clone();
+	for (set<const patNode*>::const_iterator n_iter = m_nodes.begin();
+			n_iter != m_nodes.end(); ++n_iter) {
+		if (!bb.isInBox((*n_iter)->getLatitude(), (*n_iter)->getLongitude())) {
+			new_network_clone->removeNode(*n_iter);
+		}
+	}
+	new_network_clone->finalizeNetwork();
+	return new_network_clone;
+}
+patMultiModalPath patNetworkBase::recoverPath(
+		const patMultiModalPath& path) const {
+	vector<const patArc*> arc_list = path.getArcList();
+
+	patMultiModalPath new_path;
+	unsigned i = 0;
+	vector<const patArc*> tmp_arcs;
+
+	const patNode* up_node = arc_list.front()->getUpNode();
+	for (; i < arc_list.size(); ++i) {
+		const patArc* curr_arc = arc_list[i];
+		const patNode* down_node = curr_arc->getDownNode();
+		if (tmp_arcs.empty()) {
+			if (m_outgoing_incidents.find(up_node)
+					== m_outgoing_incidents.end()) {
+				throw RuntimeException("not up node found");
+			}
+		}
+
+		tmp_arcs.push_back(curr_arc);
+
+		if (m_incoming_incidents.find(down_node) == m_incoming_incidents.end()
+				&& i != arc_list.size() - 1) {
+			//Down node not in incidents
+		} else {
+
+			if (tmp_arcs.size() == 1) {
+				cout << "," << tmp_arcs.front()->getArcString() << endl;
+
+				if (new_path.addArcToBack(tmp_arcs.front()) == false) {
+					throw RuntimeException("wrong connection");
+//					cout << new_path.getArcString() << endl;
+//
+//					cout << "up node" << new_path.getDownNode()->getUserId()
+//							<< endl;
+//					cout << "down node"
+//							<< tmp_arcs.front()->getUpNode()->getUserId()
+				}
+
+				tmp_arcs.clear();
+				up_node = down_node;
+			} else {
+				unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_outgoing =
+						m_outgoing_incidents.find(up_node);
+				if (find_outgoing == m_outgoing_incidents.end()) {
+					throw RuntimeException(
+							"patNetworkBase: outgoing node not found");
+
+				} else {
+
+					bool found_connection = false;
+
+					string tmp_arcs_string("");
+					for (vector<const patArc*>::const_iterator tmp_arc_iter =
+							tmp_arcs.begin(); tmp_arc_iter != tmp_arcs.end();
+							++tmp_arc_iter) {
+						tmp_arcs_string += (*tmp_arc_iter)->getArcString();
+					}
+					for (set<const patRoadBase*>::const_iterator road_iter =
+							find_outgoing->second.begin();
+							road_iter != find_outgoing->second.end();
+							++road_iter) {
+						if (up_node == (*road_iter)->getUpNode()
+								&& down_node == (*road_iter)->getDownNode()) {
+							if (tmp_arcs_string
+									== (*road_iter)->getArcString()) {
+								cout << "dowstream"
+										<< (*road_iter)->getArcString() << endl;
+
+								if (new_path.addArcsToBack(*road_iter)
+										== false) {
+
+								}
+								found_connection = true;
+								tmp_arcs.clear();
+								up_node = down_node;
+								break;
+							}
+						}
+					}
+					if (found_connection == false) {
+						cout << "no connection found" << endl;
+						cout << "original:" << tmp_arcs_string << endl;
+						cout << up_node->getUserId() << "-"
+								<< down_node->getUserId() << endl;
+						for (set<const patRoadBase*>::const_iterator road_iter =
+								find_outgoing->second.begin();
+								road_iter != find_outgoing->second.end();
+								++road_iter) {
+							cout << (*road_iter)->getUpNode()->getUserId()
+									<< "-"
+									<< (*road_iter)->getDownNode()->getUserId()
+									<< endl;
+
+							cout << "candidate:" << (*road_iter)->getArcString()
+									<< endl;
+						}
+
+					}
+				}
+			}
+
+		}
+	}
+
+	return new_path;
 }

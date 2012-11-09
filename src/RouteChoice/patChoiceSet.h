@@ -36,7 +36,8 @@ public:
 			const patMultiModalPath& chosen_path,
 			const patUtilityFunction* utility_function,
 			const patPathGenerator* path_generator,
-			const patChoiceSet* universal_choiceset, const unsigned& choice_set_size, const patRandomNumber& rnd) const;
+			const patChoiceSet* universal_choiceset,
+			const unsigned& choice_set_size) const;
 	unordered_map<string, double> genAttributes(
 			const patMultiModalPath& chosen_path,
 			const patUtilityFunction* utility_function,
@@ -49,18 +50,26 @@ public:
 			string file_path) const;
 	int getUniquePaths() const;
 
-	patChoiceSet sampleSubSet(const unsigned choice_set_size,const patRandomNumber& rnd) const;
+	patChoiceSet sampleSubSet(const unsigned choice_set_size) const;
 	const map<const patMultiModalPath, int>& getCount() const {
 		return m_count;
 	}
 	const map<const patMultiModalPath, double>& getLogWeight() const {
 		return m_log_weight;
 	}
+	void exportSHP(const patMultiModalPath& chosen_path,
+			string file_path) const;
 
+/**
+ * Compute the similarity of the choice set.
+ */
+	double computeSimilarity(const patMultiModalPath& chosen_path,
+			const unsigned& choice_set_size) const;
 	bool empty() const;
 protected:
 	patOd m_od;
-	set<patMultiModalPath> m_paths;
+	vector<patMultiModalPath> m_paths;
+//	set<patMultiModalPath> m_paths;
 	map<const patMultiModalPath, int> m_count;
 	map<const patMultiModalPath, double> m_log_weight;
 };

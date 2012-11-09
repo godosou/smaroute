@@ -24,16 +24,14 @@ patLinkAndPathCost* patLinkAndPathCost::clone() const {
 patLinkAndPathCost::patLinkAndPathCost(
 		const map<ARC_ATTRIBUTES_TYPES, double>& link_coef,
 		const double &link_scale, const double &ps_scale) :
-		m_link_cost_scale(link_scale),
-		m_pathsize_coefficient(link_scale * ps_scale), m_link_coefficients(
-				link_coef), m_ps_computer(NULL) {
-
-
+		m_link_cost_scale(link_scale), m_pathsize_coefficient(
+				link_scale * ps_scale), m_link_coefficients(link_coef), m_ps_computer(
+				NULL) {
 
 }
 
-const map<ARC_ATTRIBUTES_TYPES, double>& patLinkAndPathCost::getLinkCoefficients() const{
-	return  m_link_coefficients;
+const map<ARC_ATTRIBUTES_TYPES, double>& patLinkAndPathCost::getLinkCoefficients() const {
+	return m_link_coefficients;
 }
 double patLinkAndPathCost::getCost(const patRoadBase* road) const {
 	return m_link_cost_scale * road->getGeneralizedCost();
@@ -50,8 +48,17 @@ double patLinkAndPathCost::getCost(const patMultiModalPath& path) const {
 	}
 	if (m_ps_computer != NULL && m_pathsize_coefficient > 0.0) {
 		double ps_value = m_ps_computer->getPS(path);
-//		cout<<pathCost<<","<<ps_value<<","<<log(ps_value)<<endl;
-		pathCost +=  m_pathsize_coefficient * log(ps_value);
+//		cout<<pathCost<<","<<m_pathsize_coefficient<<","<<ps_value<<","<<log(ps_value)<<endl;
+		pathCost += m_pathsize_coefficient * log(ps_value);
+		if (!isfinite(pathCost)) {
+			stringstream ss;
+			ss << "patLinkAndPathCost";
+			ss << "inifit cost";
+			ss << m_pathsize_coefficient << "*" << ps_value << ","
+					<< log(ps_value);
+			cout << ss.str();
+			throw RuntimeException(ss.str().c_str());
+		}
 	}
 	return pathCost;
 }
@@ -89,9 +96,25 @@ map<string, double> patLinkAndPathCost::getAttributes(
 		attributes[patArc::getAttributeTypeString(a_iter->first)] = cost; //FIXME scale parameter
 	}
 	if (m_ps_computer != NULL) {
-		double ps_value = m_ps_computer->getPS(path);
+//		double ps_value = m_ps_computer->getPS(path);
 		attributes["path_size"] = m_ps_computer->getPS(path);
 	}
 	return attributes;
 
+}
+
+void patLinkAndPathCost::calibrate(const patMultiModalPath& sp) {
+	if (patNBParameters::the()->mh_link_scale_relative == 1) {
+		double length_coef = log(2.0)
+				/ ((patNBParameters::the()->mh_link_scale - 1.0) * sp.getLength());
+		m_link_cost_scale = length_coef/m_link_coefficients[ENUM_LENGTH];
+		cout << "patLinkAndPathCost: new link coef" << length_coef
+				<< ":log(2.0)/((" << patNBParameters::the()->mh_link_scale << "-1.0*"
+				<< sp.getLength() << "))/"<< m_link_coefficients[ENUM_LENGTH]<< endl;
+//		m_link_coefficients[ENUM_LENGTH] = 1.0;
+
+	}
+}
+double patLinkAndPathCost::getLinkCostScale() const{
+	return m_link_cost_scale;
 }

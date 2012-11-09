@@ -20,7 +20,7 @@ public:
 	patNetworkEnvironment(){
 		;
 	}
-	patNetworkEnvironment(patGeoBoundingBox& bb, patError*& err);
+	patNetworkEnvironment(patGeoBoundingBox& bb);
 	 ~patNetworkEnvironment();
 
 	/**

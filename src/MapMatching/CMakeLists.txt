@@ -4,6 +4,9 @@ include_directories("${NewBioroute_SOURCE_DIR}/NetworkHandler")
 include_directories("${NewBioroute_SOURCE_DIR}/Router")
 include_directories("${NewBioroute_SOURCE_DIR}/Math")
 add_library(MapMatching
+				patComputeBoundingBox.cc
+                patWriteMMResultKML.cc
+				patMapMatchingBed.cc
                     patSpeedDistributions.cc
                     patObservations.cc
                     patTrafficModel.cc

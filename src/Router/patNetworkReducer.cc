@@ -72,8 +72,13 @@ void patNetworkReducer::reduce(patNetworkBase* network) {
 	set<const patNode*> remove_nodes;
 	for (set<const patNode*>::const_iterator node_iter = all_nodes.begin();
 			node_iter != all_nodes.end(); ++node_iter) {
+		if((*node_iter)->getUserId()==1096678549){
+			cout<<"node 1096678549"<<fwdCost.getLabel(*node_iter) <<","<< bwdCost.getLabel(*node_iter)<<":"<<maxCost<<endl;
+		}
+//		cout<<fwdCost.getLabel(*node_iter) + bwdCost.getLabel(*node_iter)<<"?"<<maxCost<<endl;
 		if (fwdCost.getLabel(*node_iter) + bwdCost.getLabel(*node_iter)
 				> maxCost) {
+
 			remove_nodes.insert(*node_iter);
 		}
 	}

@@ -12,6 +12,9 @@
 class patListDirectory {
 public:
 	patListDirectory();
+	void  getFilesInDeep(const string & dirName,
+			const string condition, vector<string>& file_list);
+
 	static list<string> getListOfFiles(string directory_name, patError* err);
 	virtual ~patListDirectory();
 };

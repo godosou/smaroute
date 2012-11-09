@@ -20,7 +20,50 @@ patListDirectory::patListDirectory() {
 patListDirectory::~patListDirectory() {
 	//
 }
+void patListDirectory::getFilesInDeep(const string & dir_path,
+		const string condition, vector<string>& file_list) {
 
+
+	DIR * dip;
+	struct dirent *dit;
+	const char* dirName = dir_path.c_str();
+
+	unsigned char isFile = 0x8;
+	string esp("~");
+	string don("#");
+	string csvext("csv");
+	string accel("accel");
+	string bt("bt");
+
+	if ((dip = opendir(dirName)) == NULL) {
+		stringstream str;
+		str << "Directory " << dirName
+				<< " doesn't exist or no permission to read.";
+		cout<<str.str()<<endl;
+		return ;
+	}
+	while ((dit = readdir(dip)) != NULL) {
+		string fileName(dit->d_name);
+		if (dit->d_type == isFile) {
+			if (fileName.find(csvext) != string::npos
+					&& fileName.find(esp) == string::npos
+					&& fileName.find(don) == string::npos
+					&& fileName.find(accel) == string::npos
+					&& fileName.find(bt) == string::npos
+					&& fileName.find(".kml") == string::npos) {
+//				DEBUG_MESSAGE("Found file:" << fileName);
+				file_list.push_back(dir_path+"/"+fileName);
+			}
+
+		}
+		else if(dit->d_type == DT_DIR && fileName.substr(0,1)!="."){
+//			cout<< "go to folder "<< fileName<<endl;
+			getFilesInDeep(dir_path+"/"+fileName,condition,file_list);
+		}
+	}
+
+	closedir(dip);
+}
 list<string> patListDirectory::getListOfFiles(string directory_name,
 		patError* err) {
 	DIR * dip;
@@ -37,7 +80,7 @@ list<string> patListDirectory::getListOfFiles(string directory_name,
 		return list<string>();
 	}
 	DEBUG_MESSAGE("Direcotry " << dirName << " is now open");
-	list < string > dirContent;
+	list<string> dirContent;
 	unsigned char isFile = 0x8;
 	string esp("~");
 	string don("#");
@@ -54,7 +97,7 @@ list<string> patListDirectory::getListOfFiles(string directory_name,
 					&& fileName.find(accel) == string::npos
 					&& fileName.find(bt) == string::npos
 					&& fileName.find(".kml") == string::npos) {
-				DEBUG_MESSAGE("Found file:" << fileName);
+//				DEBUG_MESSAGE("Found file:" << fileName);
 				dirContent.push_back(fileName);
 			}
 

@@ -34,7 +34,7 @@ patArcSequence::patArcSequence(const vector<const patRoadBase*>& roads) {
 }
 
 bool operator==(const patArcSequence& seq_a, const patArcSequence& seq_b) {
-	return seq_a.getArcString()==seq_b.getArcString();
+	return seq_a.getArcString() == seq_b.getArcString();
 //	vector<const patArc*> arc_list_a = seq_a.getArcList();
 //	vector<const patArc*> arc_list_b = seq_b.getArcList();
 //	if (arc_list_a.size() != arc_list_b.size()) {
@@ -242,7 +242,7 @@ bool patArcSequence::addArcToFront(const patArc* arc) {
 		m_arcs.insert(m_arcs.begin(), arc);
 		m_last_added_arcs == 1;
 		m_length += arc->getLength();
-		m_arc_string = m_arc_string+arc->getArcString();
+		m_arc_string = m_arc_string + arc->getArcString();
 		return true;
 	}
 }
@@ -261,7 +261,7 @@ bool patArcSequence::addArcToBack(const patArc* arc) {
 		m_arcs.push_back(arc);
 		m_last_added_arcs == 1;
 		m_length += arc->getLength();
-		m_arc_string+=arc->getArcString();
+		m_arc_string += arc->getArcString();
 		return true;
 	}
 	return true;
@@ -293,6 +293,7 @@ bool patArcSequence::addArcsToBack(const patRoadBase* road) {
 			arc_iter != arc_list.end(); ++arc_iter) {
 		if (addArcToBack(*arc_iter) == false) {
 			pop_back(added_arcs);
+			DEBUG_MESSAGE("wrong return");
 			return false;
 		}
 		added_arcs++;
@@ -381,8 +382,13 @@ string patArcSequence::getArcsString() const {
 	stringstream arcs_string;
 	for (vector<const patArc*>::const_iterator arcIter = m_arcs.begin();
 			arcIter != m_arcs.end(); ++arcIter) {
-		arcs_string << (*arcIter)->getUpNode()->getUserId() << "_"
-				<< (*arcIter)->getDownNode()->getUserId() << " ";
+		vector<const patArc*> arc_originals = (*arcIter)->getOriginalArcList();
+		for (vector<const patArc*>::const_iterator iter_2 =
+				arc_originals.begin(); iter_2 != arc_originals.end(); ++iter_2) {
+
+			arcs_string << (*iter_2)->getUpNode()->getUserId() << "_"
+					<< (*iter_2)->getDownNode()->getUserId() << " ";
+		}
 	}
 	return arcs_string.str();
 }
@@ -440,6 +446,51 @@ bool patArcSequence::containsNodeBack(const patNode* node,
 	return false;
 }
 
+vector<const patArc*> patArcSequence::getOriginalArcs() const {
+
+	vector<const patArc*> original_arcs;
+	for (vector<const patArc*>::const_iterator arc_iter = m_arcs.begin();
+			arc_iter != m_arcs.end(); ++arc_iter) {
+
+		vector<const patArc*> arc_original = (*arc_iter)->getOriginalArcList();
+		original_arcs.insert(original_arcs.end(), arc_original.begin(),
+				arc_original.end());
+	}
+	return original_arcs;
+}
+vector<const patNode*> patArcSequence::getOriginalNodes() const {
+	vector<const patNode*> original_nodes;
+
+	vector<const patArc*> original_arcs = getOriginalArcs();
+	if (original_arcs.empty()) {
+		return original_nodes;
+	}
+	original_nodes.push_back(original_arcs.front()->getUpNode());
+	for (vector<const patArc*>::const_iterator arc_iter = original_arcs.begin();
+			arc_iter != original_arcs.end(); ++arc_iter) {
+		original_nodes.push_back((*arc_iter)->getDownNode());
+	}
+	return original_nodes;
+}
+
+void patArcSequence::getOriginalXY(vector<double>& X, vector<double>& Y) const {
+	vector<const patArc*> original_arcs = getOriginalArcs();
+	if (original_arcs.empty()) {
+		return;
+	}
+	X.push_back(
+			original_arcs.front()->getUpNode()->getGeoCoord().getLongitude());
+	Y.push_back(
+			original_arcs.front()->getUpNode()->getGeoCoord().getLatitude());
+	for (vector<const patArc*>::const_iterator arc_iter = original_arcs.begin();
+			arc_iter != original_arcs.end(); ++arc_iter) {
+		X.push_back((*arc_iter)->getDownNode()->getGeoCoord().getLongitude());
+		Y.push_back((*arc_iter)->getDownNode()->getGeoCoord().getLatitude());
+	}
+	return;
+
+}
+
 set<const patNode*> patArcSequence::getNodesFront(int stop_index) const {
 
 	set<const patNode*> nodes;
@@ -479,9 +530,36 @@ set<const patNode*> patArcSequence::getNodesBack(int stop_index) const {
 	}
 	return nodes;
 }
-void patArcSequence::clear(){
+void patArcSequence::clear() {
 	m_arcs.clear();
-	m_arc_string="";
+	m_arc_string = "";
 
 	m_length = 0.0;
+}
+double patArcSequence::distanceTo(const patNode* node) const {
+	double min_distance = DBL_MAX;
+
+	for (vector<const patArc*>::const_iterator arcIter = m_arcs.begin();
+			arcIter != m_arcs.end(); ++arcIter) {
+		double distance = (*arcIter)->distanceTo(node)["link"];
+		if (distance == 0.0) {
+			return 0.0;
+		}
+		min_distance = distance < min_distance ? distance : min_distance;
+	}
+	return min_distance;
+}
+
+double patArcSequence::distanceFrom(const patArcSequence* arc_seq) const {
+
+	const set<const patNode*> a_nodes = getNodesFront(size());
+	const set<const patNode*> b_nodes = arc_seq->getNodesFront(size());
+	double distance = 0.0;
+	for (set<const patNode*>::const_iterator node_iter = b_nodes.begin();
+			node_iter != b_nodes.end(); ++node_iter) {
+		if (a_nodes.find(*node_iter) == a_nodes.end()) {
+			distance += distanceTo(*node_iter);
+		}
+	}
+	return distance;
 }

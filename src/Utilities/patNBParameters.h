@@ -27,6 +27,7 @@ public:
 
 	double networkAccuracy;
 
+	patString experimentDirectory;
 	patString observationDirectory;
 	patString dataDirectory;
 	//patPathJ
@@ -270,6 +271,16 @@ double discardGPSGap;
 	unsigned long syntheticObservations;
 
 	unsigned long exportReducedNetwork;
+
+	unsigned long mh_function_type;
+
+	unsigned long mh_link_scale_relative;
+
+	string mh_trigger_path;
+	double ObsErrorDistanceScale;
+	double ObsErrorDistance;
+
+	unsigned long compressNetwork;
 private:
 
 	map<patString, pair<patString, patString> > params;

@@ -62,11 +62,12 @@ public:
 	const unordered_map<const char*, double>& getPathCoefficients() const;
 	virtual ~patLinkAndPathCost();
 
+	void calibrate(const patMultiModalPath& sp);
 	map<string, double> getAttributes(const patMultiModalPath& path) const;
 protected:
-	const map<ARC_ATTRIBUTES_TYPES, double> m_link_coefficients;
+	map<ARC_ATTRIBUTES_TYPES, double> m_link_coefficients;
 	const double m_pathsize_coefficient;
-	const double m_link_cost_scale;
+	double m_link_cost_scale;
 	patPathSizeComputer* m_ps_computer;
 };
 

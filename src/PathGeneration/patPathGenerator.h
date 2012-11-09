@@ -27,6 +27,11 @@ public:
 
 	virtual patPathGenerator* clone() const = 0;
 	virtual double calculatePathLogWeight(const patMultiModalPath& path) const=0;
+
+	virtual void calibrate(const patNode* origin, const patNode* destination){
+
+	}
+
 	/**
 	 * Sets the path writer. It is called after <code>setNetwork</code> and
 	 * (once) before all calls to <code>run</code>.

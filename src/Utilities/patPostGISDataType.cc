@@ -15,24 +15,60 @@ using namespace boost::xpressive;
 
 patPostGISDataType::patPostGISDataType() {
 
-
 }
-pair<double , double > patPostGISDataType::PointToLonLat(
-		string lat_lon_string) {
+vector<pair<double, double> > patPostGISDataType::MultiLineToString(
+		string line_string) {
+	vector < pair<double, double> > points;
+	sregex rex = sregex::compile("\\w+\\W(\\d+\\W\\d+)\\s(\\d+\\W\\d+)\\W");
+	cmatch what;
+    unsigned const subs[] = { 1, 2 };
+
+    sregex_token_iterator cur( line_string.begin(), line_string.end(), rex, subs );
+    sregex_token_iterator end;
+
+    bool lon_flag=true;
+    double lat,lon;
+    for( ; cur != end; ++cur )
+    {
+    	if(lon_flag==true){
+    		lon=atof(string(*cur).c_str());
+    		lon_flag=false;
+    	}
+    	else{
+    		lat=atof(string(*cur).c_str());
+    		lon_flag=true;
+    		// cout <<lon<<","<<lat<<endl;
+    		points.push_back(make_pair(lon,lat));
+    	}
+    }
+
+//
+//	while (regex_search(line_string, what, rex)) {
+//		double lon, lat;
+//		std::istringstream i1(what[1].str().c_str());
+//		i1 >> lon;
+//		std::istringstream i2(what[2].str().c_str());
+//		i2 >> lat;
+//		points.push_back(make_pair(lon, lat));
+//	}
+
+	return points;
+}
+pair<double, double> patPostGISDataType::PointToLonLat(string lat_lon_string) {
 
 	//string example "POINT(6.1666183 46.2721863)"
 	//DEBUG_MESSAGE(lat_lon_string);
 	sregex rex = sregex::compile("\\w+\\W(\\d+\\W\\d+)\\s(\\d+\\W\\d+)\\W");
 	smatch what;
-	double  lon = DBL_MAX;
-	double  lat = DBL_MAX;
+	double lon = DBL_MAX;
+	double lat = DBL_MAX;
 	if (regex_match(lat_lon_string, what, rex)) {
 		std::istringstream i1(what[1].str().c_str());
 		i1 >> lon;
 		std::istringstream i2(what[2].str().c_str());
 		i2 >> lat;
 	}
-	return pair<double , double >(lon, lat);
+	return pair<double, double>(lon, lat);
 }
 list<unsigned long> patPostGISDataType::IntArrayToULongList(string str) {
 	sregex time = sregex::compile("(\\d+)");
@@ -54,20 +90,19 @@ unordered_map<string, string> patPostGISDataType::hstoreToMap(string str) {
 	//""bicycle"=>"yes", "highway"=>"path", "surface"=>"earth""
 	sregex rex = sregex::compile("\"(\\w+)\"=>\"([\\w\\d\\s]*)\"");
 
-	int const subs[] = { 1, 2};
-	unordered_map<string, string>  string_map;
+	int const subs[] = { 1, 2 };
+	unordered_map < string, string > string_map;
 	sregex_token_iterator cur(str.begin(), str.end(), rex, subs);
 	sregex_token_iterator end;
-	string the_key="";
+	string the_key = "";
 
 	for (; cur != end; ++cur) {
-		if (the_key.empty()){
-			the_key=*cur;
-		}
-		else{
+		if (the_key.empty()) {
+			the_key = *cur;
+		} else {
 			string the_value;
-			string_map[the_key]=*cur;
-			the_key="";
+			string_map[the_key] = *cur;
+			the_key = "";
 		}
 	}
 	return string_map;

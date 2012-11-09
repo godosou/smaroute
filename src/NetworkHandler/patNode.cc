@@ -10,7 +10,7 @@
 #include "patDisplay.h"
 #include "patArc.h"
 #include "patStlSetIterator.h"
-
+#include <boost/lexical_cast.hpp>
 #include "kml/dom.h"
 using kmldom::CoordinatesPtr;
 using kmldom::KmlFactory;
@@ -24,7 +24,7 @@ patNode::patNode(unsigned long theId, patString theName, double lat, double lon,
 }
 patNode::patNode(unsigned long theId, double lat, double lon) :
 		userId(theId), internalId(patBadId), geoCoord(lat, lon), isCentroid(
-				false) {
+				false),name("") {
 	attributes.traffic_signal=false;
 
 }
@@ -147,7 +147,7 @@ PlacemarkPtr patNode::getKML() const {
 	stringstream desc;
 	desc << *this;
 	placemark->set_styleurl("#gps");
-	placemark->set_name(name);
+	placemark->set_name(name+boost::lexical_cast<string>(getUserId()));
 	placemark->set_description(getTagString());
 	placemark->set_geometry(point); // placemark takes ownership
 	return placemark;
@@ -204,4 +204,11 @@ double patNode::calHeading(const patNode* b_node) const {
 
 bool patNode::hasTrafficSignal() const {
 	return 	attributes.traffic_signal;
+}
+
+double patNode::distanceTo(const patCoordinates* b_geo) const{
+	geoCoord.distanceTo(*b_geo);
+}
+double patNode::distanceTo(const patNode* b_node) const{
+	return geoCoord.distanceTo(b_node->getGeoCoord());
 }

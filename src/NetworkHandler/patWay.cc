@@ -26,7 +26,7 @@ patWay::patWay() {
 
 patWay::patWay(unsigned long the_way_id, unordered_map<string, string> the_tags) :
 		m_way_id(the_way_id), m_tags(the_tags) {
-	m_length=-1.0;
+	m_length = -1.0;
 }
 bool patWay::isHighway() const {
 	unordered_map<string, string>::const_iterator find_highway = m_tags.find(
@@ -150,7 +150,7 @@ void patWay::loadRule(map<string, set<string> >& rule_map, string key
 		, string value) {
 	map<string, set<string> >::iterator find_key = rule_map.find(value);
 	if (find_key == rule_map.end()) {
-		set<string> value_set;
+		set < string > value_set;
 		rule_map.insert(pair<string, set<string> >(key, value_set));
 	}
 	rule_map[key].insert(value);
@@ -298,10 +298,12 @@ patWay::~patWay() {
 }
 
 bool patWay::readFromNodesIds(patNetworkElements* network,
-		list<unsigned long> the_list_of_nodes_ids, patError*& err) {
+		list<unsigned long> the_list_of_nodes_ids) {
 
 	if (the_list_of_nodes_ids.size() <= 1) {
-		DEBUG_MESSAGE("no enough node" << the_list_of_nodes_ids.size());
+//		throw Run
+		cout << "no enough node" << the_list_of_nodes_ids.size() << endl;
+//		DEBUG_MESSAGE("no enough node" << the_list_of_nodes_ids.size());
 		return false;
 	}
 	list<unsigned long>::iterator node_iter = the_list_of_nodes_ids.begin();
@@ -310,17 +312,10 @@ bool patWay::readFromNodesIds(patNetworkElements* network,
 	unsigned long down_node_id;
 	const patNode* down_node;
 	node_iter++;
-//	if(getId()==27335918){
-////		DEBUG_MESSAGE(the_list_of_nodes_ids.size());
-//	}
 	unsigned long wrong_arc_counts = 0;
 	for (; node_iter != the_list_of_nodes_ids.end(); ++node_iter) {
 		down_node_id = *node_iter;
 		down_node = network->getNode(down_node_id);
-//		DEBUG_MESSAGE(up_node_id<<"-"<<down_node_id);
-		if (getId() == 191887) {
-			DEBUG_MESSAGE(down_node_id);
-		}
 
 		if (up_node == NULL || down_node == NULL) {
 			//WARNING("Nodes "<<up_node_id<<" or "<<down_node_id<<"not found;");
@@ -328,30 +323,24 @@ bool patWay::readFromNodesIds(patNetworkElements* network,
 		} else {
 			const patArc* new_arc = up_node->getOutgoingArc(down_node_id);
 			if (new_arc == NULL) {
-				new_arc = network->addArc(up_node, down_node, this, err);
+				new_arc = network->addArc(up_node, down_node, this);
 				const_cast<patArc*>(new_arc)->setTags(m_tags);
 			}
 
 			if (new_arc != NULL) {
 				appendArc(new_arc);
 			} else {
-				DEBUG_MESSAGE("WRONG ARC" << up_node << "," << down_node)
+				cout<<"WRONG ARC" << up_node << "," << down_node<<endl;
 			}
 			const patArc* new_arc_reverse = down_node->getOutgoingArc(
 					up_node_id);
 			if (new_arc_reverse == NULL) {
-				new_arc_reverse = network->addArc(down_node, up_node, this,
-						err);
+				new_arc_reverse = network->addArc(down_node, up_node, this);
 				const_cast<patArc*>(new_arc_reverse)->setTags(m_tags);
 			}
 
 			if (new_arc_reverse != NULL) {
 				appendReverseArc(new_arc_reverse);
-				if (getId() == 191887) {
-					DEBUG_MESSAGE(*new_arc_reverse);
-					DEBUG_MESSAGE(*up_node);
-					DEBUG_MESSAGE(*down_node);
-				}
 			}
 		}
 		up_node = down_node;

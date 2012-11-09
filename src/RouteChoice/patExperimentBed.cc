@@ -7,7 +7,6 @@
 
 #include "patExperimentBed.h"
 
-#include "patError.h"
 #include "patNBParameters.h"
 #include "patDisplay.h"
 #include "patNetworkEnvironment.h"
@@ -35,6 +34,14 @@
 #include "patRouter.h"
 #include "patVerifyingSamplingResult.h"
 #include "patNetworkCompressor.h"
+#include "MHSamplingWeightFunction.h"
+#include "patSimulateProbabilisticObs.h"
+#include "MHEqualWeightFunction.h"
+#include "MHNIPSP.h"
+#include "MHNIPPG.h"
+#include "patWriteNetworkToDB.h"
+#include "patComputeBoundingBox.h"
+#include <shapefil.h>
 using namespace std;
 
 void patExperimentBed::checkExperimentFolder() const {
@@ -49,12 +56,11 @@ void patExperimentBed::checkChoiceSetFolder() const {
 }
 void patExperimentBed::checkObservationFolder() const {
 	if (!ifstream(m_observation_folder.c_str())) {
+		WARNING(m_observation_folder);
 		throw RuntimeException("observation folder does not exist");
 	}
 }
 void patExperimentBed::initiateNetworks() {
-
-	patError* err(NULL);
 
 	string network_file = patNBParameters::the()->OsmNetworkFileName;
 	string network_folder = network_file.substr(0, network_file.rfind("/"));
@@ -62,27 +68,32 @@ void patExperimentBed::initiateNetworks() {
 	if (ifstream(network_rule.c_str())) {
 		patWay::initiateNetworkTypeRules(network_rule);
 	}
-	patGeoBoundingBox bb;
-	if (m_network_real) {
-		DEBUG_MESSAGE("Use real network");
-		bb = patGeoBoundingBox(
-				patNBParameters::the()->boundingBoxLeftUpLongitude,
-				patNBParameters::the()->boundingBoxLeftUpLatitude,
-				patNBParameters::the()->boundingBoxRightBottumLongitude,
-				patNBParameters::the()->boundingBoxRightBottumLatitude);
-	} else {
-		bb = patGeoBoundingBox(-100, 100, 100, -100);
+	patGeoBoundingBox bb(patNBParameters::the()->boundingBoxLeftUpLongitude,
+			patNBParameters::the()->boundingBoxLeftUpLatitude,
+			patNBParameters::the()->boundingBoxRightBottumLongitude,
+			patNBParameters::the()->boundingBoxRightBottumLatitude);
+	;
+	if (m_observation_real
+			|| patNBParameters::the()->boundingBoxLeftUpLongitude < 0.0) {
+		bb = getBoundingBoxFromGPS();
 	}
+//	if (m_network_real) {
+	DEBUG_MESSAGE("Use real network");
+//	} else {
+//		bb = patGeoBoundingBox(-100, 100, 100, -100);
+//	}
 
-	m_network_environment = new patNetworkEnvironment(bb, err);
-	if (err != NULL) {
-		exit(-1);
-	}
+	m_network_environment = new patNetworkEnvironment(bb);
 //	DEBUG_MESSAGE("network with nodes: "<<m_network_environment->getNetwork(CAR)->getNodeSize());
 	cout << "network loaded" << endl;
 
 }
 
+void patExperimentBed::writeNetworkToDB() const {
+	string table_name = "edge";
+	patWriteNetworkToDB::write(
+			m_network_environment->getNetwork(m_transport_mode), table_name);
+}
 void patExperimentBed::exportNetwork() {
 
 	m_network_environment->getNetwork(m_transport_mode)->exportKML(
@@ -91,7 +102,18 @@ void patExperimentBed::exportNetwork() {
 			patNBParameters::the()->OsmNetworkFileName);
 	cout << "network exported" << endl;
 }
+patGeoBoundingBox patExperimentBed::getBoundingBoxFromGPS() {
 
+	vector < string > observation_files = getObservationFiles();
+	vector < string > gps_files;
+	string prefix = patNBParameters::the()->dataDirectory;
+	for (unsigned i = 0; i < observation_files.size(); ++i) {
+		string obs_file = observation_files.at(i);
+		string g_f = prefix + obs_file.substr(0, obs_file.size() - 4) + ".csv";
+		gps_files.push_back(g_f);
+	}
+	return patComputeBoundingBox::computeByGPSFiles(gps_files);
+}
 void patExperimentBed::enumerateMHPaths() {
 	checkExperimentFolder();
 	const patNode* origin = m_network_environment->getNetworkElements().getNode(
@@ -178,6 +200,27 @@ void patExperimentBed::sampleChoiceSetWithOd(const unsigned count) {
 	}
 }
 
+void patExperimentBed::simulateObservationError() {
+	checkChoiceSetFolder();
+	checkObservationFolder();
+	readObservations();
+
+//	patRouter router(m_network_environment->getNetwork(m_transport_mode),
+//			m_mh_router_link_cost);
+//
+//	patSimulateProbabilisticObs spo(
+//			m_network_environment->getNetwork(m_transport_mode), &router,
+//			&m_rnd);
+//	for (unsigned int i = 0; i < m_observations.size(); ++i) {
+//		spo.run(m_observations[i]);
+//	}
+//
+//	string folder = m_experiment_folder+"observationserror/";
+//	for (unsigned int i = 0; i < m_observations.size(); ++i) {
+//		m_observations[i].writeKML(folder);
+//	}
+
+}
 void patExperimentBed::sampleChoiceSet() {
 	checkChoiceSetFolder();
 	checkObservationFolder();
@@ -201,6 +244,24 @@ void patExperimentBed::sampleChoiceSet() {
 	}
 }
 
+void patExperimentBed::sampleEqualProbability() {
+	checkChoiceSetFolder();
+	checkObservationFolder();
+	readObservations();
+	patSampleChoiceSetForObservations sample_choice_set;
+
+	DEBUG_MESSAGE("Sample choice set with equal probablity");
+
+	MHEqualWeightFunction eq_weight_function;
+	m_mh_path_generator->setMHWeight(&eq_weight_function);
+	if (m_mh_path_generator != NULL) {
+		sample_choice_set.sampleChoiceSet(m_observations, m_mh_path_generator,
+				m_choice_set_foler);
+	} else {
+		WARNING("Wrong sampling algorithm: "<<m_algorithm);
+		throw RuntimeException("Wrong sampling algorithm");
+	}
+}
 void patExperimentBed::readUniversalChoiceSet() {
 
 	if (m_universal_choice_set.empty()) {
@@ -223,9 +284,30 @@ void patExperimentBed::readUniversalChoiceSet() {
 	}
 }
 void patExperimentBed::initCostFunctions() {
+	map<ARC_ATTRIBUTES_TYPES, double> utility_link_coef;
+
+	utility_link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_link_scale;
+
+	utility_link_coef[ENUM_MOTORWAY_LENGTH] = 0.0;
+	utility_link_coef[ENUM_PRIMARYWAY_LENGTH] = 0.0;
+	utility_link_coef[ENUM_SECONDARYWAY_LENGTH] = 0.0;
+	utility_link_coef[ENUM_TERTIARYWAY_LENGTH] = 0.0;
+	utility_link_coef[ENUM_TRUNK_LENGTH] = 0.0;
+	if (m_network_real) {
+		utility_link_coef[ENUM_TRAFFIC_SIGNAL] =
+				patNBParameters::the()->mh_sb_coef;
+	} else {
+		utility_link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
+	}
+
+	m_utility_function = new patUtilityFunction(utility_link_coef,
+			patNBParameters::the()->mh_link_scale,
+			patNBParameters::the()->mh_ps_coef);
 
 	if (m_algorithm == "MH") {
-		cout << "Use MH algorithm" << endl;
+
+		cout << "Use MH algorithm" << patNBParameters::the()->mh_function_type
+				<< endl;
 
 		map<ARC_ATTRIBUTES_TYPES, double> link_coef;
 
@@ -249,58 +331,67 @@ void patExperimentBed::initCostFunctions() {
 //		}
 		m_mh_router_link_cost = new patLinkAndPathCost(link_coef,
 				router_link_scale, router_ps_coef);
+		if (patNBParameters::the()->mh_function_type == 3) {
+			MHEqualWeightFunction eq_wf;
+			m_mh_weight_function = eq_wf.clone();
 
-		m_mh_weight_function = new MHWeightFunction(link_coef,
-				patNBParameters::the()->mh_link_scale,
-				patNBParameters::the()->mh_ps_coef,
-				patNBParameters::the()->mh_obs_scale);
-		cout << "MH params:" << endl;
-		cout << "\tmu\t " << patNBParameters::the()->mh_link_scale << endl;
-		cout << "\tlength\t " << patNBParameters::the()->mh_length_coef << endl;
-		cout << "\tsb\t " << patNBParameters::the()->mh_sb_coef << endl;
-		cout << "\tps\t " << patNBParameters::the()->mh_ps_coef << endl;
-		cout << "\tobs\t " << patNBParameters::the()->mh_obs_scale << endl;
-		if (patNBParameters::the()->mh_ps_coef > 0.0) {
+		} else {
+			MHSamplingWeightFunction mh_wf(link_coef,
+					patNBParameters::the()->mh_link_scale,
+					patNBParameters::the()->mh_ps_coef,
+					patNBParameters::the()->mh_obs_scale);
+			cout << "MH params:" << endl;
+			cout << "\tmu\t " << patNBParameters::the()->mh_link_scale << endl;
+			cout << "\tlength\t " << patNBParameters::the()->mh_length_coef
+					<< endl;
+			cout << "\tsb\t " << patNBParameters::the()->mh_sb_coef << endl;
+			cout << "\tps\t " << patNBParameters::the()->mh_ps_coef << endl;
+			cout << "\tobs\t " << patNBParameters::the()->mh_obs_scale << endl;
+			if (patNBParameters::the()->mh_ps_coef > 0.0) {
 
-			cout << "\tUse path size for sampling algorithm" << endl;
-			readUniversalChoiceSet();
+				cout << "\tUse path size for sampling algorithm" << endl;
+				readUniversalChoiceSet();
 
-			if (m_universal_choice_set.empty()) {
-				throw RuntimeException(
-						"ps coef is specified but universal choice set not found");
+				if (m_universal_choice_set.empty()) {
+					throw RuntimeException(
+							"ps coef is specified but universal choice set not found");
+				}
+				patPathSizeComputer ps_computer(
+						m_universal_choice_set.getChoiceSet());
+				mh_wf.setPathSizeComputer(&ps_computer);
 			}
-			patPathSizeComputer ps_computer(
-					m_universal_choice_set.getChoiceSet());
-			m_mh_weight_function->setPathSizeComputer(&ps_computer);
-		}
-		int sample_with_obs = patNBParameters::the()->samplingWithObs;
-		if (patNBParameters::the()->mh_obs_scale > 0.0) {
-			cout << "\tUse mh observations for sampling algorithm" << endl;
-			readObservations();
-			patGetPathProbasFromObservations ppfo;
-			if (m_observations.empty()) {
-				throw RuntimeException("No observation is read");
+			int sample_with_obs = patNBParameters::the()->samplingWithObs;
+			if (patNBParameters::the()->mh_obs_scale > 0.0) {
+				cout << "\tUse mh observations for sampling algorithm" << endl;
+				readObservations();
+				patGetPathProbasFromObservations ppfo;
+				if (m_observations.empty()) {
+					throw RuntimeException("No observation is read");
+				}
+				m_obs_path_probas = ppfo.getPathProbas(m_observations);
+				cout << "\t" << m_obs_path_probas.size()
+						<< " mh observations for sampling algorithm" << endl;
+				for (std::map<const patMultiModalPath, double>::const_iterator path_iter =
+						m_obs_path_probas.begin();
+						path_iter != m_obs_path_probas.end(); ++path_iter) {
+//				cout << path_iter->first.getArcString() << endl;
+				}
+				mh_wf.setPathProbas(&m_obs_path_probas);
 			}
-			m_obs_path_probas = ppfo.getPathProbas(m_observations);
-			cout << "\t" << m_obs_path_probas.size()
-					<< " mh observations for sampling algorithm" << endl;
-			for (std::map<const patMultiModalPath, double>::const_iterator path_iter =
-					m_obs_path_probas.begin();
-					path_iter != m_obs_path_probas.end(); ++path_iter) {
-				cout<<path_iter->first.getArcString()<<endl;
+
+			else {
+				mh_wf.setPathProbas(NULL);
+
 			}
-			m_mh_weight_function->setPathProbas(&m_obs_path_probas);
+			m_mh_weight_function = mh_wf.clone();
 		}
-
-		else {
-			m_mh_weight_function->setPathProbas(NULL);
-
-		}
+		m_nip_calculator = new MHNIPPG();
 		m_mh_path_generator = new MHPathGenerator(m_rnd);
 		m_mh_path_generator->setRouterLinkCost(m_mh_router_link_cost);
+		m_mh_path_generator->setUtilityFunction(m_utility_function);
 		m_mh_path_generator->setNetwork(
 				m_network_environment->getNetwork(m_transport_mode));
-
+		m_mh_path_generator->setNIPCalculator(m_nip_calculator);
 		m_mh_path_generator->setMHWeight(m_mh_weight_function);
 	} else if (m_algorithm == "RW") {
 		cout << "Use RW algorithm" << endl;
@@ -308,6 +399,7 @@ void patExperimentBed::initCostFunctions() {
 
 		rw_link_coef[ENUM_LENGTH] = 1.0;
 
+		m_network_environment->computeGeneralizedCost(rw_link_coef);
 		m_rw_router_link_cost = new patLinkAndPathCost(rw_link_coef, 1.0, 0.0);
 
 		m_rw_path_generator = new RWPathGenerator(m_rnd,
@@ -317,21 +409,6 @@ void patExperimentBed::initCostFunctions() {
 				m_network_environment->getNetwork(m_transport_mode));
 
 	}
-
-	map<ARC_ATTRIBUTES_TYPES, double> utility_link_coef;
-
-	utility_link_coef[ENUM_LENGTH] = patNBParameters::the()->mh_link_scale;
-
-	if (m_network_real) {
-		utility_link_coef[ENUM_TRAFFIC_SIGNAL] =
-				patNBParameters::the()->mh_sb_coef;
-	} else {
-		utility_link_coef[ENUM_SPEED_BUMP] = patNBParameters::the()->mh_sb_coef;
-	}
-
-	m_utility_function = new patUtilityFunction(utility_link_coef,
-			patNBParameters::the()->mh_link_scale,
-			patNBParameters::the()->mh_ps_coef);
 
 }
 
@@ -369,7 +446,7 @@ vector<string> patExperimentBed::getObservationFiles() {
 		exit(-1);
 	}
 //	DEBUG_MESSAGE("Direcotry " << dir_name_char << " is now open");
-	vector<string> observation_files;
+	vector < string > observation_files;
 	unsigned char isFile = 0x8;
 	string esp("~");
 	string kml("kml");
@@ -413,7 +490,7 @@ void patExperimentBed::readObservations() {
 }
 void patExperimentBed::readSyntheticObservations() {
 
-	vector<string> observation_files = getObservationFiles();
+	vector < string > observation_files = getObservationFiles();
 	for (unsigned i = 0; i < observation_files.size() && i < m_nbr_observations;
 			++i) {
 		string file_name = m_observation_folder + observation_files[i];
@@ -425,12 +502,21 @@ void patExperimentBed::readSyntheticObservations() {
 		}
 		patReadPathsFromKML rp;
 
-		vector<patMultiModalPath> obs_paths = rp.read(
+		map<patMultiModalPath, double> obs_paths = rp.read(
 				&m_network_environment->getNetworkElements(), file_name);
-		if (obs_paths.size() != 1) {
-			WARNING("WRONG PATH NUMBER"<<obs_paths.size());
+		cout << "An observation with paths: " << obs_paths.size() << endl;
+		if (obs_paths.size() == 1) {
+
+			new_observation.addPath(obs_paths.begin()->first, 1.0);
+		} else {
+			for (map<patMultiModalPath, double>::const_iterator path_iter =
+					obs_paths.begin(); path_iter != obs_paths.end();
+					++path_iter) {
+				cout << "\t path proba: " << path_iter->second << endl;
+				new_observation.addPath(path_iter->first, path_iter->second);
+			}
 		}
-		new_observation.addPath(obs_paths.front(), 1.0);
+		cout << endl;
 
 		unsigned slash_position = observation_files[i].rfind(".");
 		new_observation.setId(observation_files[i].substr(0, slash_position));
@@ -444,7 +530,7 @@ void patExperimentBed::readSyntheticObservations() {
 
 void patExperimentBed::readRealObservations() {
 
-	vector<string> observation_files = getObservationFiles();
+	vector < string > observation_files = getObservationFiles();
 	for (unsigned i = 0; i < observation_files.size() && i < m_nbr_observations;
 			++i) {
 		string file_name = m_observation_folder + observation_files[i];
@@ -464,17 +550,22 @@ patExperimentBed::patExperimentBed(bool network_real, bool observation_real,
 				NULL), m_mh_path_generator(NULL), m_rw_path_generator(NULL), m_algorithm(
 				patNBParameters::the()->pathSampleAlgorithm), m_rnd(
 				patNBParameters::the()->randomSeed), m_experiment_folder(
-				patNBParameters::the()->observationDirectory), m_observation_folder(
-				patNBParameters::the()->observationDirectory + "observations/"), m_choice_set_foler(
-				patNBParameters::the()->observationDirectory
-						+ patNBParameters::the()->choiceSetFolder + "/") {
+				patNBParameters::the()->experimentDirectory), m_observation_folder(
+				patNBParameters::the()->experimentDirectory
+						+ patNBParameters::the()->observationDirectory), m_choice_set_foler(
+				patNBParameters::the()->experimentDirectory
+						+ patNBParameters::the()->choiceSetFolder + "/"), m_nip_calculator(
+				NULL) {
 
 	initiateNetworks();
 	initCostFunctions();
 }
 
 patExperimentBed::~patExperimentBed() {
-
+	if (m_nip_calculator != NULL) {
+		delete m_nip_calculator;
+		m_nip_calculator = NULL;
+	}
 	if (m_mh_router_link_cost != NULL) {
 		delete m_mh_router_link_cost;
 		m_mh_router_link_cost = NULL;
@@ -510,9 +601,161 @@ patExperimentBed::~patExperimentBed() {
 	}
 
 }
+
+void patExperimentBed::analyzeOBS() {
+	checkObservationFolder();
+	readObservations();
+	string file_name = m_observation_folder + string("/obs_stats.csv");
+	ofstream obs_stats_file(file_name.c_str());
+
+	unsigned min_can=INT_MAX;
+	unsigned max_can=0;
+	unsigned min_od=INT_MAX;
+	unsigned max_od=0;
+	for (unsigned i = 0; i < m_observations.size(); ++i) {
+		unsigned nbr_can=m_observations[i].getNbrOfCandidates();
+		unsigned nbr_od=m_observations[i].getNbOfOds();
+		obs_stats_file<<nbr_can<<"\t"<<nbr_od<<endl;
+	}
+	obs_stats_file.close();
+}
+void patExperimentBed::analyzeChoiceSet() {
+	checkObservationFolder();
+	checkChoiceSetFolder();
+	readObservations();
+	readChoiceSetForObservations();
+
+	string choiceset_size_string =
+			patNBParameters::the()->choiceSetInBiogemeData;
+	size_t last_space = 0;
+	size_t space_position = choiceset_size_string.find_first_of(',',
+			last_space);
+	int num_threads = patNBParameters::the()->nbrOfThreads;
+	while (space_position != string::npos) {
+		string int_str = choiceset_size_string.substr(last_space,
+				space_position - last_space);
+		int c_size = atoi(int_str.c_str());
+		if (c_size > 0) {
+			string file_name = m_choice_set_foler + string("/sim_")
+					+ boost::lexical_cast<string>(c_size) + string(".txt");
+			cout << file_name;
+			ofstream sample(file_name.c_str());
+//			sample << setprecision(7) << setiosflags(ios::scientific);
+#pragma omp parallel num_threads( num_threads)
+			{
+
+#pragma omp for
+				for (unsigned i = 0; i < m_observations.size(); ++i) {
+					string obs_id = m_observations[i].getId();
+					double sim = m_observations[i].computeChoiceSetSimilarity(
+							c_size);
+
+#pragma omp critical
+					sample << obs_id << "," << sim << endl;
+				}
+			}
+			sample.close();
+
+		}
+
+		last_space = space_position + 1;
+		space_position = choiceset_size_string.find(',', last_space);
+	}
+}
+
+void patExperimentBed::kml2SHP(const string& file_name) const {
+
+	patReadPathsFromKML PathReader;
+
+	map<patMultiModalPath, double> path_set = PathReader.read(
+			&(m_network_environment->getNetworkElements()), file_name);
+
+	string shape_file_path = file_name + ".shp";
+	SHPHandle shp_file_handler = SHPCreate(shape_file_path.c_str(), SHPT_ARC);
+
+	string path_dbf_file_path = file_name + ".dbf";
+	DBFHandle path_dbf_handler = DBFCreate(path_dbf_file_path.c_str());
+
+	int proba_dbf_id = DBFAddField(path_dbf_handler, "proba", FTDouble, 15, 10);
+	for (map<patMultiModalPath, double>::const_iterator path_iter =
+			path_set.begin(); path_iter != path_set.end(); ++path_iter) {
+
+		vector<double> X, Y;
+		path_iter->first.getOriginalXY(X, Y);
+
+		double padfX[X.size()];
+		double padfY[Y.size()];
+
+		std::copy(X.begin(), X.end(), padfX);
+		std::copy(Y.begin(), Y.end(), padfY);
+
+		SHPObject* path_shp_object = SHPCreateSimpleObject(SHPT_ARC, X.size(),
+				padfX, padfY, NULL);
+		int object_number = SHPWriteObject(shp_file_handler, -1,
+				path_shp_object);
+		SHPDestroyObject(path_shp_object);
+
+		DBFWriteDoubleAttribute(path_dbf_handler, object_number, proba_dbf_id,
+				path_iter->second);
+
+	}
+
+	SHPClose(shp_file_handler);
+	DBFClose(path_dbf_handler);
+	cout << "patExperimentBed: paths onverted" << endl;
+	return;
+}
+void patExperimentBed::obs2SHP() {
+	checkObservationFolder();
+	readObservations();
+
+	string shape_file_path = "vis/observations.shp";
+	SHPHandle shp_file_handler = SHPCreate(shape_file_path.c_str(), SHPT_ARC);
+
+	for (unsigned i = 0; i < m_observations.size(); ++i) {
+		const map<const patMultiModalPath, double> paths =
+				m_observations[i].getPathProbas();
+		for (map<patMultiModalPath, double>::const_iterator path_iter =
+				paths.begin(); path_iter != paths.end(); ++path_iter) {
+
+			vector<double> X, Y;
+			path_iter->first.getOriginalXY(X, Y);
+
+			double padfX[X.size()];
+			double padfY[Y.size()];
+
+			std::copy(X.begin(), X.end(), padfX);
+			std::copy(Y.begin(), Y.end(), padfY);
+
+			SHPObject* path_shp_object = SHPCreateSimpleObject(SHPT_ARC,
+					X.size(), padfX, padfY, NULL);
+			int object_number = SHPWriteObject(shp_file_handler, -1,
+					path_shp_object);
+			SHPDestroyObject(path_shp_object);
+
+		}
+
+	}
+	SHPClose(shp_file_handler);
+	cout << "patExperimentBed: observations converted" << endl;
+	return;
+
+}
+void patExperimentBed::writeChoiceSetSHP() {
+	checkObservationFolder();
+	checkChoiceSetFolder();
+	readObservations();
+
+	readChoiceSetForObservations();
+
+	for (unsigned i = 0; i < m_observations.size(); ++i) {
+		m_observations[i].writeChoiceSetSHP(m_choice_set_foler);
+	}
+}
 void patExperimentBed::writeBiogeme() {
 	checkObservationFolder();
 	checkChoiceSetFolder();
+
 	patPathGenerator* sampling_pg(NULL);
 
 	if (m_algorithm == "MH") {
@@ -531,15 +774,26 @@ void patExperimentBed::writeBiogeme() {
 	patWriteBiogemeData wbd(m_observations, m_utility_function, sampling_pg,
 			&m_universal_choice_set, m_rnd);
 
-	wbd.writeSampleFile(m_choice_set_foler);
+	int last_char = m_observation_folder.size() - 1;
+	if (m_observation_folder.rfind("/") == last_char) {
+		--last_char;
+	}
+
+	int last_pre_slash = m_observation_folder.rfind("/", last_char);
+
+	string sample_prefix = m_observation_folder.substr(last_pre_slash + 1,
+			last_char - last_pre_slash);
+//	sample_prefix.erase(sample_prefix.find("/"),1);
+	cout << sample_prefix << endl;
+	wbd.writeSampleFile(m_choice_set_foler, sample_prefix);
 
 }
 void patExperimentBed::readChoiceSetForObservations() {
-	DEBUG_MESSAGE("Read choice set for observations: "<<m_observations.size());
+	DEBUG_MESSAGE( "Read choice set for observations: "<<m_observations.size());
 	int sampled = 0;
 	int not_sampled = 0;
 	vector<int> uppod;
-	vector<pair<int, int> > od_paths;
+	vector < pair<int, int> > od_paths;
 
 #pragma omp parallel num_threads( patNBParameters::the()->nbrOfThreads)
 
@@ -569,6 +823,7 @@ void patExperimentBed::readChoiceSetForObservations() {
 							+ m_observations[i].getId() + "_"
 							+ boost::lexical_cast<string>(file_index)
 							+ "_sample.kml";
+//					cout<<sample_file<<endl;
 					if (!ifstream(sample_file.c_str())) {
 
 						break;
@@ -681,7 +936,7 @@ void patExperimentBed::simulateObservations() {
 			cout << "Start simulation" << endl;
 			MHObservationWritterWrapper path_writer(m_observation_folder,
 					patNBParameters::the()->SAMPLEINTERVAL_ELEMENT,
-					m_mh_weight_function, i * block);
+					m_utility_function, i * block);
 			generator_clone->setSampleCount(block);
 			generator_clone->setWritterWrapper(&path_writer);
 			generator_clone->run(origin, destination);
@@ -744,13 +999,13 @@ void patExperimentBed::testNetwork() const {
 	patMultiModalPath new_path_bwd = start_router.bestRouteBwd(origin,
 			destination);
 	patKMLPathWriter sp_writer("sp.kml");
-	map<string, string> attr;
+	map < string, string > attr;
 	sp_writer.writePath(sp_path, attr);
 	sp_writer.writePath(new_path_fwd, attr);
 	sp_writer.writePath(new_path_bwd, attr);
 	DEBUG_MESSAGE("check sp"<<(sp_path==new_path_fwd));
 	DEBUG_MESSAGE(m_mh_router_link_cost->getCost(sp_path));
-	DEBUG_MESSAGE(m_mh_weight_function->getCost(sp_path));
+//	DEBUG_MESSAGE(m_mh_weight_function->getCost(sp_path));
 	DEBUG_MESSAGE(m_mh_weight_function->logWeigthOriginal(sp_path));
 
 	unordered_set<const patNode*> uncompressed_nodes;

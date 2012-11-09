@@ -160,7 +160,7 @@ void patWriteBiogemeData::writeData(const string& fileName,
 
 	sampleFile.close();
 }
-void patWriteBiogemeData::writeSampleFile(const string& folder) {
+void patWriteBiogemeData::writeSampleFile(const string& folder, const string& sample_prefix) {
 	string choiceset_size_string =
 			patNBParameters::the()->choiceSetInBiogemeData;
 	DEBUG_MESSAGE(choiceset_size_string)
@@ -174,7 +174,7 @@ void patWriteBiogemeData::writeSampleFile(const string& folder) {
 		int c_size = atoi(int_str.c_str());
 		DEBUG_MESSAGE(c_size);
 		if (c_size > 0) {
-			string file_name = folder + string("/sample_")
+			string file_name = folder + "/"+sample_prefix+string("_")
 					+ boost::lexical_cast<string>(c_size) + string(".dat");
 			DEBUG_MESSAGE(
 					m_observations.size()<<" observations write to"<<file_name);

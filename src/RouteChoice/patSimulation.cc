@@ -111,26 +111,28 @@ void patSimulation::run(string folder, const patRouter* router) {
 		attrs_true["proba"] = boost::lexical_cast<string>(
 				1.0 - patNBParameters::the()->errorInSimulatedObservations);
 		kml_writer.writePath(paths_vector[sampled], attrs_true);
-		if (patNBParameters::the()->errorInSimulatedObservations > 0.0
-				&& patNBParameters::the()->nbrOfSimulatedErrorPaths > 0) {
-			patSimulateProbabilisticPaths simulate_prob_paths(
-					paths_vector[sampled], router);
-			map<patMultiModalPath, double> simulated_paths =
-					simulate_prob_paths.run(
-							patNBParameters::the()->nbrOfSimulatedErrorPaths,
-							patNBParameters::the()->errorInSimulatedObservations);
-			for (map<patMultiModalPath, double>::iterator path_iter =
-					simulated_paths.begin(); path_iter != simulated_paths.end();
-					++path_iter) {
-				map<string, string> attrs;
-				attrs["true"] = boost::lexical_cast<string>(
-						utility_vector[sampled]);
-				attrs["id"] = boost::lexical_cast<string>(sampled);
-				attrs["proba"] = boost::lexical_cast<string>(path_iter->second);
-				kml_writer.writePath(path_iter->first, attrs);
 
-			}
-		}
+		//Deprecated and replaced by patSimulationProbabilisicObs
+//		if (patNBParameters::the()->errorInSimulatedObservations > 0.0
+//				&& patNBParameters::the()->nbrOfSimulatedErrorPaths > 0) {
+//			patSimulateProbabilisticPaths simulate_prob_paths(
+//					paths_vector[sampled], router);
+//			map<patMultiModalPath, double> simulated_paths =
+//					simulate_prob_paths.run(
+//							patNBParameters::the()->nbrOfSimulatedErrorPaths,
+//							patNBParameters::the()->errorInSimulatedObservations);
+//			for (map<patMultiModalPath, double>::iterator path_iter =
+//					simulated_paths.begin(); path_iter != simulated_paths.end();
+//					++path_iter) {
+//				map<string, string> attrs;
+//				attrs["true"] = boost::lexical_cast<string>(
+//						utility_vector[sampled]);
+//				attrs["id"] = boost::lexical_cast<string>(sampled);
+//				attrs["proba"] = boost::lexical_cast<string>(path_iter->second);
+//				kml_writer.writePath(path_iter->first, attrs);
+//
+//			}
+//		}
 		kml_writer.close();
 	}
 	sampled_file.close();

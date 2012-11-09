@@ -83,13 +83,9 @@ map<string, double> patGpsPoint::distanceTo(const patCoordinates& upGeoCoord,
 
 	map<string, double> distance;
 
-
-	distance["up"] = m_geoCoord.distanceTo(
-			upGeoCoord);
-	distance["down"] = m_geoCoord.distanceTo(
-			downGeoCoord);
-	distance["length"] =(&upGeoCoord)->distanceTo(
-					downGeoCoord);
+	distance["up"] = m_geoCoord.distanceTo(upGeoCoord);
+	distance["down"] = m_geoCoord.distanceTo(downGeoCoord);
+	distance["length"] = (&upGeoCoord)->distanceTo(downGeoCoord);
 
 	double cosUpNode = (distance["up"] * distance["up"]
 			+ distance["length"] * distance["length"]
@@ -138,8 +134,7 @@ map<string, double> patGpsPoint::distanceTo(const patCoordinates& upGeoCoord,
 }
 
 double patGpsPoint::distanceTo(const patGpsPoint* aGpsPoint) const {
-	return m_geoCoord.distanceTo(
-			*(aGpsPoint->getGeoCoord()));
+	return m_geoCoord.distanceTo(*(aGpsPoint->getGeoCoord()));
 }
 
 map<string, double> patGpsPoint::distanceTo(const patArc* theArc) const {
@@ -154,8 +149,7 @@ map<string, double> patGpsPoint::distanceTo(const patArc* theArc) const {
 }
 
 double patGpsPoint::distanceTo(const patNode* theNode) const {
-	return m_geoCoord.distanceTo(
-			theNode->getGeoCoord());
+	return m_geoCoord.distanceTo(theNode->getGeoCoord());
 }
 
 double patGpsPoint::calHeading(const patGpsPoint* nextGpsPoint) const {
@@ -173,8 +167,8 @@ double patGpsPoint::calHeading(const patGpsPoint* prevGpsPoint,
 //		double s1 = prevGpsPoint->getSpeed();
 //		double s2 = m_speed;
 
-		//ratio= s1 / (s1 + s2);
-		//double ratio  = 0.5;
+//ratio= s1 / (s1 + s2);
+//double ratio  = 0.5;
 		return ratio * incoming + (1 - ratio) * outGoing;
 	} else {
 		double h1 = incoming;
@@ -202,30 +196,30 @@ double patGpsPoint::calSpeed(const patGpsPoint* another_point) {
 
 	double time_diff = fabs(another_point->getTimeStamp() - getTimeStamp());
 
-	double speed =  3.6 * distanceTo(another_point) / time_diff;
-	DEBUG_MESSAGE("speed"<<speed<<","<<distanceTo(another_point)<<"/"<<another_point->getTimeStamp() <<"-"<<getTimeStamp()<<"."<<time_diff);
+	double speed = 3.6 * distanceTo(another_point) / time_diff;
+//	DEBUG_MESSAGE(
+//			"speed"<<speed:<<","<<distanceTo(another_point)<<"/"<<another_point->getTimeStamp() <<"-"<<getTimeStamp()<<"."<<time_diff);
 	return speed;
 
 }
 double patGpsPoint::calSpeed(const patGpsPoint* prevGpsPoint,
 		const patGpsPoint* nextGpsPoint) {
-	if (prevGpsPoint==NULL && nextGpsPoint==NULL){
+	if (prevGpsPoint == NULL && nextGpsPoint == NULL) {
 		WARNING("No valid GPS given");
 		return 0.0;
-	}
-	else if (prevGpsPoint==NULL){
+	} else if (prevGpsPoint == NULL) {
 		return calSpeed(nextGpsPoint);
-	}
-	else if (nextGpsPoint==NULL){
+	} else if (nextGpsPoint == NULL) {
 		return calSpeed(prevGpsPoint);
-	}
-	else{
-		double time_diff_prev = fabs( getTimeStamp()-prevGpsPoint->getTimeStamp() );
-		double time_diff_next = fabs( getTimeStamp()-nextGpsPoint->getTimeStamp() );
+	} else {
+		double time_diff_prev = fabs(
+				getTimeStamp() - prevGpsPoint->getTimeStamp());
+		double time_diff_next = fabs(
+				getTimeStamp() - nextGpsPoint->getTimeStamp());
 
 		double speed_prev = calSpeed(prevGpsPoint);
-		double speed_next  = calSpeed(nextGpsPoint);
-		return time_diff_prev<=time_diff_next?speed_prev:speed_next;
+		double speed_next = calSpeed(nextGpsPoint);
+		return time_diff_prev <= time_diff_next ? speed_prev : speed_next;
 	}
 }
 double patGpsPoint::calHeading(const patCoordinates* startCoord,
@@ -259,9 +253,9 @@ double patGpsPoint::calHeading(const patCoordinates* startCoord,
 ostream & operator<<(ostream& str, const patGpsPoint& x) {
 	str.precision(15);
 	str << "Time:" << x.m_timestamp << ";Speed:" << x.m_speed
-			<< ";Speed Accuracy:" << x.m_speedAccuracy << ";Heading:" << x.m_heading
-			<< ";Horizontal horizonAccuracy:" << x.m_horizonAccuracy << "; type:"
-			<< x.getType() << endl;
+			<< ";Speed Accuracy:" << x.m_speedAccuracy << ";Heading:"
+			<< x.m_heading << ";Horizontal horizonAccuracy:"
+			<< x.m_horizonAccuracy << "; type:" << x.getType() << endl;
 }
 
 double patGpsPoint::getSpeed() const {
@@ -282,8 +276,7 @@ double patGpsPoint::getHeadingAccuracy() const {
 
 double patGpsPoint::getMaxSpeed(const patGpsPoint* prevGpsPoint) const {
 	double maxSpeed = getSpeedMS();
-	double geoSpeed = m_geoCoord.distanceTo(
-			prevGpsPoint->m_geoCoord)
+	double geoSpeed = m_geoCoord.distanceTo(prevGpsPoint->m_geoCoord)
 			/ (m_timestamp - prevGpsPoint->getTimeStamp());
 	//geoSpeed = (geoSpeed < (120.0/3.6))?geoSpeed:(120.0/3.6);
 	double nextSpeed = prevGpsPoint->getSpeedMS();
@@ -363,7 +356,7 @@ pair<double, double> patGpsPoint::calSpeedInZone(
 
 		//speedProfile.second += pow( (gpsIter->first->getSpeedMS()-speedProfile.first),2);
 	}
-	speedProfile.second /= pow((double)gpsPointsInZone.size(), 2);
+	speedProfile.second /= pow((double) gpsPointsInZone.size(), 2);
 
 	//speedProfile.second/=(gpsPointsInZone.size()-1);
 
@@ -445,11 +438,11 @@ void patGpsPoint::setType(string theType) {
 }
 
 double patGpsPoint::getLatitude() const {
-	return m_geoCoord.latitudeInRadians;
+	return m_geoCoord.latitudeInDegrees;
 }
 
 double patGpsPoint::getLongitude() const {
-	return m_geoCoord.longitudeInRadians;
+	return m_geoCoord.longitudeInDegrees;
 }
 
 double patGpsPoint::getHeading() const {
@@ -488,10 +481,9 @@ PlacemarkPtr patGpsPoint::getKML(int point_id) const {
 	time_t rawtime = getTimeStamp();
 	tm* ptm = gmtime(&rawtime);
 	char buffer[50];
-	sprintf(
-			buffer,
-			"%4d-%02d-%02dT%02d:%02d:%02dZ",
-			(ptm->tm_year + 1900), (ptm->tm_mon + 1), ptm->tm_mday, (ptm->tm_hour) % 24, ptm->tm_min, ptm->tm_sec);
+	sprintf(buffer, "%4d-%02d-%02dT%02d:%02d:%02dZ", (ptm->tm_year + 1900),
+			(ptm->tm_mon + 1), ptm->tm_mday, (ptm->tm_hour) % 24, ptm->tm_min,
+			ptm->tm_sec);
 	kmlbase::DateTime* date_time = kmlbase::DateTime::Create(buffer);
 
 	TimeStampPtr time_stamp = factory->CreateTimeStamp();

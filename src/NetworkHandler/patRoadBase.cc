@@ -29,8 +29,12 @@ patRoadBase::~patRoadBase() {
 
 }
 double patRoadBase::getGeneralizedCost() const {
+//	cout<<m_generalized_cost;
 	if (m_generalized_cost == 0.0) {
-		throw RuntimeException("wrong generalized cost");
+//		cout<<"patRoadBase: zero generalized cost"<<getUpNode()->getUserId()<<"-"<<getDownNode()->getUserId()<<endl;
+//		cout<<"patRoadBase: zero generalized cost"<<*getUpNode()<<"-"<<*getDownNode()<<endl;
+//		cout<<<<endl;
+//		throw RuntimeException("wrong generalized cost");
 	}
 	return m_generalized_cost;
 }
@@ -47,6 +51,7 @@ double patRoadBase::computeGeneralizedCost(
 				const_cast<patArc*>(*arc_iter)->computeGeneralizedCost(
 						link_coef);
 	}
+	cout<<m_generalized_cost<<endl;
 	return m_generalized_cost;
 }
 FolderPtr patRoadBase::getKML(string mode) const {
@@ -71,4 +76,29 @@ FolderPtr patRoadBase::getKML(string mode) const {
 string patRoadBase::getArcString() const {
 //	cout << "road string"<<m_arc_string << endl;
 	return m_arc_string;
+}
+
+string patRoadBase::getGeomText() const {
+	vector<const patArc*> arc_list = getArcList();
+
+	stringstream ss;
+//	ss << 'ST_GeomFromText("MULTILINESTRING((';
+
+	vector<const patArc*>::const_iterator arc_iter = arc_list.begin();
+
+	const patNode* curr_node = (*arc_iter)->getUpNode();
+
+	ss << curr_node->getLongitude();
+	ss << " ";
+	ss << curr_node->getLatitude();
+	for (; arc_iter != arc_list.end(); ++arc_iter) {
+		const patNode* curr_node = (*arc_iter)->getDownNode();
+		ss<<", ";
+		ss << curr_node->getLongitude();
+		ss << " ";
+		ss << curr_node->getLatitude();
+	}
+
+//	ss << '))", 4326)';
+	return ss.str();
 }

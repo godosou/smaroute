@@ -31,9 +31,9 @@ patReadPathsFromKML::~patReadPathsFromKML() {
 	// TODO Auto-generated destructor stub
 }
 
-
-vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_network, string file_name){
-	vector<patMultiModalPath> paths;
+map<patMultiModalPath, double> patReadPathsFromKML::read(
+		const patNetworkElements* m_network, string file_name) {
+	map<patMultiModalPath, double> paths;
 	xml::tree_parser parser(file_name.c_str());
 
 	if (!parser) {
@@ -61,8 +61,27 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 			if (od_iter->is_text()) {
 				continue;
 			}
-
+//			bool is_path=true;
 			if (string(od_iter->get_name()) == string("Folder")) {
+				bool is_od_folder = false;
+				for (xml::node::iterator name_iter_od = od_iter->begin();
+						name_iter_od != od_iter->end(); ++name_iter_od) {
+					if (string(name_iter_od->get_name()) == string("name")) {
+						string folder_name(name_iter_od->get_content());
+						//					cout << folder_name << endl;
+						if (folder_name.find(string("DDR")) == string::npos
+								&& folder_name.find(string("GPS"))
+										== string::npos) {
+							is_od_folder = true;
+							//						cout << "is od folder" << endl;
+							break;
+						}
+					}
+				}
+
+				if (!is_od_folder) {
+					continue;
+				}
 				patOd od;
 				patChoiceSet od_choice_set;
 				for (xml::node::iterator path_iter = od_iter->begin();
@@ -80,20 +99,29 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 
 							int origin_id = atoi(what[1].str().c_str());
 							int dest_id = atoi(what[2].str().c_str());
-							const patNode* origin_node =
-									m_network->getNode(origin_id);
-							const patNode* dest_node =
-									m_network->getNode(dest_id);
-							if(origin_node==NULL|| dest_node==NULL){
-								throw RuntimeException("NULL NODE POINTER");
+							const patNode* origin_node = m_network->getNode(
+									origin_id);
+							const patNode* dest_node = m_network->getNode(
+									dest_id);
+
+							DEBUG_MESSAGE(origin_id<<"-"<<dest_id);
+
+							if (origin_node == NULL) {
+								throw RuntimeException("Origin NODE POINTER");
+							}
+							if (dest_node == NULL) {
+
+								throw RuntimeException("DEST NODE POINTER");
 							}
 //							DEBUG_MESSAGE(origin_id<<"-"<<dest_id);
-							od = patOd(origin_node,dest_node);
-							od_choice_set.setOD(origin_node,dest_node);
+							od = patOd(origin_node, dest_node);
+							od_choice_set.setOD(origin_node, dest_node);
 
 						} else {
-							throw RuntimeException(
-									"not od given");
+//							is_path=false;
+							break;
+//							throw RuntimeException(
+//									"patReadPathsFromKML: no od given");
 						}
 
 					} else if (string(path_iter->get_name())
@@ -101,7 +129,7 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 
 						patMultiModalPath new_path;
 						int count;
-						double log_weight;
+						double path_proba;
 						for (xml::node::iterator road_iter = path_iter->begin();
 								road_iter != path_iter->end(); ++road_iter) {
 
@@ -109,9 +137,9 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 								continue;
 							} else if (string(road_iter->get_name())
 									== string("description")) {
-//								string path_desc = road_iter->get_content();
-//								sregex rex = sregex::compile("count: (\\d+)");
-//								smatch what;
+								string path_desc = road_iter->get_content();
+								sregex rex = sregex::compile("count: (\\d+)");
+								smatch what;
 //
 //								if (regex_search(path_desc, what, rex)) {
 //
@@ -121,18 +149,34 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 //									throw RuntimeException(
 //											"not path count given");
 //								}
-//								sregex rex_log_weight = sregex::compile("logweight: ([\\-\\+]?\\d+\\.\\d+)");
-//								smatch what_log_weight;
-//
-//								if (regex_search(path_desc, what_log_weight, rex_log_weight)) {
-//
-//									log_weight = atoi(what_log_weight[1].str().c_str());
-////									DEBUG_MESSAGE(count);
-//								} else {
-//									throw RuntimeException(
-//											"not path log weight given");
-//								}
-//								DEBUG_MESSAGE(count<<","<<log_weight);
+								sregex rex_log_weight =
+										sregex::compile(
+												"proba: ([\\-\\+]?\\d+\\.\\d+e[\\-\\+]?\\d+)");
+								smatch what_log_weight;
+
+								if (regex_search(path_desc, what_log_weight,
+										rex_log_weight)) {
+
+									path_proba = atof(
+											what_log_weight[1].str().c_str());
+//									DEBUG_MESSAGE(count);
+								} else {
+									sregex rex_log_weight_nomral =
+											sregex::compile(
+													"proba: ([\\-\\+]?\\d+\\.\\d+)");
+									smatch what_log_weight;
+
+									if (regex_search(path_desc, what_log_weight,
+											rex_log_weight_nomral)) {
+
+										path_proba =
+												atof(
+														what_log_weight[1].str().c_str());
+										//									DEBUG_MESSAGE(count);
+									}
+
+								}
+//								cout <<path_proba<<endl;
 							} else if (string(road_iter->get_name())
 									== string("Folder")) {
 								for (xml::node::iterator arc_iter =
@@ -192,8 +236,7 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 															const patNode* down_node =
 																	m_network->getNode(
 																			down_node_id);
-															if (up_node
-																	== NULL) {
+															if (up_node == NULL) {
 																WARNING(
 																		"node not found: " << up_node_id);
 																throw RuntimeException(
@@ -210,8 +253,7 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 																	m_network->findArcByNodes(
 																			up_node,
 																			down_node);
-															if (new_arc
-																	== NULL) {
+															if (new_arc == NULL) {
 																WARNING(
 																		"arc not found: " << up_node_id << "-" << down_node_id);
 																throw RuntimeException(
@@ -226,9 +268,9 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 																			"not valid path");
 																}
 															}
-														}
-														else{
-															throw RuntimeException("arc description not found");
+														} else {
+															throw RuntimeException(
+																	"arc description not found");
 														}
 
 													}
@@ -241,7 +283,7 @@ vector<patMultiModalPath> patReadPathsFromKML::read(const patNetworkElements* m_
 							}
 						}
 						new_path.computeLength();
-						paths.push_back(new_path);
+						paths[new_path] = path_proba;
 					}
 				}
 			}

@@ -14,8 +14,10 @@ include_directories("${NewBioroute_SOURCE_DIR}/PathGeneration/Enumeration")
 include_directories("${NewBioroute_SOURCE_DIR}/MetropolisHasting")
 include_directories("${NewBioroute_SOURCE_DIR}/RouteChoice")
 
-#add_executable(pmm pmm.cc)
-#target_link_libraries (pmm MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+add_executable(pmm pmm.cc)
+target_link_libraries (pmm MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
+add_executable(genSP genSP.cc)
+target_link_libraries (genSP MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 
 add_executable(bioroute bioroute.cc)
 target_link_libraries (bioroute RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})

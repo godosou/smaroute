@@ -24,7 +24,7 @@ public:
 	patPathSizeComputer* clone() const;
 	void buildOverlap(const std::set<patMultiModalPath>& choice_set);
 	void initiatePS(const std::set<patMultiModalPath>& choice_set);
-	double computePS(const patMultiModalPath& path);
+	double computePS(const patMultiModalPath& path, bool not_in_set = false);
 	double getPS(const patMultiModalPath& path);
 
 	virtual ~patPathSizeComputer();

@@ -40,6 +40,9 @@ void patRouter::treeCost(patShortestPathTreeGeneral& shortest_path_tree,
 	shortest_path_tree.setLabel(root, 0.0);
 	shortest_path_tree.insertRoot(root);
 
+//	if(root->getUserId()==312048942){
+//		cout<<"get the root"<<312048942<<endl;
+//	}
 	CompareNodeFunctor label_comparator(&shortest_path_tree,
 			&patShortestPathTreeGeneral::compareLabel);
 
@@ -53,9 +56,12 @@ void patRouter::treeCost(patShortestPathTreeGeneral& shortest_path_tree,
 	} else if (direction == BWD) {
 		incidents = m_network->getIncomingIncidents();
 	}
-
 	else {
 		throw RuntimeException("wrong directin parameter");
+	}
+
+	if(incidents->size()==1){
+		cout <<"1 incidents!"<<endl;
 	}
 	/*
 	 * (3) search until all reachable targets are found
@@ -95,7 +101,10 @@ void patRouter::treeCost(patShortestPathTreeGeneral& shortest_path_tree,
 		unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_out_going =
 				incidents->find(node_to_process);
 		if (find_out_going == incidents->end()) {
-
+			if(node_to_process==root){
+				cout<<"wrong root: "<<direction<<endl;
+				cout<<"incidents: "<<incidents->size()<<endl;
+			}
 			continue;
 		}
 		for (set<const patRoadBase*>::const_iterator outgoing_road_iter =
@@ -139,6 +148,13 @@ void patRouter::treeCost(patShortestPathTreeGeneral& shortest_path_tree,
 		*true_sp = false;
 //			cout<<"New Not a sp "<<endl;
 
+	}
+	if(shortest_path_tree.getLabels().size()==1){
+		cout<<root->getUserId()<<","<<(*targets.begin())->getUserId()<<", 1 nodes visited. "<<"targets:"<<targets.size()<<endl;
+		if(incidents->find(root)==incidents->end()){
+			cout<<"root not in incidents:"<<incidents->size()<<endl;
+		}
+		throw RuntimeException("patRouter: wrong sp");
 	}
 //	cout<<"visited nodes"<<shortest_path_tree.getLabels().size()<<endl;
 }

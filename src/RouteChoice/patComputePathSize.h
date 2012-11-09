@@ -30,6 +30,21 @@ public:
 	map<const patMultiModalPath, double> computePS(
 			const patMultiModalPath& chosen_alternative,
 			const patChoiceSet& choice_set) const;
+
+
+	/**
+	 * Compute the mean similarity indicator of a set of paths;
+	 */
+	double computeMeanSimilarity(
+			const set<patMultiModalPath>& choice_set) const;
+
+	/**
+	 * Compute the similarity indicator for each path in the set.
+	 */
+	map<const patMultiModalPath, double> computeSimilarity(
+			const set<patMultiModalPath>& choice_set,
+			const unordered_map<const patArc*, int>& arc_overlap) const;
+
 	virtual ~patComputePathSize();
 };
 

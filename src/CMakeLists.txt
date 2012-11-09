@@ -7,7 +7,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 message(${CMAKE_SYSTEM_NAME})
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_OSX_ARCHITECTURES x86_64 )
 set(CMAKE_CXX_FLAGS "-DMACOSX")
 set(CMAKE_C_FLAGS -DMACOSX)
@@ -28,7 +28,7 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     # Linux specific code
         message("linux")
-
+	set(BOOST_ROOT "/home/jchen/local/boost_1_50_0") 
     set(CMAKE_CXX_COMPILER g++)
     set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include")
     SET(OperatingSystem "Linux")
@@ -52,16 +52,15 @@ find_package(PQXX)
 find_package(GSL)
 find_package(SHP)
 find_package(KML)
-find_package(Boost)
 
-SET(Boost_USE_STATIC_LIBS ON)
-SET(Boost_USE_MULTITHREAD ON)
+#SET(Boost_USE_STATIC_LIBS OFF)
+#SET(Boost_USE_MULTITHREAD ON)
 
 
+find_package(Boost )
 find_library(LIB_XMLWRAPP xmlwrapp)
-
 set(LIB_EXTRA ${PQXX_LIBRARIES} ${SHP_LIBRARIES} ${KML_LIBRARIES} ${GSLCBLAS_LIBRARIES} ${GSL_CONFIG_LIBS}
-     ${LIB_XMLWRAPP} ${LIB_UTILS} ${LIB_PARAMETERS})
+     ${LIB_XMLWRAPP} ${LIB_UTILS} ${LIB_PARAMETERS} ${Boost_LIBRARIES}  )
 
 #ADD_DEFINITIONS( "-g `xmlwrapp-config --cxxflags`")
 add_subdirectory(Utilities)

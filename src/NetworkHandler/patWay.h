@@ -44,7 +44,7 @@ public:
 	signed short int isWalkOneWay() const;
 	string getTagValue(string tag_key) const;
 	bool readFromNodesIds(patNetworkElements* network,
-			list<unsigned long> the_list_of_nodes_ids, patError*& err);
+			list<unsigned long> the_list_of_nodes_ids);
 	string getHighwayType() const;
 	bool isHighway() const;
 	bool isHighway(string highway_type);

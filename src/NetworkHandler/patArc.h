@@ -111,6 +111,20 @@ public:
 	static string getAttributeTypeString(ARC_ATTRIBUTES_TYPES type_name);
 	void setTags(const unordered_map<string, string>& tags);
 	void genArcString();
+	virtual bool isMotorWay() const;
+	virtual bool isPrimaryWay() const;
+	virtual bool isSecondaryWay() const;
+	virtual bool isTertiaryWay() const;
+	virtual bool isTrunk() const;
+	virtual double getMotorWayLength() const;
+
+	virtual double getTrunkLength() const;
+
+	virtual double getPrimaryWayLength() const;
+
+	virtual double getSecondaryWayLength() const;
+
+	virtual	double getTertiaryWayLength() const;
 	virtual double computeGeneralizedCost(
 			const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
 private:

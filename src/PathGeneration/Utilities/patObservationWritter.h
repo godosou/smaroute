@@ -20,7 +20,7 @@ public:
 	virtual ~patObservationWritter();
 	virtual void end();
 	virtual void processState(const patMultiModalPath& path,
-			const double log_weight);
+			const double log_weight=0.0, const double proba=1.);
 	virtual void start();
 
 protected:

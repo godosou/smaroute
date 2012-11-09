@@ -24,7 +24,7 @@ public:
 	void writeData(const string& fileName, const unsigned& choiceset_size);
 	void genHeader(const unsigned& choiceset_size);
 	virtual ~patWriteBiogemeData();
-	void writeSampleFile(const string& fileName);
+	void writeSampleFile(const string& fileName, const string& sample_prefix);
 	void writeSpecFile(const string& fileName, const unsigned& choiceset_size);
 protected:
 	const vector<patObservation>& m_observations;

@@ -14,7 +14,7 @@
 
 #include "patNode.h"
 #include "patLinkAndPathCost.h"
-#include "MHWeightFunction.h"
+#include "MHSamplingWeightFunction.h"
 #include "patUtilityFunction.h"
 #include "patObservation.h"
 #include "MHPathGenerator.h"
@@ -22,7 +22,7 @@
 #include "patMultiModalPath.h"
 
 
-
+#include "MHNodeInsertionProbability.h"
 #include <map>
 #include <vector>
 class patExperimentBed {
@@ -47,7 +47,7 @@ public:
 
 	void exportNetwork();
 
-
+	void writeNetworkToDB() const;
 	/**
 	 * Initiate functions for MH and RW
 	 */
@@ -74,6 +74,7 @@ public:
 	 * Read observations in m_observation_folder, and store in m_observations
 	 */
 	void readObservations();
+	void simulateObservationError() ;
 
 	/**
 	 * Read universal choice set in "universal_choice_set.kml" if exists.
@@ -96,6 +97,7 @@ public:
 	 */
 	void sampleChoiceSet();
 
+	void sampleEqualProbability();
 	/**
 	 * Simulate observations according to the the specified mh utilities.
 	 * Notice: the parameters are in mh, not utility!
@@ -114,14 +116,22 @@ public:
 	void enumerateMHPaths();
 
 
-
+	/**
+	 * Get boudingbox from the GPS files that correspond to the observation file.
+	 */
+	patGeoBoundingBox getBoundingBoxFromGPS() ;
 	void verifySamplingResult()  ;
 	/**
 	 * Read chocie set (in m_choice_set_folder) and put them in m_observations.
 	 */
 	void readChoiceSetForObservations();
 	virtual ~patExperimentBed();
+	void analyzeChoiceSet();
 	void writeBiogeme();
+	void analyzeOBS();
+	void writeChoiceSetSHP();
+	void kml2SHP(const string& file_name) const;
+	void obs2SHP();
 protected:
 	 string m_experiment_folder;
 	 string m_observation_folder;
@@ -146,7 +156,7 @@ protected:
 
 	patUtilityFunction* m_utility_function;
 
-
+	MHNodeInsertionProbability* m_nip_calculator;
 	patNetworkEnvironment* m_network_environment;
 
 	std::vector<patObservation> m_observations;

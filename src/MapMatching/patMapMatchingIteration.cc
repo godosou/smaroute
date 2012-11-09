@@ -20,12 +20,14 @@
 #include <time.h>
 #include "patCreateKmlStyles.h"
 #include<tr1/unordered_map>
+#include "patWriteMMResultKML.h"
 using namespace std::tr1;
 #include<iostream>
 #include<sstream>
 #include<fstream>
 #include "kml/dom.h"
 #include "patNetworkBase.h"
+#include <boost/lexical_cast.hpp>
 #include "patSpeedDistributions.h"
 using kmldom::DocumentPtr;
 using kmldom::KmlFactory;
@@ -37,8 +39,7 @@ patMapMatchingIteration::patMapMatchingIteration(
 		vector<patMeasurement*>* measurement_sequence,
 		map<patMultiModalPathMatching, double> paths) :
 		m_environment(environment), m_gps(gps), m_current_measurments(
-				measurement_sequence), m_paths(
-				paths) {
+				measurement_sequence), m_paths(paths) {
 }
 
 patMapMatchingIteration::~patMapMatchingIteration() {
@@ -56,7 +57,7 @@ void patMapMatchingIteration::genInitDDR() {
 	for (map<string, patNetworkBase*>::const_iterator network_iter =
 			all_networks->begin(); network_iter != all_networks->end();
 			++network_iter) {
-		DEBUG_MESSAGE("network " << network_iter->first);
+		cout << "network " << network_iter->first << endl;
 		bool found_ddr = false;
 		set<const patArc*> all_arcs = network_iter->second->getAllArcs();
 		for (set<const patArc*>::iterator arc_iter = all_arcs.begin();
@@ -66,12 +67,15 @@ void patMapMatchingIteration::genInitDDR() {
 				found_ddr = true;
 			}
 
-		}DEBUG_MESSAGE("found ddr yes/no? " << found_ddr);
+		}
+
+		cout << "found ddr yes/no? " << found_ddr << endl;
 	}
 	if (m_gps->getDDR()->empty()) {
-		DEBUG_MESSAGE("no ddr");
+		cout << ("no ddr") << endl;
 		return;
-	}DEBUG_MESSAGE("ddr arc size:" << m_gps->getDDR()->size());
+	}
+	cout << "ddr arc size:" << m_gps->getDDR()->size() << endl;
 }
 
 /**
@@ -96,15 +100,16 @@ void patMapMatchingIteration::firstIteration() {
 			all_networks->begin(); network_iter != all_networks->end();
 			++network_iter) {
 
-			if ((m_gps->getSpeed() > patNBParameters::the()->walkMaxSpeed
-					&& network_iter->second->getTransportMode() == WALK)
-					|| (m_gps->getSpeed() > patNBParameters::the()->bikeMaxSpeed
-							&& network_iter->second->getTransportMode() == BIKE)) { //speed in km/h
-				DEBUG_MESSAGE(
-						"  speed " << m_gps->getSpeed() << " too high skip network: " << network_iter->first);
+		if ((m_gps->getSpeed() > patNBParameters::the()->walkMaxSpeed
+				&& network_iter->second->getTransportMode() == WALK)
+				|| (m_gps->getSpeed() > patNBParameters::the()->bikeMaxSpeed
+						&& network_iter->second->getTransportMode() == BIKE)) { //speed in km/h
+			cout << "  speed " << m_gps->getSpeed()
+					<< " too high skip network: " << network_iter->first
+					<< endl;
 
-				continue;
-			}
+			continue;
+		}
 		patPathExtension path_initiation(network_iter->second, m_environment);
 
 		const map<const patArc*, double>* arc_list =
@@ -198,10 +203,10 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 			}
 		}
 		m_gps->setType("low_speed");
-		DEBUG_MESSAGE("	not enough distance from last GPS point, skip.");
+		cout << "	not enough distance from last GPS point, skip." << endl;
 		return false;
 	}
-	int too_long_count=0;
+	int too_long_count = 0;
 	map<TransportMode, set<const patArc*> > inter_sec_arcs =
 			m_gps->getDDR()->detInherentDDR(prevNormalGps->getDDR());
 	double travel_time = m_current_measurments->back()->getTimeStamp()
@@ -231,48 +236,57 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 			 */
 			paths_temp[path_iter->first] = 0.0;
 		}
-	}DEBUG_MESSAGE(
-			"Inherits " << paths_temp.size() << " paths from the previous DDR");
+	}
+	cout << "Inherits " << paths_temp.size() << " paths from the previous DDR"
+			<< endl;
 	const map<string, patNetworkBase*>* all_networks =
 			m_environment->getAllNetworks();
 
 	const map<const patNode*, set<const patMultiModalPathMatching*> > up_stream_paths_by_nodes =
 			sortPathsByEndNodes();
-	;DEBUG_MESSAGE(
-			"Number of end node of the previous path set:" << up_stream_paths_by_nodes.size());
+	;
+	cout << "Number of end node of the previous path set:"
+			<< up_stream_paths_by_nodes.size() << endl;
 	bool is_speed_reasonable = false;
 	for (map<const patNode*, set<const patMultiModalPathMatching*> >::const_iterator end_node_iter =
 			up_stream_paths_by_nodes.begin();
 			end_node_iter != up_stream_paths_by_nodes.end(); ++end_node_iter) {
 		//Loop over all up stream paths with the same node.
 //		DEBUG_MESSAGE("OK");
-		DEBUG_MESSAGE("start from node" << (end_node_iter->first->getName()));
+		cout << "start from node" << (end_node_iter->first->getName()) << endl;
 		for (map<string, patNetworkBase*>::const_iterator network_iter =
 				all_networks->begin(); network_iter != all_networks->end();
 				++network_iter) {
 
 			//Loop over all transport networks and extend the paths
-			if(patNBParameters::the()->speedCapacityCheckPrevious==1){
+			if (patNBParameters::the()->speedCapacityCheckPrevious == 1) {
 				if ((m_gps->getSpeed() > patNBParameters::the()->walkMaxSpeed
-						&& prevNormalGps->getSpeed() > patNBParameters::the()->walkMaxSpeed
+						&& prevNormalGps->getSpeed()
+								> patNBParameters::the()->walkMaxSpeed
 						&& network_iter->second->getTransportMode() == WALK)
-						|| (m_gps->getSpeed() > patNBParameters::the()->bikeMaxSpeed
-							&& prevNormalGps->getSpeed() > patNBParameters::the()->bikeMaxSpeed
-								&& network_iter->second->getTransportMode() == BIKE)) { //speed in km/h
-					DEBUG_MESSAGE(
-							"  speed " << m_gps->getSpeed() << " too high skip network: " << network_iter->first);
+						|| (m_gps->getSpeed()
+								> patNBParameters::the()->bikeMaxSpeed
+								&& prevNormalGps->getSpeed()
+										> patNBParameters::the()->bikeMaxSpeed
+								&& network_iter->second->getTransportMode()
+										== BIKE)) { //speed in km/h
+					cout << "  speed " << m_gps->getSpeed()
+							<< " too high skip network: " << network_iter->first
+							<< endl;
 
 					continue;
 				}
-			}
-			else{
+			} else {
 
 				if ((m_gps->getSpeed() > patNBParameters::the()->walkMaxSpeed
 						&& network_iter->second->getTransportMode() == WALK)
-						|| (m_gps->getSpeed() > patNBParameters::the()->bikeMaxSpeed
-								&& network_iter->second->getTransportMode() == BIKE)) { //speed in km/h
-					DEBUG_MESSAGE(
-							"  speed " << m_gps->getSpeed() << " too high skip network: " << network_iter->first);
+						|| (m_gps->getSpeed()
+								> patNBParameters::the()->bikeMaxSpeed
+								&& network_iter->second->getTransportMode()
+										== BIKE)) { //speed in km/h
+					cout << "  speed " << m_gps->getSpeed()
+							<< " too high skip network: " << network_iter->first
+							<< endl;
 
 					continue;
 				}
@@ -291,16 +305,16 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 			TransportMode curr_mode = network_iter->second->getTransportMode();
 			double max_distance_from_las_gps = getDistanceCeilFromGPS(m_gps,
 					prevNormalGps, network_iter->second);
-			DEBUG_MESSAGE(
-					"  find in network " << network_iter->first << " with distance " << max_distance_from_las_gps);
+			cout << "  find in network " << network_iter->first
+					<< " with distance " << max_distance_from_las_gps << endl;
 			if (network_iter->second->hasDownStream(end_node_iter->first)) {
 				if (network_iter->first == "bus") {
-					DEBUG_MESSAGE("  node has down stream");
+					cout << "  node has down stream" << endl;
 				}
 				//if the node has outgoing links, we extend.
 
 				//Build shortest path tree from a node.
-				set<pair<const patArc*, const patRoadBase*> > ddr_arcs; //Arc is the arc in ddr, roadbase is the corresponding road.
+				set < pair<const patArc*, const patRoadBase*> > ddr_arcs; //Arc is the arc in ddr, roadbase is the corresponding road.
 
 				set<patMultiModalPath> downstream_paths; //Stores down stream paths
 				//DEBUG_MESSAGE("Extend node from " << *end_node_iter->first);
@@ -331,19 +345,19 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 					//DEBUG_MESSAGE("road size"<<arc_iter->second->size());
 					list<const patRoadBase*> shortest_path_roads;
 
-							shortest_path_tree->getShortestPathTo(shortest_path_roads,
-									arc_iter->second->getUpNode());
+					shortest_path_tree->getShortestPathTo(shortest_path_roads,
+							arc_iter->second->getUpNode());
 					bool create_path_success = true;
 					patMultiModalPath shortest_path(shortest_path_roads);
 					if (shortest_path.addRoadTravelToBack(arc_iter->second)
 							== false) {
-						DEBUG_MESSAGE("invalid path");
+						cout << "invalid path" << endl;
 						continue;
 					}
 					shortest_path.setUnimodalTransportMode(curr_mode);
 
 					if (!shortest_path.isValid()) {
-						DEBUG_MESSAGE("invalid path");
+						cout << "invalid path" << endl;
 						continue;
 					} else {
 						downstream_paths.insert(shortest_path);
@@ -368,8 +382,8 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 
 				//DEBUG_MESSAGE("Path extenstion");
 				if (network_iter->first == "bus") {
-					DEBUG_MESSAGE(
-							"BUS has down stream routes: " << downstream_paths.size());
+					cout << "BUS has down stream routes: "
+							<< downstream_paths.size() << endl;
 				}
 				patPathExtension path_extension(network_iter->second,
 						m_environment);
@@ -377,8 +391,8 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 						path_extension.extendFromNode(&(end_node_iter->second),
 								end_node_iter->first, &downstream_paths,
 								m_gps->getDDR()); //Extend paths with connecting paths and the connection node.
-				DEBUG_MESSAGE(
-						"  new paths created in network " << network_iter->first << ":" << new_paths.size() << "\n");
+				cout << "  new paths created in network " << network_iter->first
+						<< ":" << new_paths.size() << "\n" << endl;
 				int new_created_path_count = 0;
 				for (set<patMultiModalPathMatching>::iterator path_iter =
 						new_paths.begin(); path_iter != new_paths.end();
@@ -399,28 +413,27 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 					}
 
 					/*
-					if (!(*path_iter).isReasonableModeChange()) {
-						// DEBUG_MESSAGE("unreasonable change");
-						continue;
-					}
-					*/
+					 if (!(*path_iter).isReasonableModeChange()) {
+					 // DEBUG_MESSAGE("unreasonable change");
+					 continue;
+					 }
+					 */
 					//DEBUG_MESSAGE("Good path.");
-
 					if (paths_temp.find(*path_iter) == paths_temp.end()) {
-						new_created_path_count ++;
+						new_created_path_count++;
 						//mmm(*path_iter).proposeStop(m_environment, m_gps->getSpeed(), 10.0);
 						paths_temp.insert(
 								pair<patMultiModalPathMatching, double>(
 										*path_iter, 0.0));
 					}
 				}
-				DEBUG_MESSAGE("NEW created "<<new_created_path_count);
+				cout << "NEW created " << new_created_path_count << endl;
 			}
 		}
 	}
-	DEBUG_MESSAGE("too long path"<<too_long_count);
+	cout << "too long path" << too_long_count << endl;
 	if (is_speed_reasonable == false) {
-		DEBUG_MESSAGE("Do not extend in any network");
+		cout << "Do not extend in any network" << endl;
 		m_gps->setType("low_speed");
 		return false;
 	}
@@ -429,8 +442,8 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 		return false;
 	}
 	m_current_measurments->back()->getDDR()->finalize(m_environment);
-	DEBUG_MESSAGE(
-			"DDR size" << m_current_measurments->back()->getDDR()->size());
+	cout << "DDR size" << m_current_measurments->back()->getDDR()->size()
+			<< endl;
 	//calPathDDR(paths_temp);
 	//m_paths=paths_temp;
 	//writeKML(0);
@@ -480,7 +493,8 @@ void patMapMatchingIteration::lastIterationForLowSpeed(
 		if (in_domain) {
 			paths_temp[path_iter->first] = 0.0;
 		}
-	}DEBUG_MESSAGE(
+	}
+	DEBUG_MESSAGE(
 			"Inherits " << paths_temp.size() << " paths from the previous DDR");
 
 	m_current_measurments->back()->getDDR()->finalize(m_environment);
@@ -497,11 +511,11 @@ void patMapMatchingIteration::lastIterationForLowSpeed(
 				last_measurement);
 	}
 	/*
-	if (paths_temp.size()
-			<= patNBParameters::the()->minGeneratedInterMediatePath) {
-		calPathDDR(paths_temp);
-	}
-*/
+	 if (paths_temp.size()
+	 <= patNBParameters::the()->minGeneratedInterMediatePath) {
+	 calPathDDR(paths_temp);
+	 }
+	 */
 	selectPaths(paths_temp); //Select paths
 
 	finalizeOneStage();
@@ -516,7 +530,8 @@ void patMapMatchingIteration::dealInterData(vector<patMeasurement*>& inter_data,
 		map<patMultiModalPathMatching, double>& paths_temp) {
 	if (inter_data.empty()) {
 		return;
-	}DEBUG_MESSAGE("Deall with intermediate data");
+	}
+	DEBUG_MESSAGE("Deall with intermediate data");
 	for (vector<patMeasurement*>::iterator data_iter = inter_data.begin();
 			data_iter != inter_data.end(); ++data_iter) {
 		DEBUG_MESSAGE("	Type of data: " << (*data_iter)->getMeasurementType());
@@ -533,24 +548,23 @@ void patMapMatchingIteration::dealInterData(vector<patMeasurement*>& inter_data,
 			}
 		}
 
-
-		 //FIXME why GPS is different?
+		//FIXME why GPS is different?
 		/*
 		 if ((*data_iter)->isGPS()) {
-		 	for (map<patMultiModalPathMatching, double>::iterator path_iter =
-		 			m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
-		 		RoadTravel road_travel = path_iter->first.back_road_travel();
+		 for (map<patMultiModalPathMatching, double>::iterator path_iter =
+		 m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
+		 RoadTravel road_travel = path_iter->first.back_road_travel();
 
-		 		bool in_domain = false;
-		 		list<const patArc*> arc_list = road_travel.road->getArcList();
+		 bool in_domain = false;
+		 list<const patArc*> arc_list = road_travel.road->getArcList();
 
-				 for (list<const patArc*>::const_iterator arc_iter =
-							 arc_list.begin(); arc_iter != arc_list.end();
-		 				++arc_iter) {
+		 for (list<const patArc*>::const_iterator arc_iter =
+		 arc_list.begin(); arc_iter != arc_list.end();
+		 ++arc_iter) {
 
-					 (*data_iter)->getDDR()->detArcDDR(*arc_iter,road_travel.mode);
-		 		}
-		 	}
+		 (*data_iter)->getDDR()->detArcDDR(*arc_iter,road_travel.mode);
+		 }
+		 }
 		 }
 		 */
 		if (!(*data_iter)->getDDR()->empty()) {
@@ -594,7 +608,8 @@ void patMapMatchingIteration::finalizeOneStage() {
 	if (m_current_measurments->back()->getDDR()->empty()) {
 		//m_current_measurments->pop_back();
 		DEBUG_MESSAGE("no path generated, invalid gps");
-	}DEBUG_MESSAGE("final ddr " << m_gps->getDDR()->size());
+	}
+	DEBUG_MESSAGE("final ddr " << m_gps->getDDR()->size());
 
 	DEBUG_MESSAGE("number of paths generated:" << m_paths.size());
 }
@@ -630,13 +645,15 @@ set<int> patMapMatchingIteration::selectPathsByShortest(
 			lengthPathSet[pl].insert(i);
 			least_change[pl] = change;
 		} else {
-			if (change < ch_iter->second && modes<  path_vector[i].getNbrOfUniqueModes() ) {
+			if (change < ch_iter->second
+					&& modes < path_vector[i].getNbrOfUniqueModes()) {
 				lengthPathSet[pl].clear();
 				//lengthPathSet[pl].insert(i);
 				least_change[pl] = change;
 
 			}
-			 if (change == ch_iter->second && modes ==  path_vector[i].getNbrOfUniqueModes() ) {
+			if (change == ch_iter->second
+					&& modes == path_vector[i].getNbrOfUniqueModes()) {
 				lengthPathSet[pl].insert(i);
 			}
 
@@ -668,7 +685,7 @@ set<int> patMapMatchingIteration::selectPathsByDDR(
 		vector<double>& proba_vector) {
 
 	//map< pair<const patArc*, TransportMode mode>, vector<int> > paths_grouped_by_arc;
-	set<pair<const patArc*, TransportMode> > important_ddr =
+	set < pair<const patArc*, TransportMode> > important_ddr =
 			selectImportantDDR();
 	set<int> path_ids;
 
@@ -694,24 +711,22 @@ set<int> patMapMatchingIteration::selectPathsByDDR(
 				pt_paths_proba_all.push_back(proba_vector[i]);
 
 				double current_path_length = path_vector[i].getLength();
-				int  curr_change= path_vector[i].getChangePoints().size();
+				int curr_change = path_vector[i].getChangePoints().size();
 				int curr_modes = path_vector[i].getNbrOfUniqueModes();
 
-
-				if (curr_change < change  || curr_modes < modes) {
+				if (curr_change < change || curr_modes < modes) {
 					path_sample_set_ids.clear();
 					pt_paths_proba.clear();
-					if(curr_change < change){
+					if (curr_change < change) {
 						change = curr_change;
 					}
-					if(curr_modes < modes)
-					{
+					if (curr_modes < modes) {
 						modes = curr_modes;
 					}
 					least_path_length = current_path_length;
 					least_length_path = i;
 				}
-				 if (curr_change == change && curr_modes == modes) {
+				if (curr_change == change && curr_modes == modes) {
 					path_sample_set_ids.push_back(i);
 					pt_paths_proba.push_back(proba_vector[i]);
 					if (current_path_length < least_path_length) {
@@ -730,21 +745,21 @@ set<int> patMapMatchingIteration::selectPathsByDDR(
 			}
 
 			/*
-			if (proba_vector[least_length_path] > -DBL_MAX) {
-				path_ids.insert(least_length_path);
+			 if (proba_vector[least_length_path] > -DBL_MAX) {
+			 path_ids.insert(least_length_path);
+			 }
+			 */
+
+			//Without least mode constraint.
+			if (patNBParameters::the()->sampleByDDRWithoutConstraint > 0) {
+				path_ids_temp = selectPathsByRandom(pt_paths_proba_all.size(),
+						pt_paths_proba_all,
+						patNBParameters::the()->sampleByDDRWithoutConstraint);
+				for (set<int>::iterator iter = path_ids_temp.begin();
+						iter != path_ids_temp.end(); ++iter) {
+					path_ids.insert(path_sample_set_ids_all[*iter]);
+				}
 			}
-*/
-
-
-			 //Without least mode constraint.
-			if (patNBParameters::the()->sampleByDDRWithoutConstraint>0){
-			 path_ids_temp = selectPathsByRandom(pt_paths_proba_all.size(),
-			 pt_paths_proba_all, patNBParameters::the()->sampleByDDRWithoutConstraint);
-			 for (set<int>::iterator iter = path_ids_temp.begin();
-			 iter != path_ids_temp.end(); ++iter) {
-			 path_ids.insert(path_sample_set_ids_all[*iter]);
-			 }
-			 }
 		}
 
 	}
@@ -757,7 +772,7 @@ set<int> patMapMatchingIteration::selectPathsByDDR(
  select important ddr with simulations
  */
 set<pair<const patArc*, TransportMode> > patMapMatchingIteration::selectImportantDDR() {
-	set<pair<const patArc*, TransportMode> > important_ddr;
+	set < pair<const patArc*, TransportMode> > important_ddr;
 	const map<TransportMode, map<const patArc*, double> >* ddr_arcs =
 			m_current_measurments->back()->getDDR()->getDDRArcs();
 	double speed = m_gps->getSpeed();
@@ -775,7 +790,7 @@ set<pair<const patArc*, TransportMode> > patMapMatchingIteration::selectImportan
 	for (map<TransportMode, map<const patArc*, double> >::const_iterator mode_iter =
 			ddr_arcs->begin(); mode_iter != ddr_arcs->end(); ++mode_iter) {
 
-		vector<pair<const patArc*, TransportMode> > ddr_vector;
+		vector < pair<const patArc*, TransportMode> > ddr_vector;
 		vector<double> proba_vector;
 		for (map<const patArc*, double>::const_iterator arc_iter =
 				mode_iter->second.begin(); arc_iter != mode_iter->second.end();
@@ -804,7 +819,8 @@ set<pair<const patArc*, TransportMode> > patMapMatchingIteration::selectImportan
 					iter != selected_ddr.end(); ++iter) {
 				important_ddr.insert(ddr_vector[*iter]);
 			}
-		}DEBUG_MESSAGE(
+		}
+		DEBUG_MESSAGE(
 				"importatnt ddr" << getTransportModeString(mode_iter->first) << ": " << important_ddr.size());
 	}
 	/*
@@ -938,13 +954,15 @@ set<int> patMapMatchingIteration::selectPathsByMode(
 				pt_paths_proba.push_back(path_probas[i]);
 			}
 		}
-	}DEBUG_MESSAGE("least change pt" << path_sample_set_ids.size());
+	}
+	DEBUG_MESSAGE("least change pt" << path_sample_set_ids.size());
 	path_ids_temp = selectPathsByRandom(pt_paths_proba.size(), pt_paths_proba,
 			patNBParameters::the()->samplePathsByMode);
 	for (set<int>::iterator iter = path_ids_temp.begin();
 			iter != path_ids_temp.end(); ++iter) {
 		path_ids.insert(path_sample_set_ids[*iter]);
-	}DEBUG_MESSAGE("SELECTED BY MODE" << path_ids.size() << "change" << change);
+	}
+	DEBUG_MESSAGE("SELECTED BY MODE" << path_ids.size() << "change" << change);
 	return path_ids;
 
 }
@@ -965,20 +983,19 @@ set<int> patMapMatchingIteration::selectPathsByChange(
 	double least_path_length = DBL_MAX;
 	int least_length_path;
 	for (int i = 0; i < path_vector.size(); ++i) {
-		int  curr_change= path_vector[i].getChangePoints().size();
+		int curr_change = path_vector[i].getChangePoints().size();
 		int curr_modes = path_vector[i].getNbrOfUniqueModes();
 		double current_path_length = path_vector[i].getLength();
 
 		if (curr_change < change || curr_modes < modes) {
 			least_change.clear();
 			least_change_proba.clear();
-					if(curr_change < change){
-						change = curr_change;
-					}
-					if(curr_modes < modes)
-					{
-						modes = curr_modes;
-					}
+			if (curr_change < change) {
+				change = curr_change;
+			}
+			if (curr_modes < modes) {
+				modes = curr_modes;
+			}
 			//least_path_length = least_path_length;
 			//least_length_path = i;
 		}
@@ -1021,62 +1038,102 @@ set<int> patMapMatchingIteration::selectPathsByRandom(int path_size,
 map<patMultiModalPathMatching, double> patMapMatchingIteration::getPaths() {
 	return m_paths;
 }
-void patMapMatchingIteration::writeKML(string trip_name,
-		int iteration_number)  {
+void patMapMatchingIteration::writeKML(string trip_name, int iteration_number) {
 	//calPathDDR(m_paths);
 	stringstream file_name;
 	iteration_number += 1;
 	file_name << patNBParameters::the()->resultPath;
-	file_name << trip_name;
+	file_name << trip_name.substr(trip_name.rfind("/") + 1, trip_name.size());
 	if (iteration_number < 1000000) {
 		file_name << "_";
 		file_name << iteration_number;
 	}
 	file_name << ".kml";
-	ofstream kml_file(file_name.str().c_str());
-	DEBUG_MESSAGE("write iteration " << iteration_number);
-	patCreateKmlStyles doc;
-	DocumentPtr document = doc.createStylesForKml();
+//	DEBUG_MESSAGE(patNBParameters::the()->resultPath);
+//	DEBUG_MESSAGE(file_name.str().c_str());
+//
+	DEBUG_MESSAGE("write iteration " << iteration_number<<","<<file_name.str());
+	{
+		patWriteMMResultKML kml_writer(file_name.str());
+		kml_writer.writeMeasurements(m_current_measurments);
+		unsigned path_id = 0;
 
-	KmlFactory* factory = KmlFactory::GetFactory();
+		double min_proba = DBL_MAX;
+		double max_proba = -DBL_MAX;
+		for (map<patMultiModalPathMatching, double>::const_iterator path_iter =
+				m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
+			double path_proba = path_iter->second;
+			min_proba = path_proba < min_proba ? path_proba : path_proba;
+			max_proba = path_proba > max_proba ? path_proba : max_proba;
+		}
 
-	FolderPtr gps_folder = factory->CreateFolder();
-	FolderPtr ddr_folder = factory->CreateFolder();
+		double sum_proba = 0.0;
+		for (map<patMultiModalPathMatching, double>::const_iterator path_iter =
+				m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
+			double path_proba = path_iter->second;
+			if (max_proba - path_proba < 10.0) {
+				sum_proba += exp(path_proba - max_proba + 10.0);
+			}
+		}
 
-	ddr_folder->set_name(string("DDR"));
-	gps_folder->set_name(string("GPS"));
-	for (int i = 0; i < m_current_measurments->size(); ++i) {
+		for (map<patMultiModalPathMatching, double>::const_iterator path_iter =
+				m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
 
-		gps_folder->add_feature(m_current_measurments->at(i)->getKML(i + 1));
-		ddr_folder->add_feature(
-				m_current_measurments->at(i)->getDDR()->getKML(i + 1));
+			if (max_proba - path_iter->second < 10.0) {
+				double normal_proba = exp(path_iter->second - max_proba + 10.0)/sum_proba;
+				map < string, string > attrs_true;
+				attrs_true["id"] = boost::lexical_cast<string>(++path_id);
+				attrs_true["proba"] = boost::lexical_cast<string>(normal_proba);
+				kml_writer.writePath(path_iter->first, attrs_true);
+
+			}
+		}
+		kml_writer.close();
 	}
-
-	FolderPtr path_folder = factory->CreateFolder();
-	path_folder->set_name("Path");
-
-	stringstream ss;
-	ss << m_paths.size();
-	path_folder->set_description(ss.str());
-	int i = 0;
-	for (map<patMultiModalPathMatching, double>::const_iterator path_iter =
-			m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
-		++i;
-//		DEBUG_MESSAGE(m_paths.size()<< " "<<i);
-		FolderPtr p = path_iter->first.getKML(i);
-		stringstream p_proba;
-		p_proba << path_iter->second;
-		p->set_description(p_proba.str());
-
-		path_folder->add_feature(p);
-	}
-
-	document->add_feature(path_folder);
-	document->add_feature(gps_folder);
-	document->add_feature(ddr_folder);
-	KmlPtr kml = factory->CreateKml();
-	kml->set_feature(document);
-
-	kml_file << kmldom::SerializePretty(kml);
-	kml_file.close();
+//
+//	ofstream kml_file(file_name.str().c_str());
+//	patCreateKmlStyles doc;
+//	DocumentPtr document = doc.createStylesForKml();
+//
+//	KmlFactory* factory = KmlFactory::GetFactory();
+//
+//	FolderPtr gps_folder = factory->CreateFolder();
+//	FolderPtr ddr_folder = factory->CreateFolder();
+//
+//	ddr_folder->set_name(string("DDR"));
+//	gps_folder->set_name(string("GPS"));
+//	for (int i = 0; i < m_current_measurments->size(); ++i) {
+//
+//		gps_folder->add_feature(m_current_measurments->at(i)->getKML(i + 1));
+//		ddr_folder->add_feature(
+//				m_current_measurments->at(i)->getDDR()->getKML(i + 1));
+//	}
+//
+//	FolderPtr path_folder = factory->CreateFolder();
+//	path_folder->set_name("Path");
+//
+//	stringstream ss;
+//	ss << m_paths.size();
+//	path_folder->set_description(ss.str());
+//	int i = 0;
+//	for (map<patMultiModalPathMatching, double>::const_iterator path_iter =
+//			m_paths.begin(); path_iter != m_paths.end(); ++path_iter) {
+//		++i;
+////		DEBUG_MESSAGE(m_paths.size()<< " "<<i);
+//		FolderPtr p = path_iter->first.getKML(i);
+//		stringstream p_proba;
+//		p_proba << path_iter->second;
+//		p->set_description(p_proba.str());
+//
+//		path_folder->add_feature(p);
+//	}
+//
+//	document->add_feature(path_folder);
+//	document->add_feature(gps_folder);
+//	document->add_feature(ddr_folder);
+//	KmlPtr kml = factory->CreateKml();
+//	kml->set_feature(document);
+//
+//	kml_file << kmldom::SerializePretty(kml);
+//	kml_file.close();
 }

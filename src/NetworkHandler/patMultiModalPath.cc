@@ -62,7 +62,7 @@ patMultiModalPath::patMultiModalPath(list<const patArc*> arc_list) :
 	m_length = 0.0;
 	for (list<const patArc*>::const_iterator arc_iter = arc_list.begin();
 			arc_iter != arc_list.end(); ++arc_iter) {
-		if (addRoadTravelToBack(*arc_iter, TransportMode(NONE), 0.0)) {
+		if (addRoadTravelToBack(*arc_iter, TransportMode(NONE), 0.0) == false) {
 			throw RuntimeException("wrong path");
 			break;
 		}

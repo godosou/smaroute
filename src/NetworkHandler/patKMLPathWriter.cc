@@ -26,6 +26,9 @@ patKMLPathWriter::~patKMLPathWriter() {
 
 void patKMLPathWriter::writePath(const patMultiModalPath& path,
 		const map<string, string>& attr) {
+	if (path.empty()){
+		return;
+	}
 	FolderPtr p = path.getKML(0);
 	stringstream desc;
 	for (map<string, string>::const_iterator a_iter = attr.begin();

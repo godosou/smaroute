@@ -62,12 +62,12 @@ int main(int argc, char *argv[]) {
 
 		patObservation new_observation;
 		patReadObservationFromKML ro(&network_environment.getNetworkElements());
-		ro.parseFile(
-				patNBParameters::the()->observationDirectory + "observations"
+		ro.parseFile(patNBParameters::the()->experimentDirectory+
+				patNBParameters::the()->observationDirectory
 						+ argv[2], new_observation);
 		patReadChoiceSetFromKML rc(&network_environment.getNetworkElements());
 		rc.read(
-				patNBParameters::the()->observationDirectory
+				patNBParameters::the()->experimentDirectory
 						+ patNBParameters::the()->choiceSetFolder + "/"
 						+ new_observation.getId() + "_sample.kml",
 				new_observation);

@@ -36,6 +36,7 @@ result patPostGreSQLConnector::makeSelectQuery(patString query_string){
 		result R=Xaction.exec(query_string);
 		Xaction.commit();
 		return R;
+//		Conn.close();
 
 	}
 	catch(const exception &e){
