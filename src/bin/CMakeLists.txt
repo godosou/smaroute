@@ -23,5 +23,5 @@ add_executable(bioroute bioroute.cc)
 target_link_libraries (bioroute RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 
 INSTALL(TARGETS pmm genSP bioroute
-  RUNTIME DESTINATION ../../bin
+  RUNTIME DESTINATION /data/jingmin/bin
 )
