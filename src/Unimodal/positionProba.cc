@@ -1,0 +1,3 @@
+calGpsPointProba(patGpsoitn* theGpsPoint){
+	
+}
