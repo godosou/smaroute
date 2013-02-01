@@ -23,4 +23,4 @@ add_executable(bioroute bioroute.cc)
 target_link_libraries (bioroute RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 
 INSTALL(PROGRAMS  ${CMAKE_CURRENT_BINARY_DIR}/bioroute
-  DESTINATION bin)
+  DESTINATION .)
