@@ -28,6 +28,7 @@ ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     # Linux specific code
         message("linux")
+	set (CMAKE_INSTALL_PREFIX /data/jingmin/bin/)
 	set(BOOST_ROOT "/home/jchen/local/boost_1_50_0") 
     set(CMAKE_CXX_COMPILER g++)
     set(CMAKE_CXX_FLAGS "-g -Wall -O2  -I/users/jchen/libs/include")
