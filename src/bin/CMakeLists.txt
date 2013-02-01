@@ -22,5 +22,5 @@ target_link_libraries (genSP MapMatching NetworkHandler ShortestPath Utilities  
 add_executable(bioroute bioroute.cc)
 target_link_libraries (bioroute RandomWalk RouteChoice MHPath MapMatching NetworkHandler ShortestPath Utilities  Math ${LIB_EXTRA})
 
-INSTALL(PROGRAMS  ${CMAKE_CURRENT_BINARY_DIR}/bioroute
+INSTALL(PROGRAMS  ${CMAKE_CURRENT_BINARY_DIR}/bioroute ${CMAKE_CURRENT_BINARY_DIR}/pmm
   DESTINATION .)

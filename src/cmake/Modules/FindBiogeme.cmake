@@ -13,12 +13,12 @@
     $ENV{BIOGEME_ROOT_DIR}
     ${BIOGEME_DIR}
     ${BIOGEME_HOME}
-    "/home/jchen/biogeme-2.0/libraries/parameters"
-    "/home/jchen/biogeme-2.0/libraries/utils"
-    "/home/jchen/biogeme-2.0/libraries/utils"
+    "${CMAKE_SOURCE_DIR}/../libs/biogeme-2.0/libraries/parameters"
+    "${CMAKE_SOURCE_DIR}/../libs/biogeme-2.0/libraries/utils"
+   	"${CMAKE_SOURCE_DIR}/../libs//biogeme-2.0/libraries/utils"
+    "${CMAKE_SOURCE_DIR}/../libs//biogeme-2.0/libraries/parameters"
+    "${CMAKE_SOURCE_DIR}/../libs//biogeme-2.0"
     "/usr/local/lib/biogeme/"
-    "/home/jchen/biogeme-2.0/libraries/parameters"
-    "/home/jchen/biogeme-2.0"
     "/data/jqdu/libs/lib/biogeme"
     "/data/jqdu/libs/include/biogeme/"
     "/data/jqdu/libs"
