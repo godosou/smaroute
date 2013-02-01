@@ -79,6 +79,10 @@ int main(int argc, char *argv[]) {
 	if (err != NULL) {
 		exit(-1);
 	}
+
+	string network_file = patNBParameters::the()->OsmNetworkFileName;
+	string network_folder = network_file.substr(0, network_file.rfind("/"));
+	string network_rule = network_folder + "/network_rules.csv";
 	if (ifstream(network_rule.c_str())) {
 		patWay::initiateNetworkTypeRules(network_rule);
 	}
