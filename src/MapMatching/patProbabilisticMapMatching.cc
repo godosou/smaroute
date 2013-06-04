@@ -35,13 +35,15 @@ void patProbabilisticMapMatching::run(patError*& err) {
 	m_observations.readFromFile(m_file_name, err);
 	if (err != NULL) {
 		return;
-	}DEBUG_MESSAGE("Prepare to generate DDR. ");
+	}
+	DEBUG_MESSAGE("Prepare to generate DDR. ");
 	DEBUG_MESSAGE("Raw points:" << m_observations.m_gps_sequence->size());
 	DEBUG_MESSAGE(
 			"first point. " << m_observations.m_gps_sequence->at(0)->getTimeStamp());
 	patGpsPoint* prevGpsPoint;
 	int first_valid = 0;
-
+	patMapMatchingIteration* valid_iteration = new patMapMatchingIteration;
+	int valid_iteration_int = -1;
 	for (; first_valid < m_observations.m_gps_sequence->size(); ++first_valid) {
 		DEBUG_MESSAGE("====seek first valid gps point: " << first_valid);
 		int next = first_valid + 1;
@@ -61,7 +63,7 @@ void patProbabilisticMapMatching::run(patError*& err) {
 			return; //FIXME
 		} else {
 			m_paths = init_iteration.getPaths();
-			init_iteration.writeKML(m_file_name, first_valid);
+//			init_iteration.writeKML(m_file_name, first_valid);
 			break;
 		}
 	}
@@ -75,7 +77,7 @@ void patProbabilisticMapMatching::run(patError*& err) {
 
 	vector<patMeasurement*> inter_data;
 	int measurements_id = 0;
-	int fail_iter= 0;
+	int fail_iter = 0;
 	DEBUG_MESSAGE(
 			"observations: " << m_observations.m_measurement_sequence.size());
 	for (int i = first_valid + 1; i < m_observations.m_gps_sequence->size();
@@ -93,12 +95,12 @@ void patProbabilisticMapMatching::run(patError*& err) {
 				&& m_observations.m_measurement_sequence[measurements_id]->getTimeStamp()
 						<= m_observations.m_gps_sequence->at(i)->getTimeStamp()) {
 			//DEBUG_MESSAGE("3 "<<measurements_id<<" "<<m_observations.m_measurement_sequence[measurements_id]->getTimeStamp());
-			if (m_observations.m_gps_sequence->at(i)->getTimeStamp() - m_observations.m_gps_sequence->at(i-1)->getTimeStamp()<=
-				patNBParameters::the()->discardGPSGap){
+			if (m_observations.m_gps_sequence->at(i)->getTimeStamp()
+					- m_observations.m_gps_sequence->at(i - 1)->getTimeStamp()
+					<= patNBParameters::the()->discardGPSGap) {
 				inter_data.push_back(
 						m_observations.m_measurement_sequence[measurements_id]);
-			}
-			else{
+			} else {
 				DEBUG_MESSAGE("additional data doesn't have enough prior.");
 			}
 			++measurements_id;
@@ -120,11 +122,14 @@ void patProbabilisticMapMatching::run(patError*& err) {
 				&m_running_measurement_sequence, m_paths);
 		bool extend_new_seg = mm_iteration.normalIteration(prevGpsPoint,
 				inter_data, err);
-
+		if (patNBParameters::the()->printKMLEveryIteration == 1) {
+//				DEBUG_MESSAGE("KML file writen to"<<m_file_name);
+			mm_iteration.writeKML(m_file_name, i);
+		}
 		m_paths = mm_iteration.getPaths();
 		if (extend_new_seg == false) {
-			fail_iter+=1;
-			if (fail_iter>20){
+			fail_iter += 1;
+			if (fail_iter > 20) {
 				break;
 			}
 			//If the path is not extended;
@@ -138,29 +143,30 @@ void patProbabilisticMapMatching::run(patError*& err) {
 						m_observations.m_gps_sequence->at(i));
 				patMapMatchingIteration mm_iteration(m_environment,
 						m_observations.m_gps_sequence->at(i),
-						&m_running_measurement_sequence,
-						m_paths);
+						&m_running_measurement_sequence, m_paths);
 				mm_iteration.lastIterationForLowSpeed(inter_data, prevGpsPoint);
+				mm_iteration.writeKML(m_file_name, i);
 
-				mm_iteration.writeKML(m_file_name, 1000000);
+				valid_iteration->writeKML(m_file_name, 1000000);
 			}
 
 		} else {
-			fail_iter=0;
+			fail_iter = 0;
 			inter_data.clear();
-			if (patNBParameters::the()->printKMLEveryIteration == 1) {
-//				DEBUG_MESSAGE("KML file writen to"<<m_file_name);
-				mm_iteration.writeKML(m_file_name, i);
-			}
+			*valid_iteration = mm_iteration;
+			valid_iteration_int = i;
+
 			if (i == m_observations.m_gps_sequence->size() - 1) {
-				mm_iteration.writeKML(m_file_name, 1000000);
+				mm_iteration.writeKML(m_file_name, i);
+				valid_iteration->writeKML(m_file_name, 1000000);
 			}
 
 			if (err != NULL) {
 				//implement better error handling
 				m_running_measurement_sequence.pop_back();
 				return;
-			}DEBUG_MESSAGE(
+			}
+			DEBUG_MESSAGE(
 					"Link DDR number:" << m_observations.m_gps_sequence->at(i)->getDDR()->size());
 
 			if (!m_observations.m_gps_sequence->at(i)->getDDR()->empty()) {
@@ -179,7 +185,21 @@ void patProbabilisticMapMatching::run(patError*& err) {
 		DEBUG_MESSAGE(
 				"==========Finish " << i + 1 << "th iteration ============");
 
-	}DEBUG_MESSAGE("Finish map matching");
+	}
+	DEBUG_MESSAGE("Finish map matching");
+	DEBUG_MESSAGE("TOTAL NUMBER of GPS"<<m_observations.m_gps_sequence->size());
+	if (valid_iteration_int == -1) {
+		DEBUG_MESSAGE("Map matching was a totally failure. No GPS was matched");
+	} else if (valid_iteration_int
+			== m_observations.m_gps_sequence->size() - 1) {
+		DEBUG_MESSAGE("Map matching successful with all gps matched");
+	} else {
+		DEBUG_MESSAGE(
+				"last matched GPS"<<valid_iteration_int <<". Its distance to the last gps " << m_observations.m_gps_sequence->at(valid_iteration_int)-> distanceTo(m_observations.m_gps_sequence->at(m_observations.m_gps_sequence->size()-1)));
 
+	}
+
+	delete valid_iteration;
+	valid_iteration = NULL;
 }
 

@@ -29,13 +29,18 @@ void patGpsSequence::recalculateSpeedHeading() {
 	for (unsigned long i = 1; i < m_gps_vector.size(); ++i) {
 		double temp_current_speed = m_gps_vector[i]->getSpeed();
 		double temp_current_heading = m_gps_vector[i]->getHeading();
+
+		/**
+		 * If heading "or" speed are the same, recalculate.
+		 * Originally, the condition was "and" (in thesis)
+		 */
 		if ((prevHeading == m_gps_vector[i]->getHeading()
-				&& prevSpeed == m_gps_vector[i]->getSpeed())
-				|| i < m_gps_vector.size() - 1
-						&& m_gps_vector[i]->getHeading()
+				|| prevSpeed == m_gps_vector[i]->getSpeed())
+				|| (i < m_gps_vector.size() - 1
+						&& (m_gps_vector[i]->getHeading()
 								== m_gps_vector[i + 1]->getHeading()
-						&& m_gps_vector[i]->getSpeed()
-								== m_gps_vector[i + 1]->getSpeed()) {
+						|| m_gps_vector[i]->getSpeed()
+								== m_gps_vector[i + 1]->getSpeed()))) {
 			nbrOfStrangeHeading += 1;
 			if (nbrOfStrangeHeading
 					> patNBParameters::the()->maxStrangeHeading) {

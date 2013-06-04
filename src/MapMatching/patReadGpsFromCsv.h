@@ -4,7 +4,12 @@
  *  Created on: Nov 14, 2011
  *      Author: jchen
  */
-
+/**
+ *
+ * This class reads GPS points from a csv file into a vector of patGpsPoint.
+ * The file format is:
+ *
+ */
 #ifndef PATREADGPSFROMCSV_H_
 #define PATREADGPSFROMCSV_H_
 #include <vector>

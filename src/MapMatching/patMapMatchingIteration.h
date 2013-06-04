@@ -24,6 +24,7 @@ public:
 	patMapMatchingIteration(const patNetworkEnvironment* environment,
 			patGpsPoint* gps, vector<patMeasurement*>* measurement_sequence,
 			map<patMultiModalPathMatching, double> paths);
+	patMapMatchingIteration();
 	~patMapMatchingIteration();
 	/**
 	 * Generate DDR for the first iteration.

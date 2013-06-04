@@ -95,7 +95,7 @@ void patSpeedDistributions::readParams(patError*& err) {
 			WARNING(err->describe());
 			return;
 		}
-		DEBUG_MESSAGE("Read file:" << file_name);
+//		DEBUG_MESSAGE("Read file:" << file_name);
 		int components = 0;
 		string line;
 		if (getline(file_stream_handler, line)) {
@@ -119,9 +119,9 @@ void patSpeedDistributions::readParams(patError*& err) {
 			getline(linestream, item, ',');
 			params.sigma = atof(item.c_str());
 
-			DEBUG_MESSAGE(
-					params.w << "," << params.lambda << "," << params.mu << ","
-							<< params.sigma)
+//			DEBUG_MESSAGE(
+//					params.w << "," << params.lambda << "," << params.mu << ","
+//							<< params.sigma)
 			patSpeedDistributions::tm_params[modes[i]] = params;
 		} else {
 			stringstream str;

@@ -40,7 +40,8 @@ void patAccelMeasurementModel::readParams(patError*& err) {
 			err = new patErrMiscError(str.str());
 			WARNING(err->describe());
 			return;
-		}DEBUG_MESSAGE("Read file:" << file_name);
+		}
+//		DEBUG_MESSAGE("Read file:" << file_name);
 		int components = 0;
 		vector<double> w, mu, sigma;
 		double w1, mu1, sigma1;
@@ -61,7 +62,7 @@ void patAccelMeasurementModel::readParams(patError*& err) {
 			getline(linestream, item, '\n');
 			sigma1 = atof(item.c_str());
 
-			DEBUG_MESSAGE(w1<<","<<mu1<<","<<sigma1)
+//			DEBUG_MESSAGE(w1<<","<<mu1<<","<<sigma1)
 			w.push_back(w1);
 			mu.push_back(mu1);
 			sigma.push_back(sigma1);

@@ -41,7 +41,9 @@ patMapMatchingIteration::patMapMatchingIteration(
 		m_environment(environment), m_gps(gps), m_current_measurments(
 				measurement_sequence), m_paths(paths) {
 }
+patMapMatchingIteration::patMapMatchingIteration(){
 
+}
 patMapMatchingIteration::~patMapMatchingIteration() {
 }
 
