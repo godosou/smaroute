@@ -1,0 +1,3146 @@
+%PDF-1.4
+%“Œ‹ž ReportLab Generated PDF document http://www.reportlab.com
+% 'BasicFonts': class PDFDictionary 
+1 0 obj
+% The standard fonts dictionary
+<< /F1 2 0 R
+ /F2 3 0 R
+ /F3 4 0 R
+ /F4 6 0 R
+ /F5 13 0 R
+ /F6 14 0 R >>
+endobj
+% 'F1': class PDFType1Font 
+2 0 obj
+% Font Helvetica
+<< /BaseFont /Helvetica
+ /Encoding /WinAnsiEncoding
+ /Name /F1
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'F2': class PDFType1Font 
+3 0 obj
+% Font Helvetica-Bold
+<< /BaseFont /Helvetica-Bold
+ /Encoding /WinAnsiEncoding
+ /Name /F2
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'F3': class PDFType1Font 
+4 0 obj
+% Font Courier
+<< /BaseFont /Courier
+ /Encoding /WinAnsiEncoding
+ /Name /F3
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Annot.NUMBER1': class LinkAnnotation 
+5 0 obj
+<< /Border [ 0
+ 0
+ 0 ]
+ /Contents ()
+ /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 678.0236
+ 0 ]
+ /Rect [ 350.3278
+ 424.3736
+ 402.0078
+ 436.3736 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'F4': class PDFType1Font 
+6 0 obj
+% Font Helvetica-Oblique
+<< /BaseFont /Helvetica-Oblique
+ /Encoding /WinAnsiEncoding
+ /Name /F4
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Annot.NUMBER2': class LinkAnnotation 
+7 0 obj
+<< /Border [ 0
+ 0
+ 0 ]
+ /Contents ()
+ /Dest [ 12 0 R
+ /XYZ
+ 62.69291
+ 726.0236
+ 0 ]
+ /Rect [ 125.1529
+ 324.9736
+ 350.2429
+ 336.9736 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER3': class LinkAnnotation 
+8 0 obj
+<< /Border [ 0
+ 0
+ 0 ]
+ /Contents ()
+ /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 768.0236
+ 0 ]
+ /Rect [ 158.4929
+ 306.9736
+ 334.1129
+ 318.9736 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER4': class LinkAnnotation 
+9 0 obj
+<< /Border [ 0
+ 0
+ 0 ]
+ /Contents ()
+ /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 738.0236
+ 0 ]
+ /Rect [ 197.4029
+ 288.9736
+ 387.4729
+ 300.9736 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Annot.NUMBER5': class LinkAnnotation 
+10 0 obj
+<< /Border [ 0
+ 0
+ 0 ]
+ /Contents ()
+ /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 708.0236
+ 0 ]
+ /Rect [ 184.0629
+ 234.9736
+ 340.7929
+ 246.9736 ]
+ /Subtype /Link
+ /Type /Annot >>
+endobj
+% 'Page1': class PDFPage 
+11 0 obj
+% Page dictionary
+<< /Annots [ 5 0 R
+ 7 0 R
+ 8 0 R
+ 9 0 R
+ 10 0 R ]
+ /Contents 38 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 37 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'Page2': class PDFPage 
+12 0 obj
+% Page dictionary
+<< /Contents 39 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 37 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'F5': class PDFType1Font 
+13 0 obj
+% Font Courier-Bold
+<< /BaseFont /Courier-Bold
+ /Encoding /WinAnsiEncoding
+ /Name /F5
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'F6': class PDFType1Font 
+14 0 obj
+% Font Courier-Oblique
+<< /BaseFont /Courier-Oblique
+ /Encoding /WinAnsiEncoding
+ /Name /F6
+ /Subtype /Type1
+ /Type /Font >>
+endobj
+% 'Page3': class PDFPage 
+15 0 obj
+% Page dictionary
+<< /Contents 40 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 37 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'Page4': class PDFPage 
+16 0 obj
+% Page dictionary
+<< /Contents 41 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 37 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ] >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'FormXob.0d5b2123db8b7e40a64c2b2e4595d6d2': class PDFImageXObject 
+17 0 obj
+<< /BitsPerComponent 8
+ /ColorSpace /DeviceRGB
+ /Filter [ /ASCII85Decode
+ /FlateDecode ]
+ /Height 100
+ /Length 1785
+ /SMask 18 0 R
+ /Subtype /Image
+ /Type /XObject
+ /Width 50 >>
+stream
+Gb"0UD((rn*!^EmF3'0^3G]BF&P8R/AFhM;Kj)C,@!Qu?:E<<q81jB6.I3qO$W2eM;FH`%*"J\LH"4s8:duKaNuN@(>l,Q9rjQ\;)?7&9^X(6@Hsc1"rj_C^>hAFg?T1<SF.MW%k;q5jIn->5h7ImW_o(O#f<<hmo->\2)k<b*Wsd[&Si_/a0WNOJ;/FG%m-jB^r0+7b/Sr_Y/2&Y4,`tWND)or%iZb/gp@cM7S7c>AK2FWi3au<BM5@$pW.[LriSbrgjZJZfOj%bnQ-,\i*iW*W&ea3bj<PM!n(t_c9:;ueDcB\8<`W6q:!N%kXF=-V[C(t9f\"hALI=X&o=a#KmdB5ujD_8;D/J\/mgiq'kg?/\%j1ZDq74#FR%'SO+-9#=r/hm:)t!"Y3$d.&@.`1,g=k<9>?Y2K)B)qqH<!d<&/Q/'bWn^JIQehp\-4TA0rtMt+Z;5ZQeMardGn`M*>fW$G8U\AWJ-$0pj#A"7mK=iTqS0g`73;dbKC8?]L&;O4[&bi8Tf/u2f@DYXsFVb8kVf;='8m;s7#!bqtKQ+H[CO&L-C(a\?`EWLP1X\-=d('$O[?P1k4-*-1JsPVl-jHf_*8)a)OZu-RVJW8M&!7f(RRj:UhZ@7RdTq(/7Ir@#IQQ;%`b,)BKs>(7jn@9U_E=YXJ]/f-Vgk/Et-3(YBq;['TtBRO*ZBL;KJ$,lur?K*NsL`l834@9aG@Uni[8:9CY#fHN(+1.#&7naZ/%,'%dIjQYpNP&B*e[C3MuNT/g,lKW,#&V6Ypek)/1[>.qf`^Z(<:S,o8e_T&@/L(/lrA4iW'Pro/:k>(-<XfNK@\X2Cs"k$_Ebpjbcm[;AcH]1$&UF-=*DM.:M:XLea$`<`d&O+G.Vo]bSt;g+-!7@R_S`Xk]KCM5Sj.^b/^j!3Yg_""2fIP\UGUdZ9sV.54?,=97ZkX-6s>k;OFSo,0J#/$hP=0Ep%?rcU/36HIa-m3+uY<LV,EcCjQ(tGdKI]?=qq\aK.S;)^3pY#"LJN9:i)BYaV\Yg2)dI(UPN/-kGYQ#!sJHT$^8o/5@^HZ<)aQ%[Cs85N?W7XDB'DXM:a4#(5k2QX)JD5T+j!To&U6;MJs=]aNVj:2MtU==E%7,mHrOSio&b1;&'l`A#$Q'+=&?`#TH4lio2pIkUDnZ(rVZ*QQ'U,-BmDgH?snE<C3AjGIV&*jE*=S6:+#!O,jl]=]nn].S+`+2POr&D!\V\88;lhijSXKfs?TEp[@"[3^nY2%5[o+R'Ep$6m>L-<;MAM='&b)@KJW'FEI0@f<9CBGP)9;%nSF2WN#.2Vb`eNRe4LMM&dZ[Y7$<N6(8'@BU!aqSXuG8kND.@djM?,[FO-jr_IA8B5^qKUng[Z:@\O?3<PhdR@2`8fSkcJEcZ<tX0afE2_-@-S=Q5N_A3t*\?iNZ'9&GU[_]dG=L./b:NT0IE3LClL6Igb^:q>*bY7ELkb8b,(@nS:UK4E1$:S-%g?mY(03>uUZ+@NH2]*4,G.P8r*^>+$$*:509[>1HUSFTeY-,N>KnkFnWQ<c9RIl%o)`p,C6kq^d8[M\^',)$a'r7k0MPGbm(`Pp+k2nWQGB\7IPbpV&W34""&54[9l70GsUf8gXP*M<_p[@!b]%6fW]Nd(En,C(NP4P?3f@Qaa2kNM_;+!^g--*aHER7ttXAli5dBM`;fCJJ%l0[lgrlj6U?9gaUq_:H*6b`T&"6Qhs[l8_N_SX0)C20WCVP&`s_YENQ\"&4K042HSQ,I3_Iik]>9A2ind%aTA<rUK"rrL[D="a~>endstream
+endobj
+% 'FormXob.7883b79b0bb6716ed5ba7309bf8e48e4': class PDFImageXObject 
+18 0 obj
+<< /BitsPerComponent 8
+ /ColorSpace /DeviceGray
+ /Decode [ 0
+ 1 ]
+ /Filter [ /ASCII85Decode
+ /FlateDecode ]
+ /Height 100
+ /Length 944
+ /Subtype /Image
+ /Type /XObject
+ /Width 50 >>
+stream
+Gb"0R>=_^Z(^KQ`eQ"0.G3t#1=PAJ-QcLQhb=cGU-jIKl#smR'&gRWX5"$!9/egmSps=`[_9<14YjLFb<1k!N8Ptj@jfL)@V-UG#CM&U=XXfntIsUd73m2ueSTE*#I-3T7fNcY>s$]gmD]C+,'BN\4J1(R&;+.c&'(J@7&7>f4h3bDYIDc7-,B!]3S4"5t%Ti]"QbJe<2'pAaU6oVWJtgq35%?4e]^ME:7r;Q#h>FK\*ul8bTXVERIp^Tco8R6JQ$W7G9g%0Y2u'2I9lE5Eq$J9X,0T;>d]u#!2;';sE;2ASn!)$u]IbKeFi,uJC`ZUS8&o]CF+V;/a2,hDF^Vr"_9cA.^hUh.C]qNkEFZEYTNKuA3ri/+3&h.nj[1#pRalu"SV+-9^^q7?+pn@T7I5a5!*EQK0Y.BMVc!L?HT:3q"2oUB`(g;K(Vg1S;jS&0J1(u%'`b=6Lckaj,n#^KAtBSFKd[&=)Gt!,aQ)B6(uckB/>GPu"[np^A!);O-,aX#7/dn[&0S8i/PZ;!6\'UcYT=sV!"eN2U&knjnhTn@U0J&$eCI6s!Y?q]/-*Um.4fudQ3-;9geo[)KU`NU%>]!QncA8PMUR*;bDMklU/?fI7!3K9lW't77@#:5l@VK`C;^ji9PUFdY04ssZbK)DWk>k0prNoo%OTTh-^3(PC8@'qiG1UgUI+5o-p77j`lQRn1W%UOO#A,X8g4raIL\6r^:%@7`&N4j14LqAmq1nU&$sLO=G+dgWu_Ni:CS+lH,l3/)<@l]i";8\s6ZHJ/la$QL$(W*OHW:g8'8GXnQ8dF>Iu3dPm+L/KkWkZYVIZI!O57S2h6^G!bkc<;BW.M)$9`'YFDl(g_TNR4sCGB/t=ar'PRK/7)^!"fYR5Ck>eC&4KjBeQnnMZ_V-S:j@RJ)f]_/^0lbD;0G`aU'JCNAUEO"E"]d:Yf)~>endstream
+endobj
+% 'FormXob.f7b20b4829a31b0bc123706c15e2d76a': class PDFImageXObject 
+19 0 obj
+<< /BitsPerComponent 8
+ /ColorSpace /DeviceRGB
+ /Filter [ /ASCII85Decode
+ /FlateDecode ]
+ /Height 80
+ /Length 2837
+ /SMask 20 0 R
+ /Subtype /Image
+ /Type /XObject
+ /Width 120 >>
+stream
+Gb"/kHUq+/*66T1=&ZF_bA:76e6YTs#Z?tW7$0q30J#'ISQR:._+#$jMr'W$R2&:^R7SPf<1=XHS+[IM1:'Y19jK9G/CS_.rb_gZceYpCkNqQ,na8Q45DApYp\3E&1\7(la'ZSL6psF26psF26psF26psFZT<@'Jl+3R^+ZVPc/seX]3sPuqkN(]#Yos*NXk)=ah8@.jq=EbNG?nHY4ETd`]74n[^]B"'#XE``]<ACk$Lm&oMaDSm=]t"Sl>"@+.[@HN[L27e!"onW:inuh6/TG,(UEAZfN<<[&]]qS(Xe/Jaj8:'EChF=7un\tgq/K&MlAhbSNBn\1Y/>'X_mk&i@(jfN!t8an*B:l'u<k@rVcZup1$8:X]pR4;C[qp4[$Y$:oREkndIlkGX'cPXK9Y&hB!k]E,ZA;`^"WhG(t['(sOk\@oP!^S?T4O'N%Ip$:PoA[C)TtT'SSWAriZ:92SenLr+][@:)OVN(0R.:DOU.5<l`^aO0>H'.6OCi>ajuKXRGd8PMo:aE)TN3,MTijQ5Ks=;2+]NupT"g\I>!NfK5H7l'\+R$^G!'If`LTdU\a>#!bp5O@+3Mj`c#oQ8fILj8FI!=D4APC<?%NOGC--n-TRjr%22g5^tkZ=F7KAGc)fjD*N,h--qhWiCq]WhlPGRHOGCH?)_`k]AjU7n8@:f(Zbe3^U6o`l@Q/a.p$.h7K"MXfJK1-Q/p`68c?E3,o!'13Mk]E])J^=E(k[Ns8XCMi/gh8!1m68/+U<FuH$.hLT/B.sH6hYZ+Y((83mKI/*138o./FIPEQ3bTt*+8goK3B].RMB7t"6aiVXj;$7")&5"f=2\-f`Lm_oHZJsreP=Wj:a+mKK/k_N`7=hOCZ\D:+1GdKfdSQoBKUOSB,H4\D<Y7sO74sp2CA+,UDk97dn(bH@+p_a/5)[.$odZXuMU^/*==P\KQ^8LEacN6h5C\h%?G:e)8\)@@5RgJ%O!4`2"ZS)PhnCD!WiiK_(sM&R&J5Te88?PH7>+Q\ftW#$:<TP2T1GdIfY_AZ)A9m7dS_W]T:\n'7@b/D<o@)Q+s<"?:JYUM=eS[Uom.7el-lOT.4B@#4$-$0Vum2Gc4&Z7kd"dCR!C$[\?B2ML8@dH;b<bh!b96/_;Vc.[#di;U(VEcE["BXr:r/8QEcnJ\"P>_1Rt@=T9;a))`J7"_/r'h[<V4N/2_M29G4<*K"JWVNp--"dq7q0FLiV_L0.sh*^+h63WImJHe3)5JHN5P:.Ro0:SbJ/GK,RZ=NA7oiTo+!k".inJe)(9W2M-9FC=7AFQjE+'G;&<mHlKf874j]q>#Tfc'pZL\8amoRr!]^&&poG]"4@)-3`;-_3e<p5kn6VPkfZoEH'FWe?j5U7T^f"qSg_(/NGiejia!&pbW)*\"&kSR=#aXDV`Hq_Mk7QF6CibW+1_#cc9,Je>ZCFgs'=2O#-DP^^UYKiWCoOfJ%R034=P>G#D5$;?--!1cI@7eEQ8`g9>"<JH?5[??Hnqpo@K"`m)Pa*IISNiQ%!$6T@4l4WpTOC3T.'mI0MiFpieIq!]I$^<C!D_M&2b_@4HGAH'iC2u*?];4phTlg+GC:.\%!KF&;#g=k<9hn!rg=!5$2o(;Ruc-8,r22i!c2KK2?"687OHb=[c77K`N4%1kY1&[&#Gfk3rf\u2`geX(FCY,`Vk8Xf:OUDpU@,ErLj'S2?gU@\NKON*dPihi8lf`bq6)n;)GepFfmV"EqUFDAJA=GJo\psa/@q-bE$?B?N<H\<=q8C3>UD';*/mlAB4o=\65s]7n)VW()%eBcR;FO#CHhQfo1hi,P?RI$AK%C=EX&lK$dRK37e^2[YYn_(afj2MAA>P?,+GZ%V;^$2b<YK`UDr89'Vum/,#4aq&_M?uqO0*$=R`.0m]h`$DDa9\[1M>#2qL'^:rc3c1:n57KrL0)Kb0!?+(?RZlJ\rtZp&Ll58jg2$]%Z)=*\WoD7I4jnGC4ge@;Y+A*Zl"]W=BjUfMq?TDY06;5sYNY)]W"kEhsYAJL(_>A>Ti1k01\t4"ssQHhYeokL%])##[.7E'H`J\da2OgC,H7q"XA(o0A-?:rZhPEeQ*1Q'K<Iag5X+DJO#Dcacp-Bk_9$RhlkWZ^WJ19(U8GTq\7_J,Ah-_Sa:gR7Q"tQ;%CD@<QfPQYj/[f\82i`/#!FS&>5Yh;$_nbML!`5A/93r\G3-*1W@^pI?YLeS]8BrTJKOH0sCtPC)\2$DY;MhO\4uQsnXliO:%R`J*mRnnm-i9qFHbC2f"t!kW#t635OXe0\a<A__E9/in7H+>e`Y)OsHs;L$3Z9q/S&bEeVVD\Bbha0=l4]AFnda6'Tr@Q0'o`?O/T$)mh3VE7m>\=`?Bf@RA#4F6X5X*Xc+;HHqdP`u:]*Ro`3naTEsEc:j9aV/ihkKfc=4h(Gen:bC""7!3)gAlu26'@e/S@G3TMK#8aUP&Ag'EKL!D-s^U];1%c2`3J?p171pp@\[n";p4qfWeqnIG#P*_&O1)7HL-tfJ'G0XTh;*Y\,;q`[Sb/Ik6G<a^g[%Q*a9=)Ab#20M$50Gr]_?[K]]hbkl,2hVJt^'sp]g)XZqZbknZLhl*NRTl%s'kjIkN?31NC$e+?^Zq]3lHG)L+4ru(3/hZS,rdhl#,UF`?-X!9DOhALB0a7P0D2sX:B@!0GD9"QN+-_%qGSCl-dC*PSW7>XIA02m8)u.Kc?ip!,\g/.1(g(!HbG>O3V*dU;USFTdmEK5k/1a2ues/iRpFj:%F*#`pc`5i<#+11npD8sSO^GhMiSH7?/Ibl8?bY<1eng,idSf^%\mo5[q0mTMA]b^#Gj*Ktb?F`MMTeeO~>endstream
+endobj
+% 'FormXob.5d8c36e18ecdb51d12487768523dd960': class PDFImageXObject 
+20 0 obj
+<< /BitsPerComponent 8
+ /ColorSpace /DeviceGray
+ /Decode [ 0
+ 1 ]
+ /Filter [ /ASCII85Decode
+ /FlateDecode ]
+ /Height 80
+ /Length 1545
+ /Subtype /Image
+ /Type /XObject
+ /Width 120 >>
+stream
+Gb"/gCMX\b'Z[,*m^?6BZ9W,@7:+DG@nf3&C`9(uJfuk."9ArMLch0V+JQj\,t;>WN<Un(5sYP]&;ifL(emp0WMW7N63Q@HP![>-$f0BFl!q3Yj*f.S4#:M]B>(nj5OA3ojSqI-r8uBiGOC`l6mNrgM+GSb4m[?UM)j<PqTl=%'t2K<qlm'<3B]XfmFYeef)T,4PF1fM=;Vkk'5e8pV,:h;O+J@T`<*XW_#Ke$be>4oq\W^2G6([1b"V(0Enb'=XTiGVBeHeKaR'Y]c3h@k\YguMBr>OF?_#jRYg%:\Ui+KF&]U+<F?@^EQNS0"W[Ke$%tHU5.B$_27T&RdJG.K+$IV!bGFp:m)5&OlM@V+ZP9BQ*!;BdHPn[)5W?Cp8^dknE/'PnjnWZ+$%%H4.^dQ\o4qI-(lIZEO9+3>Q"ZV2tNOh>P)f]Tr\L.C.TLLC-[@ku)K,E]ZfR&DHhUF9;Fe]`J=+j)^\>oU5;'U-QIlOM6E/A#"r;\oV@i]p?Q)Ialn?jCJ6gmb"1%$ibPtKWc"_-+5HG-/E'\f+/=c:D]RkD]d8=E>oN+nqLK22Og(;ic5OQL%,@km#0@+K.'//%%3-9Z14Z&)rEP;2A>1/?7#\YhuBF:I"u\`f9*SetIZ=Qq#D1*/6m(kY,uEOps9DJ*Ah[)ia#plcQ,1#ig"IMTmp*n"U'U1aD+F'%\lo7'r298?r8<ZY+6o\mEi`W@p@iODp4^0#IQL>R'[rj2EtFusn=)mAsNUKV;4bo`V1UKJ58^)2N"gtr$<A1maG>GkLdi>jb-q\;>\X4?d`5#B0oFi:KCo/,p%;k_n<aS"C`Kl5eje5"Pa8bn7"(H0KZNZ;!-Z&Mhn4W]1O/PE,T?eqV<LG&LD;OCd4NbO&iWYT.;F>""Kg,9H497G$N>JU?\6?hSEg`Q7.G(eG#);jsiJnAQ+95ZY8_E[5Di.h`O,r3:7q30J\NkC_Qafh`)9E+Z`=l(QR<q6'"Jlctj2-"^GE'6^bXPepO%$+%Zgjm@?d9KY+bN_Nl::kcK`)DX+5^&mh?^4N90\uDPW]Zod,B_1tnfp!(iFtYMHb(877J(@oe`C>p3jbSW--A=1Kn_P!9@H&.T'G!QZk)t]9m$OolBKJ$"]+#aa;sSEFn`PaNH-oMa3iUU\Tj$!SAW;]6`sD8V<HbQHA,?+h7Y-A.HWi5pe)dmE&#d9k.Vr:m='4MQr/;oUu2*sM:Tfer<b9=MnTI%8XfYKn$i4Cm1#Ot.J9ra20A[!>ebaa/G`X$"m6oU/&YC>H6[J1HVA$)aeN+7-?/C<3-(jPHePYFbZ/D=Epf'7Ej8`i\PXDSLrU*^*R'J4):M.N0^^QOZ1>^#A6Fj3dE8u&>E"hcpUJ?*h3c/@[X_[M2gb(R")O@f>E)q2Yg]_ok0j4QN<6/c%_BDkSROJ-7^lAl)-172%h`]\kYXV;Z&N-AZ*0>c7O@lK=Dg-a*Y%cX>E:?\?hM:V*mr$V!*l*0/eg-$=F`!r6]:O-B,NPF+'Ui--gji(>Mu!\@qU/IW;?/R2gA99i#`9:6IY~>endstream
+endobj
+% 'Page5': class PDFPage 
+21 0 obj
+% Page dictionary
+<< /Contents 42 0 R
+ /MediaBox [ 0
+ 0
+ 595.2756
+ 841.8898 ]
+ /Parent 37 0 R
+ /Resources << /Font 1 0 R
+ /ProcSet [ /PDF
+ /Text
+ /ImageB
+ /ImageC
+ /ImageI ]
+ /XObject << /FormXob.0d5b2123db8b7e40a64c2b2e4595d6d2 17 0 R
+ /FormXob.f7b20b4829a31b0bc123706c15e2d76a 19 0 R >> >>
+ /Rotate 0
+ /Trans <<  >>
+ /Type /Page >>
+endobj
+% 'R22': class PDFCatalog 
+22 0 obj
+% Document Root
+<< /Outlines 24 0 R
+ /PageLabels 43 0 R
+ /PageMode /UseNone
+ /Pages 37 0 R
+ /Type /Catalog >>
+endobj
+% 'R23': class PDFInfo 
+23 0 obj
+<< /Author ()
+ /CreationDate (D:20130514152041-01'00')
+ /Creator (\(unspecified\))
+ /Keywords ()
+ /Producer (ReportLab PDF Library - www.reportlab.com)
+ /Subject (\(unspecified\))
+ /Title (BIOROUTE C++ documentation) >>
+endobj
+% 'R24': class PDFOutlines 
+24 0 obj
+<< /Count 14
+ /First 25 0 R
+ /Last 33 0 R
+ /Type /Outlines >>
+endobj
+% 'Outline.0': class OutlineEntryObject 
+25 0 obj
+<< /Dest [ 11 0 R
+ /XYZ
+ 62.69291
+ 729.0236
+ 0 ]
+ /Next 26 0 R
+ /Parent 24 0 R
+ /Title (Introduction) >>
+endobj
+% 'Outline.1': class OutlineEntryObject 
+26 0 obj
+<< /Dest [ 11 0 R
+ /XYZ
+ 62.69291
+ 576.0236
+ 0 ]
+ /Next 27 0 R
+ /Parent 24 0 R
+ /Prev 25 0 R
+ /Title (Installation) >>
+endobj
+% 'Outline.2': class OutlineEntryObject 
+27 0 obj
+<< /Count 5
+ /Dest [ 11 0 R
+ /XYZ
+ 62.69291
+ 543.0236
+ 0 ]
+ /First 28 0 R
+ /Last 32 0 R
+ /Next 33 0 R
+ /Parent 24 0 R
+ /Prev 26 0 R
+ /Title (Usage) >>
+endobj
+% 'Outline.13.0': class OutlineEntryObject 
+28 0 obj
+<< /Dest [ 12 0 R
+ /XYZ
+ 62.69291
+ 723.0236
+ 0 ]
+ /Next 29 0 R
+ /Parent 27 0 R
+ /Title (Sampling alternatives for route choice observations) >>
+endobj
+% 'Outline.13.1': class OutlineEntryObject 
+29 0 obj
+<< /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 765.0236
+ 0 ]
+ /Next 30 0 R
+ /Parent 27 0 R
+ /Prev 28 0 R
+ /Title (Sampling alternatives with the given OD) >>
+endobj
+% 'Outline.13.2': class OutlineEntryObject 
+30 0 obj
+<< /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 735.0236
+ 0 ]
+ /Next 31 0 R
+ /Parent 27 0 R
+ /Prev 29 0 R
+ /Title (Sampling alternatives with equal probability) >>
+endobj
+% 'Outline.13.3': class OutlineEntryObject 
+31 0 obj
+<< /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 705.0236
+ 0 ]
+ /Next 32 0 R
+ /Parent 27 0 R
+ /Prev 30 0 R
+ /Title (Simulate route choice observations) >>
+endobj
+% 'Outline.13.4': class OutlineEntryObject 
+32 0 obj
+<< /Dest [ 15 0 R
+ /XYZ
+ 62.69291
+ 675.0236
+ 0 ]
+ /Parent 27 0 R
+ /Prev 31 0 R
+ /Title (Parameters) >>
+endobj
+% 'Outline.3': class OutlineEntryObject 
+33 0 obj
+<< /Count 3
+ /Dest [ 16 0 R
+ /XYZ
+ 62.69291
+ 189.3191
+ 0 ]
+ /First 34 0 R
+ /Last 36 0 R
+ /Parent 24 0 R
+ /Prev 27 0 R
+ /Title (A use case) >>
+endobj
+% 'Outline.14.0': class OutlineEntryObject 
+34 0 obj
+<< /Dest [ 21 0 R
+ /XYZ
+ 62.69291
+ 741.0236
+ 0 ]
+ /Next 35 0 R
+ /Parent 33 0 R
+ /Title (Input) >>
+endobj
+% 'Outline.14.1': class OutlineEntryObject 
+35 0 obj
+<< /Dest [ 21 0 R
+ /XYZ
+ 62.69291
+ 264.3913
+ 0 ]
+ /Next 36 0 R
+ /Parent 33 0 R
+ /Prev 34 0 R
+ /Title (Run MH sampling) >>
+endobj
+% 'Outline.14.2': class OutlineEntryObject 
+36 0 obj
+<< /Dest [ 21 0 R
+ /XYZ
+ 62.69291
+ 206.0874
+ 0 ]
+ /Parent 33 0 R
+ /Prev 35 0 R
+ /Title (Output) >>
+endobj
+% 'R37': class PDFPages 
+37 0 obj
+% page tree
+<< /Count 5
+ /Kids [ 11 0 R
+ 12 0 R
+ 15 0 R
+ 16 0 R
+ 21 0 R ]
+ /Type /Pages >>
+endobj
+% 'R38': class PDFStream 
+38 0 obj
+% page stream
+<< /Length 10115 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 741.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 4 Tm /F2 20 Tf 24 TL 86.03488 0 Td (BIOROUTE C++ documentation) Tj T* -86.03488 0 Td ET
+Q
+Q
+q
+1 0 0 1 62.69291 708.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Introduction) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 678.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 1.54748 Tw (This documentation explains the usage of bioroute v1.0, a implementation of Metropolis-Hastings path) Tj T* 0 Tw (sampling \(MHPS\) algorithm for route choice modeling using GPS data.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 660.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Features:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 654.0236 cm
+Q
+q
+1 0 0 1 62.69291 654.0236 cm
+Q
+q
+1 0 0 1 62.69291 642.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 5.66 0 Td (1.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (MHPS algorithm.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 636.0236 cm
+Q
+q
+1 0 0 1 62.69291 624.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 5.66 0 Td (2.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Random walk algorithm.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 618.0236 cm
+Q
+q
+1 0 0 1 62.69291 606.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 5.66 0 Td (3.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Deals with probabilistic map matching results.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 600.0236 cm
+Q
+q
+1 0 0 1 62.69291 588.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 5.66 0 Td (4.) Tj T* -5.66 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Generation of biogeme inputs \(model file and data file\).) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 588.0236 cm
+Q
+q
+1 0 0 1 62.69291 555.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Installation) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 522.0236 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (Usage) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 504.0236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (The basic usage is following:) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 470.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (bioroute -c COMMAND -f PARAM_FILE -r -n NBR_OBSERVATIONS -s) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 447.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 .1 .1 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (-c COMMAND) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 240.9449 3.2 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (the function to be executed) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 420.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 14.8 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 .1 .1 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (-f PARAM_FILE) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 240.9449 3 cm
+q
+BT 1 0 0 1 0 14 Tm .130542 Tw 12 TL /F1 10 Tf 0 0 0 rg (is the path to the parameter file which is explained) Tj T* 0 Tw (in Section ) Tj 0 0 .501961 rg (Parameters) Tj 0 0 0 rg (.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 393.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 14.8 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 .1 .1 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (-r) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 240.9449 3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL 7.235814 Tw (specified if the observations are real, not) Tj T* 0 Tw (synthetic.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 378.4236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 .1 .1 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (-s) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 240.9449 3.2 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (specified if the network is synthetic, not real.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 363.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 3 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 .1 .1 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (-n NBR_OBSERVATIONS) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 240.9449 3.2 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (number of observations.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 345.2236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (COMMAND) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 339.2236 cm
+Q
+q
+1 0 0 1 62.69291 339.2236 cm
+Q
+q
+1 0 0 1 62.69291 327.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (Sample) Tj /F1 10 Tf (: ) Tj 0 0 .501961 rg (sampling alternatives for route choice observations) Tj 0 0 0 rg (.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 321.2236 cm
+Q
+q
+1 0 0 1 62.69291 309.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (SampleWithOd) Tj /F1 10 Tf (: ) Tj 0 0 .501961 rg (sampling alternatives with the given OD) Tj 0 0 0 rg (.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 303.2236 cm
+Q
+q
+1 0 0 1 62.69291 291.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (SampleEqualProbability) Tj /F1 10 Tf (: ) Tj 0 0 .501961 rg (sampling alternatives with equal probability) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 285.2236 cm
+Q
+q
+1 0 0 1 62.69291 273.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (MHEnumeratePaths) Tj /F1 10 Tf (: enumerate paths) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 267.2236 cm
+Q
+q
+1 0 0 1 62.69291 255.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (WriteBiogeme) Tj /F1 10 Tf (: write biogeme model and data files) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 249.2236 cm
+Q
+q
+1 0 0 1 62.69291 237.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (SimulateObservation) Tj /F1 10 Tf (: ) Tj 0 0 .501961 rg (simulate route choice observations ) Tj 0 0 0 rg (with specified route choice model.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 231.2236 cm
+Q
+q
+1 0 0 1 62.69291 219.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (ExportNetwork) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 213.2236 cm
+Q
+q
+1 0 0 1 62.69291 201.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (TestNetwork) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 195.2236 cm
+Q
+q
+1 0 0 1 62.69291 183.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (Verify) Tj /F1 10 Tf (: verify sampling results.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 177.2236 cm
+Q
+q
+1 0 0 1 62.69291 165.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (SimulateObservationsError) Tj /F1 10 Tf (: simulation errors in observations.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 159.2236 cm
+Q
+q
+1 0 0 1 62.69291 147.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (WriteNetworkToDB) Tj /F1 10 Tf (: write network to postgresql database.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 141.2236 cm
+Q
+q
+1 0 0 1 62.69291 129.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (AnalyzeChoiceSet) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 123.2236 cm
+Q
+q
+1 0 0 1 62.69291 111.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (WriteChoiceSetSHP) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 105.2236 cm
+Q
+q
+1 0 0 1 62.69291 93.22362 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (KML2SHP) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 87.22362 cm
+Q
+ 
+endstream
+endobj
+% 'R39': class PDFStream 
+39 0 obj
+% page stream
+<< /Length 1659 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 753.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (OBS2SHP) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 747.0236 cm
+Q
+q
+1 0 0 1 62.69291 735.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F4 10 Tf 0 0 0 rg (AnalyzeOBS) Tj /F1 10 Tf (:) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 735.0236 cm
+Q
+q
+1 0 0 1 62.69291 705.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Sampling alternatives for route choice observations) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 675.0236 cm
+q
+BT 1 0 0 1 0 14 Tm .386651 Tw 12 TL /F1 10 Tf 0 0 0 rg (The most important feature of ) Tj /F4 10 Tf (bioroute ) Tj /F1 10 Tf (is to sample alternatives for GPS map matching results generated) Tj T* 0 Tw (by ) Tj /F4 10 Tf (pmm) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 641.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F3 10 Tf 12 TL (bioroute -c Sample -f PARAM_FILE  -r) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 621.8236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (where ) Tj /F4 10 Tf (-r ) Tj /F1 10 Tf (indicates that the map matching results are from real data, not synthetic route choice results.) Tj T* ET
+Q
+Q
+ 
+endstream
+endobj
+% 'R40': class PDFStream 
+40 0 obj
+% page stream
+<< /Length 24382 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 747.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Sampling alternatives with the given OD) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 717.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Sampling alternatives with equal probability) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 687.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Simulate route choice observations) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 657.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Parameters) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 264.7908 cm
+q
+q
+.679817 0 0 .679817 0 0 cm
+q
+1 0 0 1 6.6 9.70849 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 690 564 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 540.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 540.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 48 540.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 78 540.75 84 12 re f*
+.960784 .960784 .862745 rg
+n 162 540.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 528.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 528.75 126 12 re f*
+.960784 .960784 .862745 rg
+n 204 528.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 240 528.75 24 12 re f*
+.960784 .960784 .862745 rg
+n 270 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 300 528.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 348 528.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 354 528.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 516.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 516.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 0 504.75 162 12 re f*
+.960784 .960784 .862745 rg
+n 0 492.75 336 12 re f*
+.960784 .960784 .862745 rg
+n 0 480.75 204 12 re f*
+.960784 .960784 .862745 rg
+n 0 468.75 12 12 re f*
+.960784 .960784 .862745 rg
+n 12 468.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 444.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 444.75 270 12 re f*
+.960784 .960784 .862745 rg
+n 276 444.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 432.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 432.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 432.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 432.75 84 12 re f*
+.960784 .960784 .862745 rg
+n 210 432.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 246 432.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 282 432.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 312 432.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 342 432.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 348 432.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 408.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 408.75 444 12 re f*
+.960784 .960784 .862745 rg
+n 498 408.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 396.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 396.75 432 12 re f*
+.960784 .960784 .862745 rg
+n 486 396.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 384.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 384.75 306 12 re f*
+.960784 .960784 .862745 rg
+n 360 384.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 372.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 372.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 372.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 372.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 222 372.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 258 372.75 72 12 re f*
+.960784 .960784 .862745 rg
+n 336 372.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 366 372.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 414 372.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 420 372.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 348.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 348.75 468 12 re f*
+.960784 .960784 .862745 rg
+n 474 348.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 336.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 336.75 306 12 re f*
+.960784 .960784 .862745 rg
+n 312 336.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 324.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 324.75 276 12 re f*
+.960784 .960784 .862745 rg
+n 282 324.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 312.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 312.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 312.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 312.75 126 12 re f*
+.960784 .960784 .862745 rg
+n 204 312.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 240 312.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 264 312.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 294 312.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 324 312.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 330 312.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 300.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 300.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 48 300.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 276.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 276.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 48 276.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 78 276.75 72 12 re f*
+.960784 .960784 .862745 rg
+n 150 276.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 264.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 264.75 264 12 re f*
+.960784 .960784 .862745 rg
+n 318 264.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 252.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 252.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 252.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 252.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 168 252.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 204 252.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 246 252.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 276 252.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 318 252.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 324 252.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 240.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 240.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 240.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 240.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 168 240.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 204 240.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 240 240.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 270 240.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 312 240.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 318 240.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 228.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 228.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 48 228.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 192.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 48 192.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 78 192.75 96 12 re f*
+.960784 .960784 .862745 rg
+n 174 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 168.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 168.75 288 12 re f*
+.960784 .960784 .862745 rg
+n 294 168.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 156.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 156.75 294 12 re f*
+.960784 .960784 .862745 rg
+n 300 156.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 144.75 666 12 re f*
+.960784 .960784 .862745 rg
+n 672 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 132.75 456 12 re f*
+.960784 .960784 .862745 rg
+n 462 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 120.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 120.75 126 12 re f*
+.960784 .960784 .862745 rg
+n 204 120.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 240 120.75 102 12 re f*
+.960784 .960784 .862745 rg
+n 348 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 378 120.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 426 120.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 432 120.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 108.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 108.75 132 12 re f*
+.960784 .960784 .862745 rg
+n 210 108.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 246 108.75 120 12 re f*
+.960784 .960784 .862745 rg
+n 372 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 402 108.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 450 108.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 456 108.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 96.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 96.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 96.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 96.75 102 12 re f*
+.960784 .960784 .862745 rg
+n 180 96.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 216 96.75 72 12 re f*
+.960784 .960784 .862745 rg
+n 294 96.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 324 96.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 372 96.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 378 96.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 72.75 276 12 re f*
+.960784 .960784 .862745 rg
+n 330 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 60.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 60.75 114 12 re f*
+.960784 .960784 .862745 rg
+n 192 60.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 228 60.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 282 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 312 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 342 60.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 348 60.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 48.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 48.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 48.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 48.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 270 48.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 306 48.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 360 48.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 390 48.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 420 48.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 426 48.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 24.75 66 12 re f*
+.960784 .960784 .862745 rg
+n 120 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 12.75 90 12 re f*
+.960784 .960784 .862745 rg
+n 174 12.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 210 12.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 258 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 288 12.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 330 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 336 12.75 6 12 re f*
+BT 1 0 0 1 0 542 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (module) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("pathSampling") Tj /F5 10 Tf 0 .501961 0 rg (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("pathSampleAlgorithm") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("MH") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--) Tj T* (        Sampling algorithm:) Tj T* (                - MH: Metropolis-Hastings path sampling.) Tj T* (                - RW: random walk.) Tj T* (--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- total number of samples to be generated--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("SAMPLE_COUNT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("100") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- For biogeme data, different number of alternatives can be specified --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- It is used to test the effect of different number of alterantives --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Syntax is `NUMBER,`, for example, 30,50,100, --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("choiceSetInBiogemeData") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("30,50,100,") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- The behavior of sampling alternative or not if the result already exists--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- 1  sample again and overwrite the sample file--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- 0 does not sample in order to save time --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("overwriteSampleFile") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (/module) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (module) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("RandomWalk") Tj /F5 10 Tf 0 .501961 0 rg (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Parameters for random walk algorithm. --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("kumaA") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("30.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("kumaB") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (/module) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (module) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("MHPathSampling") Tj /F5 10 Tf 0 .501961 0 rg (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Folder for experiment and its subfolders. --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--    experimentDirectory: the parent folder. --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--    observationDirectory: the subfolder that contains the route choice observations \(mapmatching results\) --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--    choiceSetFolder: the subfolder that the sampling results writes to --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("experimentDirectory") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("EXPERIMENT_HOME") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("observationDirectory") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("path_observations/") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("choiceSetFolder") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.026_1.0/") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- warm up iteration and sampling interval --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("WARMUP_ITERATIONS") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("500000") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("SAMPLEINTERVAL_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("100000") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- zeta --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_link_scale") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.026") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 87.59085 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 168 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 144.75 336 12 re f*
+.960784 .960784 .862745 rg
+n 342 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 132.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 132.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 132.75 96 12 re f*
+.960784 .960784 .862745 rg
+n 180 132.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 216 132.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 264 132.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 294 132.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 342 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 348 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 120.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 120.75 72 12 re f*
+.960784 .960784 .862745 rg
+n 156 120.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 192 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 228 120.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 258 120.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 300 120.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 306 120.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 108.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 108.75 72 12 re f*
+.960784 .960784 .862745 rg
+n 156 108.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 192 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 228 108.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 258 108.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 300 108.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 306 108.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 84.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 84.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 150 84.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 72.75 84 12 re f*
+.960784 .960784 .862745 rg
+n 168 72.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 204 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 240 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 270 72.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 312 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 318 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 36.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 36.75 270 12 re f*
+.960784 .960784 .862745 rg
+n 276 36.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 24.75 234 12 re f*
+.960784 .960784 .862745 rg
+n 240 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 12.75 426 12 re f*
+.960784 .960784 .862745 rg
+n 432 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 18 12 re f*
+BT 1 0 0 1 0 146 Tm 12 TL /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- coefficients for length, speed bump and path size --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_length_coef") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("-0.01") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj 0 0 0 rg ( ) Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_sb_coef") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("0.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_ps_coef") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("0.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- omega 2 parameter --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_obs_scale") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Export reduced network. 1 export, 0 no.--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Reduced network is in MHPS paper.--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Cut off probability for reduced network. TODO check the function.--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+ 
+endstream
+endobj
+% 'R41': class PDFStream 
+41 0 obj
+% page stream
+<< /Length 30016 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 201.3191 cm
+q
+q
+.679817 0 0 .679817 0 0 cm
+q
+1 0 0 1 6.6 9.70849 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 630 828 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 804.75 486 12 re f*
+.960784 .960784 .862745 rg
+n 0 792.75 258 12 re f*
+.960784 .960784 .862745 rg
+n 258 792.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 264 792.75 180 12 re f*
+.960784 .960784 .862745 rg
+n 0 780.75 234 12 re f*
+.960784 .960784 .862745 rg
+n 0 768.75 396 12 re f*
+.960784 .960784 .862745 rg
+n 0 756.75 492 12 re f*
+.960784 .960784 .862745 rg
+n 492 756.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 498 756.75 120 12 re f*
+.960784 .960784 .862745 rg
+n 0 744.75 402 12 re f*
+.960784 .960784 .862745 rg
+n 0 732.75 102 12 re f*
+.960784 .960784 .862745 rg
+n 0 720.75 12 12 re f*
+.960784 .960784 .862745 rg
+n 12 720.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 708.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 708.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 708.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 708.75 132 12 re f*
+.960784 .960784 .862745 rg
+n 210 708.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 246 708.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 270 708.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 300 708.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 330 708.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 336 708.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 696.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 696.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 696.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 696.75 162 12 re f*
+.960784 .960784 .862745 rg
+n 240 696.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 276 696.75 72 12 re f*
+.960784 .960784 .862745 rg
+n 354 696.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 384 696.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 426 696.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 432 696.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 672.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 672.75 228 12 re f*
+.960784 .960784 .862745 rg
+n 0 660.75 552 12 re f*
+.960784 .960784 .862745 rg
+n 552 660.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 648.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 648.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 648.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 648.75 102 12 re f*
+.960784 .960784 .862745 rg
+n 186 648.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 222 648.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 246 648.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 276 648.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 306 648.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 312 648.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 624.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 624.75 318 12 re f*
+.960784 .960784 .862745 rg
+n 372 624.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 612.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 612.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 612.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 612.75 60 12 re f*
+.960784 .960784 .862745 rg
+n 186 612.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 222 612.75 66 12 re f*
+.960784 .960784 .862745 rg
+n 294 612.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 324 612.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 354 612.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 360 612.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 600.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 600.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 600.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 600.75 90 12 re f*
+.960784 .960784 .862745 rg
+n 216 600.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 252 600.75 66 12 re f*
+.960784 .960784 .862745 rg
+n 324 600.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 354 600.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 384 600.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 390 600.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 540.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 540.75 186 12 re f*
+.960784 .960784 .862745 rg
+n 240 540.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 528.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 528.75 120 12 re f*
+.960784 .960784 .862745 rg
+n 246 528.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 282 528.75 54 12 re f*
+.960784 .960784 .862745 rg
+n 342 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 372 528.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 402 528.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 408 528.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 516.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 516.75 234 12 re f*
+.960784 .960784 .862745 rg
+n 288 516.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 504.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 504.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 504.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 504.75 126 12 re f*
+.960784 .960784 .862745 rg
+n 252 504.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 288 504.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 336 504.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 366 504.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 396 504.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 402 504.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 456.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 456.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 456.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 456.75 162 12 re f*
+.960784 .960784 .862745 rg
+n 288 456.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 324 456.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 378 456.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 408 456.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 450 456.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 456 456.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 432.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 432.75 204 12 re f*
+.960784 .960784 .862745 rg
+n 258 432.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 420.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 420.75 138 12 re f*
+.960784 .960784 .862745 rg
+n 192 420.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 408.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 408.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 408.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 408.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 228 408.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 264 408.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 306 408.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 336 408.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 378 408.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 384 408.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 396.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 396.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 396.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 396.75 108 12 re f*
+.960784 .960784 .862745 rg
+n 192 396.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 228 396.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 252 396.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 282 396.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 312 396.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 318 396.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 384.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 384.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 384.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 384.75 102 12 re f*
+.960784 .960784 .862745 rg
+n 186 384.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 222 384.75 12 12 re f*
+.960784 .960784 .862745 rg
+n 240 384.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 270 384.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 324 384.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 330 384.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 348.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 348.75 138 12 re f*
+.960784 .960784 .862745 rg
+n 144 348.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 336.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 336.75 150 12 re f*
+.960784 .960784 .862745 rg
+n 156 336.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 324.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 324.75 132 12 re f*
+.960784 .960784 .862745 rg
+n 138 324.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 312.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 312.75 186 12 re f*
+.960784 .960784 .862745 rg
+n 192 312.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 300.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 300.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 300.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 300.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 228 300.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 264 300.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 288 300.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 318 300.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 348 300.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 354 300.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 252.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 252.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 48 252.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 216.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 216.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 48 216.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 78 216.75 126 12 re f*
+.960784 .960784 .862745 rg
+n 204 216.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 192.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 192.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 192.75 102 12 re f*
+.960784 .960784 .862745 rg
+n 228 192.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 264 192.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 288 192.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 318 192.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 348 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 354 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 360 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 366 192.75 198 12 re f*
+.960784 .960784 .862745 rg
+n 564 192.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 180.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 180.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 180.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 180.75 138 12 re f*
+.960784 .960784 .862745 rg
+n 216 180.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 252 180.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 288 180.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 318 180.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 360 180.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 366 180.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 168.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 168.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 168.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 168.75 108 12 re f*
+.960784 .960784 .862745 rg
+n 186 168.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 222 168.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 270 168.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 300 168.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 342 168.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 348 168.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 156.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 156.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 156.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 156.75 156 12 re f*
+.960784 .960784 .862745 rg
+n 240 156.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 276 156.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 300 156.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 330 156.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 360 156.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 366 156.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 144.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 144.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 144.75 180 12 re f*
+.960784 .960784 .862745 rg
+n 264 144.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 300 144.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 336 144.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 366 144.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 408 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 414 144.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 132.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 48 132.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 96.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 96.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 48 96.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 78 96.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 222 96.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 84.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 84.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 84.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 84.75 150 12 re f*
+.960784 .960784 .862745 rg
+n 276 84.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 312 84.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 366 84.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 396 84.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 426 84.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 432 84.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 72.75 138 12 re f*
+.960784 .960784 .862745 rg
+n 264 72.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 300 72.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 324 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 354 72.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 384 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 390 72.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 60.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 60.75 138 12 re f*
+.960784 .960784 .862745 rg
+n 264 60.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 300 60.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 324 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 354 60.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 384 60.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 390 60.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 36.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 36.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 36.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 36.75 108 12 re f*
+.960784 .960784 .862745 rg
+n 234 36.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 270 36.75 18 12 re f*
+.960784 .960784 .862745 rg
+n 294 36.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 324 36.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 354 36.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 360 36.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 96 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 102 24.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 138 24.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 168 24.75 162 12 re f*
+.960784 .960784 .862745 rg
+n 336 24.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 372 24.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 408 24.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 438 24.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 468 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 474 24.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 48 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 54 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 90 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 120 12.75 144 12 re f*
+.960784 .960784 .862745 rg
+n 270 12.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 306 12.75 24 12 re f*
+.960784 .960784 .862745 rg
+n 336 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 366 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 396 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 402 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 42 12 re f*
+.960784 .960784 .862745 rg
+n 48 .75 6 12 re f*
+BT 1 0 0 1 0 806 Tm 12 TL /F6 10 Tf .25098 .501961 .501961 rg (                double expansion = 1.0 - log\(m_cutOffProbability\) / \(linkCostSP\);) Tj T* (                if \(patNBParameters::the\(\)-) Tj (>) Tj (mh_link_scale_relative == 1\) {) Tj T* (                        expansion = 1.0) Tj T* (                                        - log\(m_cutOffProbability\)) Tj T* (                                                        * \(patNBParameters::the\(\)-) Tj (>) Tj (mh_link_scale - 1.0\)) Tj T* (                                                        / \(log\(2\)\);) Tj T* (                }) Tj T* (--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("exportReducedNetwork") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("CUTOFFPROBABILITY_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("0.00000001") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Export compressed network network.) Tj T* (                Compressed network merges links which do not have intersections in between--) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("compressNetwork") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Origin and destination node id in OSM network. --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("OriginId") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("296253984") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("DestinationId") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("973818127") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T*  T*  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- random seed for sampling --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("RANDOMSEED_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("4213332") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- print message every X iterations --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("MSGINTERVAL_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("10000") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T*  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("RELATIVECOSTSCALE_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.0200") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--- link cost scale for router --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!--- Don't chage it! --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("router_cost_link_scale") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("-1.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_function_type") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("2") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_trigger_path") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj 0 0 0 rg ( ) Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- Do not change it --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- patLinkAndPathCost --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- MHPathGenerator --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- MHSamplingWeightFunction --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_link_scale_relative") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T*  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (/module) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (module) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("SimulateObservation") Tj /F5 10 Tf 0 .501961 0 rg (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("samplingWithObs") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F6 10 Tf .25098 .501961 .501961 rg (<) Tj (!-- used in synwritebiogeme.cc --) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("ObsErrorDistanceScale") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("0.1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("ObsErrorDistance") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("200.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("nbrOfSimulatedErrorPaths") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("5") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("errorInSimulatedObservations") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("0.2") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (/module) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T*  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (module) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("UselessAfterMultiModal") Tj /F5 10 Tf 0 .501961 0 rg (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("TOTALITERATIONS_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("100000") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("writeBiogemeModelFile") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("syntheticObservations") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T*  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("pathSamplingAlgo") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (                ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("maxNumberOfGeneratedPaths") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("200") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* (        ) Tj /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("maxTrialsForRandomWalk") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("50") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (/module) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 168.3191 cm
+q
+BT 1 0 0 1 0 3.5 Tm 21 TL /F2 17.5 Tf 0 0 0 rg (A use case) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 114.3191 cm
+q
+BT 1 0 0 1 0 38 Tm 2.46284 Tw 12 TL /F1 10 Tf 0 0 0 rg (This case study implements the real data experiment described in Jingmin Chen's thesis. The map) Tj T* 0 Tw .888409 Tw (matching results of 19 trips are given. Decompress the content to a folder, and we note the path to this) Tj T* 0 Tw 1.861976 Tw (directory as ) Tj /F2 10 Tf (EXPERIMENT_HOME ) Tj /F1 10 Tf (The configuration file ) Tj /F4 10 Tf (config_gps_route_choice.xml ) Tj /F1 10 Tf (is in the param) Tj T* 0 Tw (folder.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 81.11906 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 126 12 re f*
+.960784 .960784 .862745 rg
+n 204 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 240 .75 108 12 re f*
+.960784 .960784 .862745 rg
+n 354 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 384 .75 48 12 re f*
+.960784 .960784 .862745 rg
+n 432 .75 6 12 re f*
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("experimentDirectory") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("EXPERIMENT_HOME/") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg (string"/) Tj /F5 10 Tf 0 .501961 0 rg (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+ 
+endstream
+endobj
+% 'R42': class PDFStream 
+42 0 obj
+% page stream
+<< /Length 15248 >>
+stream
+1 0 0 1 0 0 cm  BT /F1 12 Tf 14.4 TL ET
+q
+1 0 0 1 62.69291 753.0236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Note: always put a ) Tj /F4 10 Tf (/ ) Tj /F1 10 Tf (after a directory!) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 723.0236 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Input) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 693.0236 cm
+q
+BT 1 0 0 1 0 14 Tm .601163 Tw 12 TL /F1 10 Tf 0 0 0 rg (The unimodal map matching is applied to generate path observations from GPS data. The gps data is in) Tj T* 0 Tw /F4 10 Tf (gps ) Tj /F1 10 Tf (folder. * Map matching results with ) Tj /F4 10 Tf (kml ) Tj /F1 10 Tf (format are in ) Tj /F4 10 Tf (path_observations ) Tj /F1 10 Tf (folder.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 659.8236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 132 12 re f*
+.960784 .960784 .862745 rg
+n 210 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 246 .75 120 12 re f*
+.960784 .960784 .862745 rg
+n 366 .75 42 12 re f*
+.960784 .960784 .862745 rg
+n 408 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 414 .75 6 12 re f*
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("observationDirectory") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("path_observations/") Tj 0 0 0 rg (string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 603.8236 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 38 Tm /F1 10 Tf 12 TL .63528 Tw (We would like to use MH path sampling to generate biogeme inputs. Each set of sampled alternatives is) Tj T* 0 Tw .752765 Tw (composed of 100 draws. In order to test the effect of the sampling size, different sets of alterantives are) Tj T* 0 Tw 1.992485 Tw (produced: 30, 50, 100. There will be three inputs generated. One contains 30 draws in the sampled) Tj T* 0 Tw (alterantives; one contains 50, and one contains 100.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 558.6236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 12.75 84 12 re f*
+.960784 .960784 .862745 rg
+n 162 12.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 198 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 234 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 264 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 294 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 300 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 144 12 re f*
+.960784 .960784 .862745 rg
+n 222 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 258 .75 72 12 re f*
+.960784 .960784 .862745 rg
+n 336 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 366 .75 48 12 re f*
+.960784 .960784 .862745 rg
+n 414 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 420 .75 6 12 re f*
+BT 1 0 0 1 0 14 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("SAMPLE_COUNT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("100") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("choiceSetInBiogemeData") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("30,50,100,") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 538.6236 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Note ) Tj /F4 10 Tf (`,` ) Tj /F1 10 Tf (after ) Tj /F4 10 Tf (100) Tj /F1 10 Tf (. It is a required syntax.) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 532.6236 cm
+Q
+q
+1 0 0 1 62.69291 532.6236 cm
+Q
+q
+1 0 0 1 62.69291 520.6236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Set the ) Tj /F4 10 Tf (burn-in ) Tj /F1 10 Tf (and ) Tj /F4 10 Tf (sampling interval ) Tj /F1 10 Tf (for MH path sampling) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 520.6236 cm
+Q
+q
+1 0 0 1 62.69291 475.4236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 12.75 114 12 re f*
+.960784 .960784 .862745 rg
+n 192 12.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 228 12.75 48 12 re f*
+.960784 .960784 .862745 rg
+n 282 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 312 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 342 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 348 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 144 12 re f*
+.960784 .960784 .862745 rg
+n 222 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 258 .75 48 12 re f*
+.960784 .960784 .862745 rg
+n 312 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 342 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 372 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 378 .75 6 12 re f*
+BT 1 0 0 1 0 14 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("WARMUP_ITERATIONS") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("500000") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("SAMPLEINTERVAL_ELEMENT") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("100000") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("int") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 461.4236 cm
+Q
+q
+1 0 0 1 62.69291 461.4236 cm
+Q
+q
+1 0 0 1 62.69291 449.4236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+q
+5 0 0 10 17.79 -1 cm
+/FormXob.0d5b2123db8b7e40a64c2b2e4595d6d2 Do
+Q
+q
+12 0 0 8 42.25 -1 cm
+/FormXob.f7b20b4829a31b0bc123706c15e2d76a Do
+Q
+BT 1 0 0 1 0 2 Tm 12 TL /F1 10 Tf 0 0 0 rg (Set ) Tj 22.79 0 Td (and ) Tj 31.46 0 Td (parameters for the sampling) Tj T* -54.25 0 Td ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 449.4236 cm
+Q
+q
+1 0 0 1 62.69291 404.2236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 36 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 12.75 90 12 re f*
+.960784 .960784 .862745 rg
+n 174 12.75 36 12 re f*
+.960784 .960784 .862745 rg
+n 210 12.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 258 12.75 30 12 re f*
+.960784 .960784 .862745 rg
+n 288 12.75 42 12 re f*
+.960784 .960784 .862745 rg
+n 330 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 336 12.75 6 12 re f*
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 84 12 re f*
+.960784 .960784 .862745 rg
+n 168 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 204 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 240 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 270 .75 42 12 re f*
+.960784 .960784 .862745 rg
+n 312 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 318 .75 6 12 re f*
+BT 1 0 0 1 0 14 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_link_scale") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.026") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj /F3 10 Tf 0 0 0 rg  T* /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("mh_obs_scale") Tj 0 0 0 rg (  ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.0") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("float") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 390.2236 cm
+Q
+q
+1 0 0 1 62.69291 390.2236 cm
+Q
+q
+1 0 0 1 62.69291 366.2236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 9 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 14 Tm /F1 10 Tf 12 TL .48686 Tw (Set the sampling results folder. The choice set for each observation, along with the biogeme dat file) Tj T* 0 Tw (and mod file will be produced in this folder.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 366.2236 cm
+Q
+q
+1 0 0 1 62.69291 333.0236 cm
+q
+q
+1 0 0 1 0 0 cm
+q
+1 0 0 1 6.6 6.6 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 468.6898 24 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 102 12 re f*
+.960784 .960784 .862745 rg
+n 180 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 216 .75 72 12 re f*
+.960784 .960784 .862745 rg
+n 294 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 324 .75 48 12 re f*
+.960784 .960784 .862745 rg
+n 372 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 378 .75 6 12 re f*
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("choiceSetFolder") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("1.026_1.0/") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 319.0236 cm
+Q
+q
+1 0 0 1 62.69291 319.0236 cm
+Q
+q
+1 0 0 1 62.69291 307.0236 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL (Set the network file) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 307.0236 cm
+Q
+q
+1 0 0 1 62.69291 276.3913 cm
+q
+q
+.898107 0 0 .898107 0 0 cm
+q
+1 0 0 1 6.6 7.348787 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 522 24 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 0 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 6 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 42 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 72 .75 120 12 re f*
+.960784 .960784 .862745 rg
+n 198 .75 36 12 re f*
+.960784 .960784 .862745 rg
+n 234 .75 180 12 re f*
+.960784 .960784 .862745 rg
+n 420 .75 30 12 re f*
+.960784 .960784 .862745 rg
+n 450 .75 48 12 re f*
+.960784 .960784 .862745 rg
+n 498 .75 6 12 re f*
+.960784 .960784 .862745 rg
+n 504 .75 6 12 re f*
+BT 1 0 0 1 0 2 Tm 12 TL /F5 10 Tf 0 .501961 0 rg (<) Tj (param) Tj /F3 10 Tf 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (name=) Tj .729412 .129412 .129412 rg ("OsmNetworkFileName") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (value=) Tj .729412 .129412 .129412 rg ("EXEPRIMENT_HOME/lausanne.osm") Tj 0 0 0 rg ( ) Tj .490196 .564706 .160784 rg (type=) Tj .729412 .129412 .129412 rg ("string") Tj /F5 10 Tf 0 .501961 0 rg (/) Tj (>) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 246.3913 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Run MH sampling) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 218.0874 cm
+q
+q
+.805709 0 0 .805709 0 0 cm
+q
+1 0 0 1 6.6 8.191538 cm
+q
+.662745 .662745 .662745 RG
+.5 w
+.960784 .960784 .862745 rg
+n -6 -6 582 24 re B*
+Q
+q
+.960784 .960784 .862745 rg
+n 90 .75 12 12 re f*
+BT 1 0 0 1 0 2 Tm 12 TL /F3 10 Tf 0 0 0 rg (EXPERIMENT_HOME) Tj .098039 .090196 .486275 rg ($ ) Tj 0 0 0 rg (/data/jingmin/bin/bioroute -c Sample -f params/config_gps_route_choice.xml  -r) Tj T* ET
+Q
+Q
+Q
+Q
+Q
+q
+1 0 0 1 62.69291 188.0874 cm
+q
+BT 1 0 0 1 0 3 Tm 18 TL /F2 15 Tf 0 0 0 rg (Output) Tj T* ET
+Q
+Q
+q
+1 0 0 1 62.69291 176.0874 cm
+Q
+q
+1 0 0 1 62.69291 176.0874 cm
+Q
+q
+1 0 0 1 62.69291 116.0874 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 45 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 50 Tm 1.284985 Tw 12 TL /F1 10 Tf 0 0 0 rg (For each candidate path, a set of alterantives are generated. For an observation with file name ) Tj /F4 10 Tf (3) Tj T* 0 Tw 4.652485 Tw (-6623) Tj /F1 10 Tf (, there are 7 candidate paths, noted from ) Tj /F4 10 Tf (3 -6623_1 ) Tj /F1 10 Tf (to ) Tj /F4 10 Tf (3 -6623_7) Tj /F1 10 Tf (. For path 1 ) Tj /F4 10 Tf (3) Tj T* 0 Tw 1.953294 Tw (-6623_1_sample.kmlreduced.kml.kml ) Tj /F1 10 Tf (and ) Tj /F4 10 Tf (3 -6623_1_sample.kmlreduced.kml.shp ) Tj /F1 10 Tf (are the reduced) Tj T* 0 Tw 1.949983 Tw (network \(described in MH paper\) in ) Tj /F4 10 Tf (kml ) Tj /F1 10 Tf (and ) Tj /F4 10 Tf (shp ) Tj /F1 10 Tf (format. ) Tj /F4 10 Tf (3 -6623_1_sample.kml ) Tj /F1 10 Tf (is the sampling) Tj T* 0 Tw (result.) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 110.0874 cm
+Q
+q
+1 0 0 1 62.69291 86.08744 cm
+0 0 0 rg
+BT /F1 10 Tf 12 TL ET
+q
+1 0 0 1 6 9 cm
+q
+0 0 0 rg
+BT 1 0 0 1 0 2 Tm /F1 10 Tf 12 TL 10.5 0 Td (\177) Tj T* -10.5 0 Td ET
+Q
+Q
+q
+1 0 0 1 23 -3 cm
+q
+BT 1 0 0 1 0 14 Tm 3.81284 Tw 12 TL /F1 10 Tf 0 0 0 rg (Three biogeme data files are produced, with 30, 50, 100 draws respectively. The files are) Tj T* 0 Tw /F4 10 Tf (observations_30.dat) Tj /F1 10 Tf (, ) Tj /F4 10 Tf (observations_50.dat ) Tj /F1 10 Tf (and ) Tj /F4 10 Tf (observations_100.dat) Tj T* ET
+Q
+Q
+q
+Q
+Q
+q
+1 0 0 1 62.69291 86.08744 cm
+Q
+ 
+endstream
+endobj
+% 'R43': class PDFPageLabels 
+43 0 obj
+% Document Root
+<< /Nums [ 0
+ 44 0 R
+ 1
+ 45 0 R
+ 2
+ 46 0 R
+ 3
+ 47 0 R
+ 4
+ 48 0 R ] >>
+endobj
+% 'R44': class PDFPageLabel 
+44 0 obj
+% None
+<< /S /D
+ /St 1 >>
+endobj
+% 'R45': class PDFPageLabel 
+45 0 obj
+% None
+<< /S /D
+ /St 2 >>
+endobj
+% 'R46': class PDFPageLabel 
+46 0 obj
+% None
+<< /S /D
+ /St 3 >>
+endobj
+% 'R47': class PDFPageLabel 
+47 0 obj
+% None
+<< /S /D
+ /St 4 >>
+endobj
+% 'R48': class PDFPageLabel 
+48 0 obj
+% None
+<< /S /D
+ /St 5 >>
+endobj
+xref
+0 49
+0000000000 65535 f
+0000000113 00000 n
+0000000271 00000 n
+0000000436 00000 n
+0000000611 00000 n
+0000000785 00000 n
+0000001013 00000 n
+0000001207 00000 n
+0000001448 00000 n
+0000001689 00000 n
+0000001930 00000 n
+0000002157 00000 n
+0000002490 00000 n
+0000002772 00000 n
+0000002944 00000 n
+0000003120 00000 n
+0000003400 00000 n
+0000003723 00000 n
+0000005803 00000 n
+0000007046 00000 n
+0000010178 00000 n
+0000011980 00000 n
+0000012378 00000 n
+0000012537 00000 n
+0000012811 00000 n
+0000012937 00000 n
+0000013110 00000 n
+0000013298 00000 n
+0000013524 00000 n
+0000013739 00000 n
+0000013957 00000 n
+0000014180 00000 n
+0000014393 00000 n
+0000014564 00000 n
+0000014780 00000 n
+0000014949 00000 n
+0000015143 00000 n
+0000015294 00000 n
+0000015438 00000 n
+0000025653 00000 n
+0000027411 00000 n
+0000051893 00000 n
+0000082009 00000 n
+0000097361 00000 n
+0000097506 00000 n
+0000097583 00000 n
+0000097660 00000 n
+0000097737 00000 n
+0000097814 00000 n
+trailer
+<< /ID 
+ % ReportLab generated PDF document -- digest (http://www.reportlab.com) 
+ [(\274\222\310\221~Y\337\365<\001\357\275\220\015n\377) (\274\222\310\221~Y\337\365<\001\357\275\220\015n\377)] 
+
+ /Info 23 0 R
+ /Root 22 0 R
+ /Size 49 >>
+startxref
+97861
+%%EOF
