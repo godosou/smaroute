@@ -31,14 +31,10 @@ int main(int argc, char *argv[]) {
 	 */
 
 	char *param_file = NULL;
-	char *command = NULL;
 	char *gps_file = NULL;
 	int c;
-	while ((c = getopt(argc, argv, "c:f:g:h")) != -1) {
+	while ((c = getopt(argc, argv, "f:g:h")) != -1) {
 		switch (c) {
-		case 'c':
-			command = optarg;
-			break;
 		case 'f':
 			param_file = optarg;
 			break;
@@ -47,9 +43,7 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case 'h':
-			cout
-					<< "bioroute -c COMMAND -f PARAM_FILE -n NUMBER_OF_OBSERVATIONS"
-					<< endl;
+			cout << "pmm  -f PARAM_FILE  -g gps_file" << endl;
 			break;
 
 		default:
@@ -62,10 +56,6 @@ int main(int argc, char *argv[]) {
 	} else {
 		cout << "use param file: " << param_file << endl;
 	}
-
-	string command_str(command);
-	string gps_file_string(gps_file);
-	cout << command_str << endl;
 
 	initParameters(param_file);
 	patError* err(NULL);
@@ -87,19 +77,17 @@ int main(int argc, char *argv[]) {
 		patWay::initiateNetworkTypeRules(network_rule);
 	}
 
+
+	string gps_file_string(gps_file);
+	cout << "read gps"<<gps_file_string << endl;
 	patGpsSequence gps_sequence(gps_file_string);
 	patGeoBoundingBox bb = gps_sequence.computeBoundingBox(0.01);
-	// patGeoBoundingBox(
-	// 		patNBParameters::the()->boundingBoxLeftUpLongitude,
-	// 		patNBParameters::the()->boundingBoxLeftUpLatitude,
-	// 		patNBParameters::the()->boundingBoxRightBottumLongitude,
-	// 		patNBParameters::the()->boundingBoxRightBottumLatitude);
+	cout<<bb<<endl;
 	patNetworkEnvironment network_environment(bb);
 	//Load networks
-	network_environment.getNetwork(CAR)->exportShpFiles(
-			gps_file_string + "_network.shp");
+//	network_environment.getNetwork(CAR)->exportShpFiles(
+//			gps_file_string + "_network.shp");
 //	network_environment.getNetwork(CAR)->exportKML(gps_file_string+"_network.kml");
-	cout << gps_file_string << endl;
 	patProbabilisticMapMatching pmm(&network_environment,
 			gps_file_string.substr(0, gps_file_string.size() - 4), err);
 
@@ -108,30 +96,4 @@ int main(int argc, char *argv[]) {
 	}
 	pmm.run(err);
 
-//#pragma omp parallel num_threads( num_threads)
-	// {
-//#pragma omp for
-
-	// for (list<string>::iterator gps_file_iter = gps_files.begin();
-	// 		gps_file_iter != gps_files.end();
-	// 		++gps_file_iter
-	// 	) {
-	// 		try {
-	// 			DEBUG_MESSAGE("OK");
-	// 			DEBUG_MESSAGE("===FINISH "<< *gps_file_iter);
-
-	// 			 if (err != NULL) {
-	// 			 continue;
-	// 			 } else {
-	// 			 DEBUG_MESSAGE("===FINISH "<< *gps_file_iter);
-	// 			 //	pmm.exportToKML();
-	// 			 }
-
-	// 		}
-	// 		catch(...) {
-	// 			DEBUG_MESSAGE("===Fail to map matching "<<*gps_file_iter);
-	// 		}
-	// 	}
-	// }
-	// return 0;
 }

@@ -18,7 +18,14 @@
    	"${CMAKE_SOURCE_DIR}/../libs//biogeme-2.0/libraries/utils"
     "${CMAKE_SOURCE_DIR}/../libs//biogeme-2.0/libraries/parameters"
     "${CMAKE_SOURCE_DIR}/../libs//biogeme-2.0"
-    "/usr/local/lib/biogeme/"
+    "${CMAKE_SOURCE_DIR}/../libs//biogeme"
+    "/home/jchen/biogeme-2.0/libraries/parameters"
+    "/home/jchen/biogeme-2.0/libraries/utils"
+   	"/home/jchen/biogeme-2.0/libraries/utils"
+    "/home/jchen/biogeme-2.0/libraries/parameters"
+    "/home/jchen/biogeme-2.0"
+    "/home/jchen/biogeme"
+    "/usr/local/libs/biogeme/"
     "/data/jqdu/libs/lib/biogeme"
     "/data/jqdu/libs/include/biogeme/"
     "/data/jqdu/libs"
@@ -64,8 +71,9 @@ if (BIOGEME_FOUND)
     message(${BIOGEME_INCLUDE_UTILS_DIRECTORIES})
     include_directories(${BIOGEME_INCLUDE_DIRECTORIES})
     include_directories(${BIOGEME_INCLUDE_UTILS_DIRECTORIES})
-
-endif (BIOGEME_FOUND)
+else(NOT BIOGEME_FOUND)
+	message("BIOGEME not found")
+endif(BIOGEME_FOUND)
 mark_as_advanced( FORCE BIOGEME_INCLUDE_DIRECTORIES )
 mark_as_advanced( FORCE LIB_PARAMETERS )
 mark_as_advanced( FORCE LIB_UTILS )

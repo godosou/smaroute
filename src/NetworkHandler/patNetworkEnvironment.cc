@@ -17,6 +17,9 @@
 #include "patNetworkMetro.h"
 #include "patNetworkBike.h"
 #include "patNBParameters.h"
+#include "libconfig.h++"
+using namespace libconfig;
+
 patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb) {
 //Initiate rules for loading types of network elements.
 //	DEBUG_MESSAGE(patNBParameters::the()->enableTrainNetwork
@@ -76,10 +79,10 @@ patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb) {
 			 }
 			 */
 			if (network_iter->second->getTransportMode() == METRO) {
-				if (patNBParameters::the()->walkOnTrack) {
-					network_iter->second->walkOnTrack(&m_network_elements,
-							m_networks["walk"]);
-				}
+//				if (patNBParameters::the()->walkOnTrack) {
+//					network_iter->second->walkOnTrack(&m_network_elements,
+//							m_networks["walk"]);
+//				}
 				network_iter->second->walkFromToStops(&m_network_elements,
 						m_networks["walk"]);
 			}
@@ -104,7 +107,7 @@ patNetworkEnvironment::patNetworkEnvironment(patGeoBoundingBox& bb) {
 
 //}
 
-	DEBUG_MESSAGE("network with nodes: "<<getNetwork(CAR)->getNodeSize());
+//	DEBUG_MESSAGE("network with nodes: "<<getNetwork(CAR)->getNodeSize());
 }
 
 void patNetworkEnvironment::exportNetwork() {

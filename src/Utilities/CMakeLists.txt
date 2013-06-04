@@ -1,5 +1,6 @@
 
 add_library(Utilities
+				patPostGreSqlDataType.cc
                 patTimeFunctions.cc
                 patCoordinates.cc
                 patDisplay.cc

@@ -12,6 +12,7 @@
 
 //#include <unordered_map>
 #include <set>
+#include <list>
 #include "patNode.h"
 #include "patRoadBase.h"
 #include "patArc.h"
@@ -104,8 +105,19 @@ public:
 			unordered_map<const patNode*, set<const patRoadBase*> >& outgoing_incidents);
 
 	patMultiModalPath recoverPath(const patMultiModalPath& path) const;
+
+	void assignRoadBaseId();
+
+	const list< int> findPrevRoadIds(const patNode* node) const;
+	const list< int> findNextRoadIds(const patNode* node) const;
+	const patRoadBase* findOpposite(const patRoadBase* road) const;
+	const int getRoadId(const patRoadBase* road) const;
+
+	const unordered_map<const patRoadBase*, const int>* getAllRoads() const;
 protected:
 
+
+	unordered_map<const patRoadBase*, const int> m_road_id;
 	unordered_map<const patNode*, set<const patRoadBase*> > m_outgoing_incidents;
 	unordered_map<const patNode*, set<const patRoadBase*> > m_incoming_incidents;
 	set<const patNode*> m_nodes;

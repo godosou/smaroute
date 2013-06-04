@@ -1,7 +1,11 @@
 include_directories("${NewBioroute_SOURCE_DIR}/MapMatching")
 
 include_directories("${NewBioroute_SOURCE_DIR}/Utilities")
+include_directories("${LIBCONFIG_INCLUDE_DIR}")
+
+
 add_library(NetworkHandler
+				patSpatialSearch.cc
                 patWriteNetworkToDB.cc
                 patCompressedArc.cc
 		patGetShortestPathFromDB.cc

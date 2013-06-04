@@ -9,6 +9,8 @@
 #define PATGEOBOUNDINGBOX_H_
 #include "patType.h"
 #include <iostream>
+using namespace std;
+
 class patGeoBoundingBox {
 	friend ostream& operator<<(ostream& str, const patGeoBoundingBox& x);
 public:
@@ -28,7 +30,7 @@ public:
 	patGeoBoundingBox(double tleft_top_lat, double tlat_top_lon,
 			double tright_buttom_lat, double tright_buttom_lon);
 	patString toString() const;
-
+	string toPostGISString() const;
 	bool isInBox(double lat, double lon) const;
 
 	bool valid() const;

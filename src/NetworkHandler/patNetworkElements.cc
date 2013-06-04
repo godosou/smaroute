@@ -23,13 +23,11 @@ patNetworkElements::patNetworkElements() :
 }
 patNode* patNetworkElements::addNode(unsigned long theId, patNode& theNode) {
 
-
 	unsigned long node_id = theNode.getUserId();
-	if(theId==INT_MAX){
+	if (theId == INT_MAX) {
 		node_id = m_nodes.size();
 	}
-	map<unsigned long, patNode>::iterator found = m_nodes.find(
-			node_id);
+	map<unsigned long, patNode>::iterator found = m_nodes.find(node_id);
 	if (found != m_nodes.end()) {
 		// The node Id already exists
 //		DEBUG_MESSAGE("node exists");
@@ -41,7 +39,8 @@ patNode* patNetworkElements::addNode(unsigned long theId, patNode& theNode) {
 		;
 		//    DEBUG_MESSAGE("Node '" << theNode.name << "' added") ;
 		if (insert_result.second == false) {
-			throw RuntimeException("patNetworkElements: insert node not successful");
+			throw RuntimeException(
+					"patNetworkElements: insert node not successful");
 			return NULL;
 		}
 
@@ -177,14 +176,15 @@ void patNetworkElements::readNetworkFromOSMFile(string file_name,
 
 }
 
-void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box) {
+void patNetworkElements::readNodesFromPostGreSQL(
+		patGeoBoundingBox bounding_box) {
 
 	string bb_box;
 	stringstream query_stream(bb_box);
 	query_stream
 			<< "SELECT id, tags, tags -> 'name'::text AS name, ST_AsText(geom) as geom from nodes"
-			<< " where geom && GeomFromText(setsrid('BOX3D(" << bounding_box.toString()
-			<< ")'::box3d,4326));";
+			<< " where geom && st_setsrid(" << bounding_box.toPostGISString()
+			<< ",4326);";
 	DEBUG_MESSAGE(query_stream.str());
 	result R = patPostGreSQLConnector::makeSelectQuery(query_stream.str());
 	DEBUG_MESSAGE("Total nodes: " << R.size());
@@ -192,7 +192,7 @@ void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box)
 
 		pair<double, double> lon_lat = patPostGISDataType::PointToLonLat(
 				(*i)["geom"].c_str());
-		unordered_map<string, string> tags = patPostGISDataType::hstoreToMap(
+		unordered_map < string, string > tags = patPostGISDataType::hstoreToMap(
 				(*i)["tags"].c_str());
 		unsigned long id;
 		(*i)["id"].to(id);
@@ -208,7 +208,8 @@ void patNetworkElements::readNodesFromPostGreSQL(patGeoBoundingBox bounding_box)
 
 }
 
-void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box) {
+void patNetworkElements::readWaysFromPostGreSQL(
+		patGeoBoundingBox bounding_box) {
 	/*
 	 //swiss_edges table has some problem that does not include all the ways (probably pt are excluded
 	 string bb_box;
@@ -258,8 +259,8 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box) 
 	 << " on ways.id=ways_in_region.osm_id;";
 	 */
 	query_stream
-			<< "select ways.tags,ways.nodes,ways.id from ways  where setsrid(geom,4326)  && GeomFromText(setsrid('BOX3D("
-			<< bounding_box.toString() << ")'::box3d,4326));";
+			<< "select ways.tags,ways.nodes,ways.id from ways  where st_setsrid(geom,4326)  && st_setsrid("
+			<< bounding_box.toPostGISString() << ",4326)";
 	DEBUG_MESSAGE(query_stream.str());
 
 	result R = patPostGreSQLConnector::makeSelectQuery(query_stream.str());
@@ -272,14 +273,15 @@ void patNetworkElements::readWaysFromPostGreSQL(patGeoBoundingBox bounding_box) 
 
 		list<unsigned long> nodes_list =
 				patPostGISDataType::IntArrayToULongList((*i)["nodes"].c_str());
-		unordered_map<string, string> tags = patPostGISDataType::hstoreToMap(
+		unordered_map < string, string > tags = patPostGISDataType::hstoreToMap(
 				(*i)["tags"].c_str());
 		if (way_id != last_way_id) {
 			patWay new_way = patWay(way_id, tags);
 			addWay(&new_way, nodes_list);
 		}
 		last_way_id = way_id;
-	}DEBUG_MESSAGE("network node size: " << getNodeSize());
+	}
+	DEBUG_MESSAGE("network node size: " << getNodeSize());
 	DEBUG_MESSAGE("network arc size: " << getArcSize());
 	DEBUG_MESSAGE("network way size: " << getWaySize());
 	DEBUG_MESSAGE("network processed way size: " << m_processed_ways.size());
@@ -352,9 +354,9 @@ void patNetworkElements::summarizeMembership() {
 
 }
 
-
-void patNetworkElements::computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef){
-	cout<<"compute generalized cost for arcs"<<m_arcs.size()<<endl;
+void patNetworkElements::computeGeneralizedCost(
+		const map<ARC_ATTRIBUTES_TYPES, double>& link_coef) {
+	cout << "compute generalized cost for arcs" << m_arcs.size() << endl;
 	for (map<unsigned long, patArc>::iterator arc_iter = m_arcs.begin();
 			arc_iter != m_arcs.end(); ++arc_iter) {
 		arc_iter->second.computeGeneralizedCost(link_coef);
@@ -399,8 +401,8 @@ const patArc* patNetworkElements::findArcByNodes(const patNode* up_node,
 class CompareDist {
 public:
 	// Compare two Foo structs.
-	bool operator()(const pair<double, const patNode*>& x
-			, const pair<double, const patNode*>& y) const {
+	bool operator()(const pair<double, const patNode*>& x,
+			const pair<double, const patNode*>& y) const {
 		DEBUG_MESSAGE(x.first << "-" << y.first);
 		return x.first < y.first;
 	}

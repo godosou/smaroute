@@ -13,7 +13,7 @@
 class patWriteNetworkToDB {
 public:
 	patWriteNetworkToDB();
-	static void write(const patNetworkBase* network, const std::string& db_name) ;
+	static void write(const patNetworkBase* network, const std::string& db_name,const string & conn_string="") ;
 	virtual ~patWriteNetworkToDB();
 };
 

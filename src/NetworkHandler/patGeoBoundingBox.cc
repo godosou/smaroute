@@ -19,7 +19,7 @@ patGeoBoundingBox::patGeoBoundingBox(double tleft_top_lon, double tleft_top_lat,
 				tright_buttom_lat), right_buttom_lon(tright_buttom_lon) {
 
 }
-patString patGeoBoundingBox::toString() const{
+patString patGeoBoundingBox::toString() const {
 	string bb_box;
 	stringstream bb_box_stream(bb_box);
 	bb_box_stream << left_top_lon << " " << left_top_lat << ","
@@ -27,6 +27,14 @@ patString patGeoBoundingBox::toString() const{
 	return bb_box_stream.str();
 }
 
+string patGeoBoundingBox::toPostGISString() const {
+	string bb_box;
+	stringstream bb_box_stream(bb_box);
+	bb_box_stream << "st_makebox2d(" << "st_makepoint(" << getMinLon() << ","
+			<< getMinLat() << "),st_makepoint(" << getMaxLon() << ","
+			<< getMaxLat() << ")" << ")";
+	return bb_box_stream.str();
+}
 double patGeoBoundingBox::getMinLat() const {
 	return right_buttom_lat;
 }
@@ -63,21 +71,23 @@ void patGeoBoundingBox::extend(const patGeoBoundingBox& bb) {
 			bb.getMinLat() < right_buttom_lat ?
 					bb.getMinLat() : right_buttom_lat;
 	right_buttom_lon =
-			bb.getMaxLon() > right_buttom_lon ? bb.getMaxLon() : right_buttom_lon;
+			bb.getMaxLon() > right_buttom_lon ?
+					bb.getMaxLon() : right_buttom_lon;
 
 }
 
 ostream& operator<<(ostream& str, const patGeoBoundingBox& x) {
-	str<<"BoudingBox:";
-	str<<"lat ["<<x.getMinLat()<<"-"<<x.getMaxLat()<<"],"<<"lon ["<<x.getMinLon()<<"-"<<x.getMaxLon()<<"],";
+	str << "BoudingBox:";
+	str << "lat [" << x.getMinLat() << "-" << x.getMaxLat() << "]," << "lon ["
+			<< x.getMinLon() << "-" << x.getMaxLon() << "],";
 	return str;
 }
 
-bool patGeoBoundingBox::valid() const{
-	if(isfinite(left_top_lat) &&isfinite(left_top_lon) &&isfinite(right_buttom_lat) &&isfinite(right_buttom_lon) ){
+bool patGeoBoundingBox::valid() const {
+	if (isfinite(left_top_lat) && isfinite(left_top_lon)
+			&& isfinite(right_buttom_lat) && isfinite(right_buttom_lon)) {
 		return true;
-	}
-	else{
+	} else {
 		return false;
 	}
 }

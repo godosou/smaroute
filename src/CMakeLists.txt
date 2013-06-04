@@ -15,6 +15,7 @@ set(CMAKE_CXX_FLAGS "-g -Wall  ")
    # Mac OS X specific code
    SET(OperatingSystem "Mac OS X")
 
+	set(BOOST_ROOT "/usr/local/boost_1_49_0") 
    include_directories("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/usr/include/")
    include_directories("${PROJECT_SOURCE_DIR}/../libs/biogeme/include")
     include_directories("${PROJECT_SOURCE_DIR}/../libs/biogeme/randomNumbers")
@@ -47,12 +48,14 @@ include_directories("/usr/local/include")
 include_directories("${PROJECT_BINARY_DIR}")
 include_directories("/usr/local/boost_1_49_0")
 include_directories("/home/jchen/libs/include")
+include_directories("${LIBCONFIG_INCLUDE_DIR}")
 
 find_package(POSTGRES)
 find_package(PQXX)
 find_package(GSL)
 find_package(SHP)
 find_package(KML)
+find_package(LibConfig) 
 
 #SET(Boost_USE_STATIC_LIBS OFF)
 #SET(Boost_USE_MULTITHREAD ON)
@@ -60,8 +63,8 @@ find_package(KML)
 
 find_package(Boost )
 find_library(LIB_XMLWRAPP xmlwrapp)
-set(LIB_EXTRA ${PQXX_LIBRARIES} ${SHP_LIBRARIES} ${KML_LIBRARIES} ${GSLCBLAS_LIBRARIES} ${GSL_CONFIG_LIBS}
-     ${LIB_XMLWRAPP} ${LIB_UTILS} ${LIB_PARAMETERS} ${Boost_LIBRARIES}  )
+set(LIB_EXTRA  ${LIBCONFIGPP_LIBRARY} ${PQXX_LIBRARIES} ${SHP_LIBRARIES} ${KML_LIBRARIES} ${GSLCBLAS_LIBRARIES} ${GSL_CONFIG_LIBS}
+     ${LIB_XMLWRAPP} ${LIB_UTILS} ${LIB_PARAMETERS} ${Boost_LIBRARIES} )
 
 #ADD_DEFINITIONS( "-g `xmlwrapp-config --cxxflags`")
 add_subdirectory(Utilities)

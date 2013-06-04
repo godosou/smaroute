@@ -211,7 +211,7 @@
         <param name="usePreviousGPS" value="1" type="int"/>
         <param name="printKMLEveryIteration" value="0" type="int"/>
 		<param name="dataDirectory" value="/Users/jchen/Documents/Project/biogeme/newbioroute/data/uni-modal/all" type="string"/>
-		<param name="resultPath" value="/Volumes/jchen/Experiments/ManyTests/modeChangePenalty0.0proposeStopTime0.0enableACCEL0enableBT0/" type="string"/>
+		<param name="resultPath" value="./" type="string"/>
 	</module>
 	
 	<module name="biogemeInput">

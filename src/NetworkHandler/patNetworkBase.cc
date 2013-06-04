@@ -117,6 +117,7 @@ void patNetworkBase::finalizeNetwork() {
 		}
 	}
 	buildIncomingIncidents();
+	assignRoadBaseId();
 }
 
 void patNetworkBase::exportKML(const string file_path) const {
@@ -427,6 +428,104 @@ const patNode* patNetworkBase::getNearestNode(const patCoordinates* geo) const {
 		}
 	}
 	return node;
+}
+
+const patRoadBase* patNetworkBase::findOpposite(const patRoadBase* road) const {
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_download_outgoing =
+			m_outgoing_incidents.find(road->getDownNode());
+
+	if (find_download_outgoing == m_outgoing_incidents.end()) {
+		return NULL;
+	} else {
+		for (set<const patRoadBase*>::const_iterator road_iter =
+				find_download_outgoing->second.begin();
+				road_iter != find_download_outgoing->second.end();
+				++road_iter) {
+			if ((*road_iter)->getDownNode() == road->getUpNode()) {
+				return *road_iter;
+			}
+		}
+	}
+	return NULL;
+}
+
+const list< int> patNetworkBase::findPrevRoadIds(
+		const patNode* node) const {
+
+	list< int> prev_road_ids;
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_incoming =
+			m_incoming_incidents.find(node);
+	if (find_incoming == m_incoming_incidents.end()) {
+		return prev_road_ids;
+	} else {
+		for (set<const patRoadBase*>::const_iterator road_iter =
+				find_incoming->second.begin();
+				road_iter != find_incoming->second.end();
+				++road_iter) {
+			const int road_id = getRoadId(*road_iter);
+			if (road_id != 0) {
+				prev_road_ids.push_back(road_id);
+			}
+		}
+	}
+	return prev_road_ids;
+}
+const list< int> patNetworkBase::findNextRoadIds(
+		const patNode* node) const {
+	list< int> next_road_ids;
+	unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator find_download_outgoing =
+			m_outgoing_incidents.find(node);
+	if (find_download_outgoing == m_outgoing_incidents.end()) {
+		return next_road_ids;
+	} else {
+		for (set<const patRoadBase*>::const_iterator road_iter =
+				find_download_outgoing->second.begin();
+				road_iter != find_download_outgoing->second.end();
+				++road_iter) {
+			const int road_id = getRoadId(*road_iter);
+			if (road_id != 0) {
+				next_road_ids.push_back(road_id);
+			}
+		}
+	}
+	return next_road_ids;
+}
+
+const int patNetworkBase::getRoadId(const patRoadBase* road) const {
+
+	unordered_map<const patRoadBase*, const int>::const_iterator road_id_iter =
+			m_road_id.find(road);
+	if (road_id_iter == m_road_id.end()) {
+		return 0;
+	} else {
+		return road_id_iter->second;
+	}
+}
+void patNetworkBase::assignRoadBaseId() {
+	m_road_id.clear();
+
+	int road_idx = 0;
+
+	for (unordered_map<const patNode*, set<const patRoadBase*> >::const_iterator node_iter =
+			m_outgoing_incidents.begin();
+			node_iter != m_outgoing_incidents.end(); ++node_iter) {
+		for (set<const patRoadBase*>::const_iterator road_iter =
+				node_iter->second.begin(); road_iter != node_iter->second.end();
+				++road_iter) {
+			unordered_map<const patRoadBase*, const int>::const_iterator road_id_iter =
+					m_road_id.find(*road_iter);
+			if (road_id_iter == m_road_id.end()) {
+				m_road_id.insert(
+						pair<const patRoadBase*, const int>(*road_iter,
+								++road_idx));
+			}
+		}
+	}
+}
+
+
+const unordered_map<const patRoadBase*, const int>* patNetworkBase::getAllRoads() const{
+	return &m_road_id;
 }
 unordered_map<const patNode*, double> patNetworkBase::getNearbyNodes(
 		const patNode* center, const double& distance) const {

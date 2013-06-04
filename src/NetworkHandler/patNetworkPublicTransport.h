@@ -24,9 +24,7 @@ class patNetworkPublicTransport: public patNetworkBase {
 public:
 	patNetworkPublicTransport();
 
-	/**
-	 * Virtual method for getting routes from patNetworkElements::patNetworkElements() and postgresql database;
-	 */
+
 	int getDirection(string direction_string);
 	bool findArcInForbidenList(list<map<const patArc*, const patNode*> >& arcs_to_stop,const patArc* arc);
 	map<string, map< const patArc*, const patNode*> > findStopsIncomingLinks(map<const patNode*, int>& stops,

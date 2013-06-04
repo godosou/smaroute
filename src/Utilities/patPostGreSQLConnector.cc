@@ -41,6 +41,7 @@ result patPostGreSQLConnector::makeSelectQuery(patString query_string){
 	}
 	catch(const exception &e){
 		WARNING(e.what());
+		WARNING(query_string);
 	}
 
 }

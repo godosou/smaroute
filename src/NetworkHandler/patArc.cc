@@ -13,7 +13,6 @@
 #include "patConst.h"
 #include "patErrNullPointer.h"
 #include "patCoordinates.h"
-#include "patNBParameters.h"
 #include "patException.h"
 #include <boost/lexical_cast.hpp>
 using kmldom::CoordinatesPtr;
@@ -63,6 +62,11 @@ patArc::patArc(unsigned long theId, const patNode* theUpNode,
 	calHeading();
 	genArcString();
 }
+
+/**
+ * Deprecated in multimodal mapmatching
+ */
+/*
 void patArc::calPriority() {
 	if (m_attributes.type == "steps") {
 		m_attributes.priority = patNBParameters::the()->stepsPriority;
@@ -107,6 +111,7 @@ void patArc::calPriority() {
 
 	}
 }
+*/
 double patArc::calHeading() {
 
 	patCoordinates startCoord = m_up_node->getGeoCoord();

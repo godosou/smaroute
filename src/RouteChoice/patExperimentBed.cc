@@ -360,7 +360,7 @@ void patExperimentBed::initCostFunctions() {
 						m_universal_choice_set.getChoiceSet());
 				mh_wf.setPathSizeComputer(&ps_computer);
 			}
-			int sample_with_obs = patNBParameters::the()->samplingWithObs;
+//			int sample_with_obs = patNBParameters::the()->samplingWithObs;
 			if (patNBParameters::the()->mh_obs_scale > 0.0) {
 				cout << "\tUse mh observations for sampling algorithm" << endl;
 				readObservations();
@@ -764,7 +764,7 @@ void patExperimentBed::writeBiogeme() {
 		sampling_pg = m_rw_path_generator;
 
 	} else {
-		WARNING("Wrong sampling algorithm: "<<m_algorithm);
+		WARNING("Wrong sampling algorithm: "<<m_algorithm<<". It should be RW or MH");
 		throw RuntimeException("Wrong sampling algorithm");
 	}
 
