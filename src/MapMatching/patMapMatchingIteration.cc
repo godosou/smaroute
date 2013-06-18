@@ -205,7 +205,7 @@ bool patMapMatchingIteration::normalIteration(patGpsPoint* prevNormalGps,
 			}
 		}
 		m_gps->setType("low_speed");
-		cout << "	not enough distance from last GPS point, skip." << endl;
+		cout << "	not enough distance from last GPS point, skip."<<distance_to_prev_normal<<"<"<< patNBParameters::the()->minDistanceFromLastPoint<< endl;
 		return false;
 	}
 	int too_long_count = 0;

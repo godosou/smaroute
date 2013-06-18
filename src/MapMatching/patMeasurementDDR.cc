@@ -30,6 +30,7 @@ patMeasurementDDR::patMeasurementDDR() :
 bool patMeasurementDDR::detArcDDR(const patArc* arc, TransportMode mode) {
 
 	double ddr_value = measureDDR(arc, mode);
+	cout<<ddr_value<<endl;
 	if (ddr_value > 0) {
 		m_ddr_arcs[mode];
 		m_ddr_arcs[mode].insert(pair<const patArc*, double>(arc, ddr_value));
@@ -93,6 +94,8 @@ set<const patArc*> patMeasurementDDR::detInherentDDR(
 	if (arc_list == NULL) {
 		return inherentDDR;
 	}
+	cout<<"detect inherent ddr"<<getTransportModeString(mode)<<","<<arc_list->size()<<endl;
+
 	for (map<const patArc*, double>::const_iterator arc_iter =
 			arc_list->begin(); arc_iter != arc_list->end(); ++arc_iter) {
 		if (detArcDDR(arc_iter->first, mode)) {

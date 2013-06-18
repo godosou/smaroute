@@ -63,8 +63,12 @@ void patProbabilisticMapMatching::run(patError*& err) {
 			return; //FIXME
 		} else {
 			m_paths = init_iteration.getPaths();
-//			init_iteration.writeKML(m_file_name, first_valid);
+			if (patNBParameters::the()->printKMLEveryIteration == 1) {
+				cout<<"kml written"<<endl;
+				init_iteration.writeKML(m_file_name, first_valid);
+			}
 			break;
+
 		}
 	}
 

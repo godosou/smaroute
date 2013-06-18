@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	char *file_name=NULL;
 	int nbr_observation = INT_MAX;
 	bool synthetic_network = false;
-	bool real_observation = false;
+	bool real_observation = true;
 	int c;
 	while ((c = getopt(argc, argv, "c:f:n:o:srh")) != -1) {
 		switch (c) {
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
 			param_file = optarg;
 			break;
 		case 'r':
-			real_observation = true;
+			real_observation = false;
 			break;
 		case 'h':
 			cout
@@ -50,9 +50,9 @@ int main(int argc, char *argv[]) {
 			cout
 					<< "\t Sample: \t\t\t Sample choice set with observations in observations folder."
 					<< endl;
-			cout
-					<< "\t SampleEqualProbability: \t\t\t Sample choice set with observations in observations folder with equal probability."
-					<< endl;
+//			cout
+//					<< "\t SampleEqualProbability: \t\t\t Sample choice set with observations in observations folder with equal probability."
+//					<< endl;
 			cout
 					<< "\t MHEnumeratePaths: \t\t Enumerate paths using MH algorithm."
 					<< endl;
@@ -101,8 +101,18 @@ int main(int argc, char *argv[]) {
 		cout << "use param file: " << param_file << endl;
 	}
 
+
 	string command_str(command);
 	cout << command_str << endl;
+
+	if (synthetic_network==true){
+		cout << "The network is synthetic."<<endl;
+	}
+	if (real_observation==false){
+		cout << "The observations are synthetic."<<endl;
+	}
+
+
 	initParameters(param_file);
 
 	try {
@@ -114,12 +124,6 @@ int main(int argc, char *argv[]) {
 			patExperimentBed run(!synthetic_network, real_observation, CAR,
 					nbr_observation);
 			run.sampleChoiceSet();
-			run.writeBiogeme();
-			run.analyzeChoiceSet();
-		} else if (command_str == "SampleEqualProbability") {
-			patExperimentBed run(!synthetic_network, real_observation, CAR,
-					nbr_observation);
-			run.sampleEqualProbability();
 			run.writeBiogeme();
 			run.analyzeChoiceSet();
 		} else if (command_str == "MHEnumeratePaths") {

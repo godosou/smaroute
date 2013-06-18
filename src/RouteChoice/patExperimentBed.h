@@ -97,7 +97,7 @@ public:
 	 */
 	void sampleChoiceSet();
 
-	void sampleEqualProbability();
+//	void sampleEqualProbability();
 	/**
 	 * Simulate observations according to the the specified mh utilities.
 	 * Notice: the parameters are in mh, not utility!

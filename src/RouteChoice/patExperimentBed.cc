@@ -155,6 +155,7 @@ void patExperimentBed::sampleChoiceSetWithOd(const unsigned count) {
 	}
 
 	const patPathGenerator* sampling_pg(NULL);
+	MHEqualWeightFunction eq_weight_function;
 
 	if (m_algorithm == "MH" && m_mh_path_generator != NULL) {
 		sampling_pg = m_mh_path_generator;
@@ -167,7 +168,11 @@ void patExperimentBed::sampleChoiceSetWithOd(const unsigned count) {
 
 		sampling_pg = m_rw_path_generator;
 
-	} else {
+	} else if (m_algorithm == "EQ"&& m_mh_path_generator != NULL) {
+		m_mh_path_generator->setMHWeight(&eq_weight_function);
+		sampling_pg=m_mh_path_generator;
+	}
+	else {
 		WARNING("Wrong sampling algorithm: "<<m_algorithm);
 		throw RuntimeException("Wrong sampling algorithm");
 	}
@@ -226,6 +231,7 @@ void patExperimentBed::sampleChoiceSet() {
 	checkObservationFolder();
 	readObservations();
 	patSampleChoiceSetForObservations sample_choice_set;
+	MHEqualWeightFunction eq_weight_function;
 
 	DEBUG_MESSAGE("Sample choice set");
 
@@ -236,6 +242,15 @@ void patExperimentBed::sampleChoiceSet() {
 
 		sample_choice_set.sampleChoiceSet(m_observations, m_rw_path_generator,
 				m_choice_set_foler);
+	} else if (m_algorithm == "EQ"&& m_mh_path_generator != NULL) {
+		m_mh_path_generator->setMHWeight(&eq_weight_function);
+		if (m_mh_path_generator != NULL) {
+			sample_choice_set.sampleChoiceSet(m_observations,
+					m_mh_path_generator, m_choice_set_foler);
+		} else {
+			WARNING("Wrong sampling algorithm: "<<m_algorithm);
+			throw RuntimeException("Wrong sampling algorithm");
+		}
 	}
 
 	else {
@@ -244,24 +259,15 @@ void patExperimentBed::sampleChoiceSet() {
 	}
 }
 
-void patExperimentBed::sampleEqualProbability() {
-	checkChoiceSetFolder();
-	checkObservationFolder();
-	readObservations();
-	patSampleChoiceSetForObservations sample_choice_set;
-
-	DEBUG_MESSAGE("Sample choice set with equal probablity");
-
-	MHEqualWeightFunction eq_weight_function;
-	m_mh_path_generator->setMHWeight(&eq_weight_function);
-	if (m_mh_path_generator != NULL) {
-		sample_choice_set.sampleChoiceSet(m_observations, m_mh_path_generator,
-				m_choice_set_foler);
-	} else {
-		WARNING("Wrong sampling algorithm: "<<m_algorithm);
-		throw RuntimeException("Wrong sampling algorithm");
-	}
-}
+//void patExperimentBed::sampleEqualProbability() {
+//	checkChoiceSetFolder();
+//	checkObservationFolder();
+//	readObservations();
+//	patSampleChoiceSetForObservations sample_choice_set;
+//
+//	DEBUG_MESSAGE("Sample choice set with equal probablity");
+//
+//}
 void patExperimentBed::readUniversalChoiceSet() {
 
 	if (m_universal_choice_set.empty()) {
@@ -608,14 +614,14 @@ void patExperimentBed::analyzeOBS() {
 	string file_name = m_observation_folder + string("/obs_stats.csv");
 	ofstream obs_stats_file(file_name.c_str());
 
-	unsigned min_can=INT_MAX;
-	unsigned max_can=0;
-	unsigned min_od=INT_MAX;
-	unsigned max_od=0;
+	unsigned min_can = INT_MAX;
+	unsigned max_can = 0;
+	unsigned min_od = INT_MAX;
+	unsigned max_od = 0;
 	for (unsigned i = 0; i < m_observations.size(); ++i) {
-		unsigned nbr_can=m_observations[i].getNbrOfCandidates();
-		unsigned nbr_od=m_observations[i].getNbOfOds();
-		obs_stats_file<<nbr_can<<"\t"<<nbr_od<<endl;
+		unsigned nbr_can = m_observations[i].getNbrOfCandidates();
+		unsigned nbr_od = m_observations[i].getNbOfOds();
+		obs_stats_file << nbr_can << "\t" << nbr_od << endl;
 	}
 	obs_stats_file.close();
 }
@@ -764,7 +770,8 @@ void patExperimentBed::writeBiogeme() {
 		sampling_pg = m_rw_path_generator;
 
 	} else {
-		WARNING("Wrong sampling algorithm: "<<m_algorithm<<". It should be RW or MH");
+		WARNING(
+				"Wrong sampling algorithm: "<<m_algorithm<<". It should be RW or MH");
 		throw RuntimeException("Wrong sampling algorithm");
 	}
 
