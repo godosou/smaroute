@@ -59,13 +59,12 @@ Requirements
 * biogeme 
 * Postgresql > 9.0
 * libpqxx
-* Nnu GSL
+* GNU GSL
 * libshp
 * libkml
 * libconfig
 * xmlwrapp
 * CXXTest
-* libgsl
 It is likely that cmake fails to find some dependencies. In this case, please update the corresponding package look-up file in: src/cmake/Modules/. For more details about how to find dependencies in cmake environemnt, read [cmake documentation](http://www.cmake.org/Wiki/CMake:How_To_Find_Libraries).
 
 MAC OS X
