@@ -1,5 +1,13 @@
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
-
+- [Introduction](#introduction)
+- [Functionalities](#functionalities)
+   - [pmm](#pmm)
+	- [bioroute](#bioroute)
+	- [mr.osm](#mrosm)
+- [Installation](#installation)
+	- [Download](#download)
+	- [Requirements](#requirements)
+	- [MAC OS X](#mac-os-x)
+	- [Build](#build)
 
 Introduction
 ===========
