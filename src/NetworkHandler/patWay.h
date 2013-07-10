@@ -42,6 +42,7 @@ public:
 	signed short int isCarOneWay() const;
 	signed short int isBikeOneWay() const;
 	signed short int isWalkOneWay() const;
+	signed short int isTrainOneWay() const;
 	string getTagValue(string tag_key) const;
 	bool readFromNodesIds(patNetworkElements* network,
 			list<unsigned long> the_list_of_nodes_ids);
@@ -63,6 +64,8 @@ public:
 	static map<string, set<string> > walk_include_rules;
 	static map<string, set<string> > walk_exclude_rules;
 
+	static map<string, set<string> > train_include_rules;
+	static map<string, set<string> > train_exclude_rules;
 
 	void setTags(unordered_map<string, string>& tags);
 protected:

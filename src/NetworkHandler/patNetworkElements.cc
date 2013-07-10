@@ -43,7 +43,9 @@ patNode* patNetworkElements::addNode(unsigned long theId, patNode& theNode) {
 					"patNetworkElements: insert node not successful");
 			return NULL;
 		}
-
+		if (theNode.getTag("railway")==string("station")){
+			m_railway_stations.insert(&(insert_result.first->second));
+		}
 		return &(insert_result.first->second);
 	}
 
@@ -94,7 +96,7 @@ patPublicTransportSegment* patNetworkElements::addPTSegment(
 		return new_pt_pointer;
 	}
 }
-const map<unsigned long, patWay>* patNetworkElements::getWays() {
+const map<unsigned long, patWay>* patNetworkElements::getWays() const{
 	return &m_ways;
 }
 
@@ -343,6 +345,11 @@ unsigned long patNetworkElements::getNodeSize() const {
 const map<unsigned long, patArc>* patNetworkElements::getAllArcs() const {
 	return &m_arcs;
 }
+
+const set<const patNode*>* patNetworkElements::getRailwayStations() const{
+	return &m_railway_stations;
+}
+
 
 void patNetworkElements::summarizeMembership() {
 	for (map<unsigned long, patArc>::const_iterator arc_iter = m_arcs.begin();

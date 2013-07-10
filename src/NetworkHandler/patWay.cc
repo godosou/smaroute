@@ -20,6 +20,10 @@ map<string, set<string> > patWay::bike_exclude_rules;
 map<string, set<string> > patWay::walk_include_rules;
 map<string, set<string> > patWay::walk_exclude_rules;
 
+map<string, set<string> > patWay::train_include_rules;
+map<string, set<string> > patWay::train_exclude_rules;
+
+
 patWay::patWay() {
 	//
 }
@@ -55,6 +59,16 @@ signed short int patWay::isOneway() const {
 		}
 	}
 
+}
+signed short int patWay::isTrainOneWay() const {
+//	DEBUG_MESSAGE(patWay::train_include_rules.size());
+	if (patWay::train_include_rules.size() > 0
+			&& !isWay(patWay::train_include_rules, patWay::train_exclude_rules)) {
+		return -2; //not train
+	} else {
+
+		return 0; //"-1" reverse, "0" two ways, "1" one way;
+	}
 }
 signed short int patWay::isCarOneWay() const {
 	if (patWay::car_include_rules.size() > 0
@@ -213,6 +227,15 @@ void patWay::initiateNetworkTypeRules(string file_name) {
 				loadRule(walk_exclude_rules, key, value);
 			}
 
+		}else if (type == "train") {
+
+			if (include) {
+				loadRule(train_include_rules, key, value);
+			} else {
+
+				loadRule(train_exclude_rules, key, value);
+			}
+
 		}
 	}
 	file_stream_handler.close();
@@ -220,6 +243,7 @@ void patWay::initiateNetworkTypeRules(string file_name) {
 void patWay::initiateNetworkTypeRules() {
 
 	string query_string = "select type,key,value,include from network_rules;";
+	DEBUG_MESSAGE(query_string);
 	result R = patPostGreSQLConnector::makeSelectQuery(query_string);
 
 	for (result::const_iterator i = R.begin(); i != R.end(); ++i) {
@@ -231,7 +255,7 @@ void patWay::initiateNetworkTypeRules() {
 		(*i)["type"].to(type);
 		(*i)["key"].to(key);
 		(*i)["value"].to(value);
-//		DEBUG_MESSAGE(include << " " << type << " " << key << " " << value);
+		DEBUG_MESSAGE(include << " " << type << " " << key << " " << value);
 		if (type == "car") {
 			if (include) {
 				loadRule(car_include_rules, key, value);
@@ -255,6 +279,14 @@ void patWay::initiateNetworkTypeRules() {
 			} else {
 
 				loadRule(walk_exclude_rules, key, value);
+			}
+		}else if (type == "train") {
+
+			if (include) {
+				loadRule(train_include_rules, key, value);
+			} else {
+
+				loadRule(train_exclude_rules, key, value);
 			}
 		}
 	}

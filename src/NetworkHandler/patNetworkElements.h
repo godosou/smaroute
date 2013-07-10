@@ -53,7 +53,7 @@ public:
 	 * Get the pointer to the way sets;
 	 * @return A pointer to the ways member variable containing all the ways in the network;
 	 */
-	const map<unsigned long, patWay>* getWays();
+	const map<unsigned long, patWay>* getWays() const;
 
 	/**
 	 * Add an arc into the network.
@@ -131,6 +131,8 @@ public:
 	void computeGeneralizedCost(const map<ARC_ATTRIBUTES_TYPES, double>& link_coef);
 	set<const patNode*> getNearbyNode(const patCoordinates& coords,
 			double distance, int count) const;
+
+	const set<const patNode*>* getRailwayStations() const;
 protected:
 
 	map<unsigned long, patNode> m_nodes;/**< The map of nodes. Key is the node osm id, value is the node object*/
@@ -140,6 +142,8 @@ protected:
 	map<unsigned long, patPublicTransportSegment> m_pt_segments;
 	map<unsigned long, patWay> m_processed_ways;
 	map<const patNode*, map<const patNode*, const patArc*> > m_node_arc_membership;
+
+	set<const patNode*> m_railway_stations;
 private:
 	unsigned long total_nbr_of_arcs;/**< Total number of arcs, used to generate arc id*/
 	unsigned long total_nbr_of_pt_segs;

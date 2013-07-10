@@ -5,6 +5,8 @@ include_directories("${LIBCONFIG_INCLUDE_DIR}")
 
 
 add_library(NetworkHandler
+                patNetworkElements.cc
+                patNetworkTrain.cc
 				patSpatialSearch.cc
                 patWriteNetworkToDB.cc
                 patCompressedArc.cc
@@ -22,7 +24,6 @@ add_library(NetworkHandler
                 patMultiModalPath.cc
                 patPublicTransportSegment.cc
                 patGeoBoundingBox.cc
-                patNetworkElements.cc
                 patNetworkBase.cc
                 patNetworkUnimodal.cc
                 patNetworkPublicTransport.cc
@@ -30,7 +31,6 @@ add_library(NetworkHandler
                 patNetworkBus.cc
                 patNetworkMetro.cc
                 patNetworkCar.cc
-                patNetworkTrain.cc
                 patNetworkWalk.cc
                 patNetworkEnvironment.cc
                 patReadPathFromShp.cc)
