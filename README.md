@@ -48,7 +48,8 @@ mr.osm stands for multimodal routable openstreetmap (OSM). The public tranposrt 
 
 
 Installation
-------------
+==============
+
 The software is implemented in C++. The building environment is [cmake](http://www.cmake.org/) with gcc >4.4. The installation has been tested on Mac OSX (10.6-10.8) and Linux (Ubuntu 10.04.4 LTS).
 
 Requirements
