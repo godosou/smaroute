@@ -19,7 +19,9 @@ Specifically, the software package contains three programs:
 * bioroute (biogeme route choice modeling).
 * mr.osm (multimodal routeable openstreepmap).
 
-Please read [wiki]: https://github.com/godosou/newbioroute/wiki/ for the usage!
+Please read [wiki][] for the usage!
+
+[wiki]: https://github.com/godosou/newbioroute/wiki/ "wiki"
 
 Functionalities
 ===============
