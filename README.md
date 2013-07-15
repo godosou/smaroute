@@ -99,6 +99,7 @@ Build
 This is a typical cmake building procedure:
 * Create and Enter a folder (BUILD_FOLDER) outside of the source code directory.
 * Run $cmake PATH_TO_SRC_FOLDER
+* Run $make
 * You will find executables in BUILD_FOLDER/bin
 
 
